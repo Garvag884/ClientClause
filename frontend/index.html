@@ -86,6 +86,7 @@ header,.hero,.side,.noprint{display:none!important}
 .wm{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:70%;max-width:560px;opacity:.07;z-index:0;pointer-events:none}
 }
 </style>
+<link rel="stylesheet" href="voice.css">
 </head>
 <body>
 <img class="wm" src="logo.png" alt="" onerror="this.remove()">
@@ -96,7 +97,7 @@ header,.hero,.side,.noprint{display:none!important}
 <p class="lede">Describe an agreement in your own words. ClientClause drafts it, checks that nothing is missing, and lets you adjust each clause. Works for freelance agreements, NDAs and employment agreements.</p>
 <div class="ask">
 <textarea id="desc" aria-label="Describe your agreement" placeholder="For example: I'm Riya Sharma, a web developer building a website for Acme Traders for 50,000 rupees, 1 December 2026 to 31 January 2027. Courts in Bengaluru."></textarea>
-<div class="bar"><span class="hint">Privacy: your description is sent to the configured AI provider for processing and is not saved by ClientClause. Avoid confidential or sensitive personal information; use made-up details while testing.</span><button class="btn" id="go" onclick="draft()">Draft contract</button></div>
+<div class="bar"><span class="hint">Privacy: your description is sent to the configured AI provider for processing and is not saved by ClientClause. Avoid confidential or sensitive personal information; use made-up details while testing.</span><span class="voice"><button type="button" class="mic" id="mic" aria-pressed="false"><span class="dotm"></span><span id="micl">Speak</span></button><select id="vlang" aria-label="Voice language"><option value="auto">Auto-detect</option><option value="en">English</option><option value="hi">Hindi</option><option value="translate">Any language to English</option></select></span><button class="btn" id="go" onclick="draft()">Draft contract</button></div>
 </div>
 <div class="chips" id="chips"></div>
 <div class="msg" id="msg" role="alert"></div>
@@ -182,5 +183,6 @@ if(g.witnesses)h+=`<p><b>Witnesses</b></p><div class="sigrow">${Array.from({leng
 h+=`</div><p class="fine noprint">A drafting aid, not legal advice. Stamp duty, registration and leave rules vary by state, so have a lawyer review this before signing.</p></article>`;
 $("work").innerHTML=h;$("work").hidden=false;}
 </script>
+<script src="voice.js"></script>
 </body>
 </html>

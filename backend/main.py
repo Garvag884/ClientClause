@@ -5,7 +5,7 @@ from pathlib import Path
 
 import os
 import time
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -352,6 +352,37 @@ def rebuild(body: BuildIn):
     if not t:
         raise HTTPException(400, "Unknown contract type")
     return package(t, body.fields, body.variants)
+
+
+@app.post("/api/transcribe")
+async def transcribe(request: Request, audio: UploadFile = File(...), mode: str = Form("auto")):
+    check_rate(request)
+    key = os.getenv("GROQ_API_KEY")
+    if not key:
+        raise HTTPException(503, "Voice input is not set up on this server.")
+    data = await audio.read()
+    if len(data) < 1000:
+        raise HTTPException(400, "That recording was too short. Please try again.")
+    if len(data) > 8_000_000:
+        raise HTTPException(400, "That recording is too long. Keep it under about two minutes.")
+    ctype = (audio.content_type or "audio/webm").split(";")[0].lower()
+    ext = "mp4" if "mp4" in ctype else "ogg" if "ogg" in ctype else "wav" if "wav" in ctype else "webm"
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=key, base_url="https://api.groq.com/openai/v1", timeout=40)
+        file = ("speech." + ext, data, ctype)
+        if mode == "translate":
+            r = client.audio.translations.create(model="whisper-large-v3", file=file)
+        else:
+            extra = {"language": mode} if mode in ("en", "hi") else {}
+            r = client.audio.transcriptions.create(
+                model=os.getenv("WHISPER_MODEL", "whisper-large-v3-turbo"), file=file, **extra)
+        text = (r.text or "").strip()
+    except Exception as e:
+        raise HTTPException(502, "Voice transcription failed: " + str(e)[:150])
+    if not text:
+        raise HTTPException(400, "I couldn't hear any speech. Try again closer to the microphone.")
+    return {"text": text}
 
 
 @app.get("/api/health")

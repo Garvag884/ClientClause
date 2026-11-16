@@ -3,7 +3,10 @@ import re
 from datetime import date
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+import os
+import time
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -16,6 +19,24 @@ for f in (ROOT / "contract_types").glob("*.json"):
     TYPES[t["id"]] = t
 
 app = FastAPI()
+
+ORIGINS = [o.strip() for o in os.getenv("FRONTEND_ORIGINS", "").split(",") if o.strip()]
+app.add_middleware(CORSMiddleware, allow_origins=ORIGINS or ["*"],
+                   allow_methods=["*"], allow_headers=["*"])
+
+LIMIT = int(os.getenv("DRAFTS_PER_HOUR", "30"))
+_hits = {}
+
+
+def check_rate(request):
+    fwd = request.headers.get("x-forwarded-for", "")
+    ip = fwd.split(",")[0].strip() or (request.client.host if request.client else "unknown")
+    now = time.time()
+    recent = [t for t in _hits.get(ip, []) if now - t < 3600]
+    if len(recent) >= LIMIT:
+        raise HTTPException(429, "Too many drafts from this connection. Please try again in a while.")
+    recent.append(now)
+    _hits[ip] = recent
 BLANK = re.compile(r"\[[a-z0-9_ ]+\?\]")
 
 
@@ -305,7 +326,10 @@ def package(t, fields, variants):
 
 # ---------- API ----------
 @app.post("/api/draft")
-def draft(body: DraftIn):
+def draft(body: DraftIn, request: Request):
+    check_rate(request)
+    if len(body.text) > 4000:
+        raise HTTPException(400, "Please keep the description under 4000 characters.")
     if len(body.text.strip()) < 10:
         raise HTTPException(400, "Please describe the agreement in a sentence or two.")
     try:
@@ -328,6 +352,11 @@ def rebuild(body: BuildIn):
     if not t:
         raise HTTPException(400, "Unknown contract type")
     return package(t, body.fields, body.variants)
+
+
+@app.get("/api/health")
+def health():
+    return {"ok": True}
 
 
 app.mount("/", StaticFiles(directory=ROOT / "frontend", html=True), name="frontend")

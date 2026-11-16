@@ -1,168 +1,184 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ClientClause</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <style>
-body{font-family:system-ui,sans-serif;max-width:900px;margin:30px auto;padding:0 16px;color:#222}
-textarea{width:100%;height:110px;padding:10px;font-size:15px;box-sizing:border-box}
-button{padding:9px 16px;font-size:15px;cursor:pointer;margin-top:8px}
-.card{border:1px solid #ddd;border-radius:8px;padding:14px;margin:14px 0}
-.error{color:#b00020}.warn{color:#9a6700}.ok{color:#1a7f37}
-label{display:block;font-size:13px;margin-top:8px}
-input{width:100%;padding:6px;font-size:14px;box-sizing:border-box}
-select{margin-left:8px}
-.note{font-size:13px;color:#666}
-.contract{font-family:Georgia,"Times New Roman",serif;line-height:1.55;font-size:15px}
-.print-logo{display:none}
-.contract mark{color:inherit;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.contract mark.key-detail{background:#fff2bf;border-bottom:1px solid #c79827;padding:0 1px}
-.contract mark.missing{background:#ffe0d9;border-bottom:2px solid #c43b24;color:#8e2012;font-weight:bold;padding:0 2px}
-.contract mark.missing[data-field]{cursor:pointer}
-.contract mark.missing[data-field]:focus{outline:2px solid #8e2012;outline-offset:2px}
-.report-link{border:0;background:none;color:inherit;font:inherit;text-align:left;padding:0;text-decoration:underline;text-decoration-style:dotted;cursor:pointer}
-.contract h2{text-align:center;letter-spacing:1px}
-.pre{margin:8px 0;white-space:pre-wrap}
-.clause{margin:14px 0}
-.ctext{white-space:pre-wrap;margin-top:4px;text-align:justify}
-.sigblock{margin-top:28px;break-inside:avoid}
-.sigrow{display:flex;gap:28px;margin:16px 0;flex-wrap:wrap}
-.sigcol{flex:1;min-width:220px;font-size:14px;line-height:1.9}
-.line{border-bottom:1px solid #000;height:46px;margin-bottom:4px}
-@media print{.noprint{display:none}.card{border:none;padding:0}body{margin:0 auto}.contract{position:relative}.print-logo{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:110mm;height:auto;max-height:145mm;object-fit:contain;opacity:.08;z-index:0;pointer-events:none}.contract>*:not(.print-logo){position:relative;z-index:1}}
+:root{--ink:#1c2b45;--muted:#5d6b82;--desk:#e8ecf2;--line:#d5dbe5;--mark:#ffe08a;--val:#e4ecff;--ok:#1f7a52;--bad:#b3261e;--warn:#8a5a00;
+--ui:"Instrument Sans",system-ui,-apple-system,sans-serif;--serif:"Source Serif 4",Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--desk);color:var(--ink);font:16px/1.5 var(--ui)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header{padding:18px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px}
+.brand img{height:28px;width:auto}
+.hero{max-width:680px;padding:36px 0 24px}
+h1{font:600 clamp(32px,5vw,48px)/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.01em}
+.lede{color:var(--muted);margin:0 0 22px;max-width:52ch}
+.ask{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px}
+.ask:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,43,69,.12)}
+.ask textarea{width:100%;height:112px;border:0;resize:vertical;padding:12px;font:inherit;color:var(--ink);background:transparent}
+.ask textarea:focus{outline:none}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px;flex-wrap:wrap}
+.hint{color:var(--muted);font-size:14px}
+.btn{font:600 15px var(--ui);padding:10px 18px;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+.btn:hover{background:#2a3d5e}
+.btn.ghost{background:#fff;color:var(--ink)}
+.btn.ghost:hover{background:#f3f5f9}
+.btn:disabled{opacity:.6;cursor:wait}
+:focus-visible{outline:3px solid #6f8ee8;outline-offset:2px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{font:14px var(--ui);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.msg{color:var(--bad);margin-top:10px;min-height:1px}
+body.has-draft .hero{padding-top:4px}
+body.has-draft h1,body.has-draft .lede,body.has-draft .chips{display:none}
+body.has-draft .ask textarea{height:64px}
+.work{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;padding-bottom:60px}
+.side{position:sticky;top:16px;display:grid;gap:16px;max-height:calc(100vh - 32px);overflow:auto;padding-right:2px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+.panel h3{margin:0 0 4px;font-size:17px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 10px}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}
+input{width:100%;font:15px var(--ui);padding:8px 10px;border:1px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
+input.need{border-left:4px solid #e0a800}
+input.flash{animation:flash 1.4s}
+@keyframes flash{0%,60%{background:var(--mark)}100%{background:#fff}}
+.row{display:flex;gap:8px;margin-top:16px}
+.row .btn{flex:1}
+.status{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:8px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--ok)}
+.dot.bad{background:var(--bad)}.dot.warn{background:#e0a800}
+.items{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.items li{font-size:14px;display:flex;gap:8px;line-height:1.4}
+.ico{flex:none;width:18px;height:18px;border-radius:50%;font:700 12px/18px var(--ui);text-align:center;color:#fff;background:var(--ok)}
+.error .ico{background:var(--bad)}.warn .ico{background:#c08a00}
+.ritem{all:unset;cursor:pointer;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.ritem:hover{text-decoration-color:var(--ink)}
+.paper{position:relative;background:#fff;border:1px solid var(--line);border-radius:4px;padding:56px clamp(20px,6vw,72px);font:17px/1.65 var(--serif);box-shadow:0 1px 2px rgba(28,43,69,.08),0 12px 32px rgba(28,43,69,.08)}
+.paper h2{text-align:center;font-size:22px;letter-spacing:.04em;margin:0 0 28px}
+.pre{margin:0 0 12px;max-width:70ch}
+.clause{margin:22px 0}
+.ctitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ctitle b{font-weight:600}
+.ctitle select{font:13px var(--ui);padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--muted)}
+.ctext{white-space:pre-wrap;margin-top:4px;max-width:70ch}
+.v{background:var(--val);border-radius:3px;padding:0 2px}
+.blank{font:inherit;background:var(--mark);border:0;border-bottom:2px solid #c99a00;border-radius:3px;padding:0 3px;cursor:pointer;color:var(--ink)}
+.sig{margin-top:36px;break-inside:avoid}
+.sigrow{display:flex;gap:32px;margin:18px 0;flex-wrap:wrap}
+.sigcol{flex:1;min-width:210px;font-size:15px;line-height:1.9}
+.line{border-bottom:1px solid var(--ink);height:44px;margin-bottom:4px}
+.fine{color:var(--muted);font-size:13px;max-width:70ch;margin-top:18px}
+.wm{display:none}
+@media(max-width:900px){.work{grid-template-columns:1fr}.side{position:static;max-height:none}}
+@media(prefers-reduced-motion:reduce){input.flash{animation:none;background:var(--mark)}}
+@media print{
+body{background:#fff}
+header,.hero,.side,.noprint{display:none!important}
+.work{display:block;padding:0}
+.paper{border:0;box-shadow:none;padding:0;background:transparent}
+.paper>*{position:relative;z-index:1}
+.v{background:none;padding:0}
+.blank{background:none;border-bottom:1px solid #000;padding:0}
+.wm{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:70%;max-width:560px;opacity:.07;z-index:0;pointer-events:none}
+}
 </style>
 </head>
 <body>
-<div class="noprint">
-<h1>ClientClause</h1>
-<p>Describe any agreement in plain language. Currently supported: freelance agreements, NDAs and employment agreements.</p>
-<textarea id="desc" placeholder="Example: I'm Riya Sharma, a web developer. I'm building a website for Acme Traders for 50,000 rupees from 1 December 2026 to 31 January 2027. Courts in Bengaluru."></textarea>
-<button onclick="draft()">Draft contract</button>
-<div id="status"></div>
+<img class="wm" src="logo.png" alt="" onerror="this.remove()">
+<header><div class="wrap brand"><img src="logo.png" alt="" onerror="this.remove()">ClientClause</div></header>
+<main class="wrap">
+<section class="hero">
+<h1>Say what the deal is. Get the contract.</h1>
+<p class="lede">Describe an agreement in your own words. ClientClause drafts it, checks that nothing is missing, and lets you adjust each clause. Works for freelance agreements, NDAs and employment agreements.</p>
+<div class="ask">
+<textarea id="desc" aria-label="Describe your agreement" placeholder="For example: I'm Riya Sharma, a web developer building a website for Acme Traders for 50,000 rupees, 1 December 2026 to 31 January 2027. Courts in Bengaluru."></textarea>
+<div class="bar"><span class="hint">Use made-up names while testing.</span><button class="btn" id="go" onclick="draft()">Draft contract</button></div>
 </div>
-<div id="out"></div>
-<p class="note noprint">This is a drafting aid, not legal advice. Stamp duty, registration and leave rules vary by state, so have a lawyer review any contract before signing.</p>
+<div class="chips" id="chips"></div>
+<div class="msg" id="msg" role="alert"></div>
+</section>
+<section class="work" id="work" hidden></section>
+</main>
 <script>
-let state = null;
-const $ = id => document.getElementById(id);
-function esc(s){return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function importantValue(f){
-  const v = state.fields[f.key];
-  if(v == null || String(v).trim() === "") return "";
-  if(f.type === "date"){
-    const d = new Date(String(v) + "T00:00:00");
-    return Number.isNaN(d.getTime()) ? String(v) : new Intl.DateTimeFormat("en-GB", {day:"numeric", month:"long", year:"numeric"}).format(d);
-  }
-  if(f.type === "number"){
-    const n = Number(v);
-    if(!Number.isFinite(n)) return String(v);
-    if(f.money){
-      const rounded = Math.round(n * 100) / 100;
-      const whole = Math.trunc(rounded);
-      const paise = Math.round((rounded - whole) * 100);
-      return new Intl.NumberFormat("en-IN", {maximumFractionDigits:0}).format(whole) + (paise ? "." + String(paise).padStart(2,"0") : "/-");
-    }
-    return Number.isInteger(n) ? String(n) : String(n);
-  }
-  return String(v).trim();
-}
-function contractText(value){
-  const details = state.field_defs
-    .filter(f => f.required || f.type === "date" || f.type === "number" || /name/.test(f.key))
-    .map(importantValue).filter(v => v.length >= 2);
-  const alternatives = [...new Set(details)].sort((a,b) => b.length-a.length).map(v => {
-    const escaped = v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return /^\d+(?:[.,]\d+)?$/.test(v) ? "(?<![0-9])" + escaped + "(?![0-9])" : "(?<![\\p{L}\\p{N}])" + escaped + "(?![\\p{L}\\p{N}])";
-  });
-  const missing = "(\\[[a-z0-9_ ]+\\?\\])";
-  const pattern = new RegExp(alternatives.length ? "(" + alternatives.join("|") + ")|" + missing : missing, "giu");
-  return String(value ?? "").replace(pattern, match => {
-    if(match.startsWith("[")){
-      const key = match.slice(1,-2).trim().replace(/\s+/g,"_");
-      const field = state.field_defs.find(f => f.key.toLowerCase() === key.toLowerCase());
-      const attrs = field ? ` data-field="${esc(field.key)}" role="button" tabindex="0" title="Go to ${esc(field.label)}"` : "";
-      return `<mark class="missing"${attrs}>${esc(match)}</mark>`;
-    }
-    return `<mark class="key-detail">${esc(match)}</mark>`;
-  });
-}
-function focusField(key){
-  const field = $("f_" + key);
-  if(!field) return;
-  field.scrollIntoView({behavior:"smooth",block:"center"});
-  field.focus({preventScroll:true});
-}
-async function post(url, body){
-  const r = await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
-  const d = await r.json();
-  if(!r.ok) throw new Error(d.detail || "Something went wrong");
-  return d;
-}
+const $=id=>document.getElementById(id);
+let S=null;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+const SAMPLES={
+"Freelance":"I'm Riya Sharma, a freelance web developer. I'm building an e-commerce website for Acme Traders for 50,000 rupees. Work starts 1 December 2026 and is due 31 January 2027. Courts in Bengaluru.",
+"Employment":"I'm Arjun Mehta, joining Zesta Labs as a Backend Developer on 1 December 2026. Salary is 60000 rupees per month, 5 work from home days a month, 3 sick leaves, 30 days notice. Courts in Bengaluru.",
+"NDA":"My startup Zesta Labs is sharing product plans with Arjun Mehta so he can evaluate a partnership. Confidentiality for 3 years. Courts in Bengaluru."};
+$("chips").innerHTML=Object.keys(SAMPLES).map(k=>`<button type="button" class="chip" data-s="${k}">Try: ${k}</button>`).join("");
+$("desc").addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")draft()});
+async function post(url,body){
+const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+const d=await r.json();
+if(!r.ok)throw new Error(d.detail||"Something went wrong. Try again in a moment.");
+return d;}
 async function draft(){
-  $("status").textContent = "Working...";
-  try{
-    state = await post("/api/draft", {text: $("desc").value});
-    state.variants = {};
-    $("status").textContent = "";
-    render();
-  }catch(e){ $("status").textContent = e.message; }
-}
+const text=$("desc").value.trim();
+$("msg").textContent="";$("go").disabled=true;$("go").textContent="Drafting...";
+try{S=await post("/api/draft",{text});S.variants={};render();
+document.body.classList.add("has-draft");$("work").scrollIntoView({behavior:"smooth"});}
+catch(e){$("msg").textContent=e.message;}
+finally{$("go").disabled=false;$("go").textContent="Draft contract";}}
 async function rebuild(){
-  state.field_defs.forEach(f => { const el = $("f_" + f.key); if(el) state.fields[f.key] = el.value.trim(); });
-  try{
-    const d = await post("/api/build", {type_id: state.type_id, fields: state.fields, variants: state.variants});
-    state = {...state, ...d};
-    render();
-  }catch(e){ $("status").textContent = e.message; }
-}
-function setVar(id, v){ state.variants[id] = v; rebuild(); }
-function label(o){ return o === "a" ? "Favours " + state.side_a : o === "b" ? "Favours " + state.side_b : "Balanced"; }
+S.field_defs.forEach(f=>{const el=$("f_"+f.key);if(el)S.fields[f.key]=el.value.trim();});
+const y=window.scrollY;
+try{const d=await post("/api/build",{type_id:S.type_id,fields:S.fields,variants:S.variants});
+S={...S,...d};render();window.scrollTo(0,y);}
+catch(e){$("msg").textContent=e.message;}}
+function setVar(id,v){S.variants[id]=v;rebuild();}
+const label=o=>o==="a"?"Favours "+S.side_a:o==="b"?"Favours "+S.side_b:"Balanced";
+function rich(text){
+const vals=S.field_defs.filter(f=>f.type!=="date"&&f.type!=="number").map(f=>String(S.fields[f.key]??"").trim()).filter(v=>v.length>2).map(v=>reEsc(esc(v))).sort((a,b)=>b.length-a.length);
+const months="(?:January|February|March|April|May|June|July|August|September|October|November|December)";
+const parts=["\\[[a-z0-9_ ]+\\?\\]","Rs\\. [\\d,]+(?:\\.\\d+)?(?:\\/-)?","\\d{1,2} "+months+" \\d{4}",...vals];
+return esc(text).replace(new RegExp(parts.join("|"),"g"),m=>{
+if(m.startsWith("[")&&m.endsWith("?]")){
+const k=m.slice(1,-2).replace(/ /g,"_").replace(/_words$/,"");
+return `<button type="button" class="blank" data-k="${k}" title="Fill in this detail">${m}</button>`;}
+return `<span class="v">${m}</span>`;});}
+function jump(k){
+const el=$("f_"+k);if(!el)return;
+el.scrollIntoView({block:"center",behavior:"smooth"});
+el.focus({preventScroll:true});
+el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1400);}
+document.addEventListener("click",e=>{
+const s=e.target.closest("[data-s]");if(s){$("desc").value=SAMPLES[s.dataset.s];$("desc").focus();return;}
+const k=e.target.closest("[data-k]");if(k){jump(k.dataset.k);return;}
+const c=e.target.closest("[data-c]");if(c){const t=$("c"+c.dataset.c);if(t)t.scrollIntoView({block:"center",behavior:"smooth"});}});
+function item(r){
+let attr="",m;
+if(r.message.startsWith("Missing detail: ")){const f=S.field_defs.find(f=>f.label===r.message.slice(16));if(f)attr=` data-k="${f.key}"`;}
+else if((m=r.message.match(/^Clause (\d+)/)))attr=` data-c="${m[1]}"`;
+else if(r.message.startsWith("The opening section"))attr=` data-c="0"`;
+const txt=esc(r.message);
+const ico=r.level==="ok"?"✓":r.level==="error"?"×":"!";
+return `<li class="${r.level}"><span class="ico">${ico}</span>${attr?`<button type="button" class="ritem"${attr}>${txt}</button>`:`<span>${txt}</span>`}</li>`;}
 function render(){
-  const s = state;
-  let h = `<div class="card noprint"><h2>${esc(s.type_name)}</h2><p>Check and complete the details:</p>`;
-  s.field_defs.forEach(f => {
-    h += `<label for="f_${esc(f.key)}">${esc(f.label)}${f.required ? " *" : ""}</label><input id="f_${esc(f.key)}" value="${esc(s.fields[f.key] || "")}">`;
-  });
-  h += `<button onclick="rebuild()">Update contract</button></div>`;
-  h += `<div class="card noprint"><h3>Reliability report</h3>` +
-       s.report.map(r => {
-         const missing = r.level === "error" ? s.field_defs.find(f => r.message === "Missing detail: " + f.label) : null;
-         const message = missing
-           ? `<button type="button" class="report-link" data-field="${esc(missing.key)}">${esc(r.message)}</button>`
-           : esc(r.message);
-         return `<div class="${r.level}">${r.level==="ok"?"✔":r.level==="error"?"✖":"⚠"} ${message}</div>`;
-       }).join("") + `</div>`;
-  h += `<div class="card contract"><img class="print-logo" src="/logo.png" alt="ClientClause logo"><h2>${esc(s.type_name.toUpperCase())}</h2>`;
-  s.preamble.forEach(p => { h += `<div class="pre">${contractText(p)}</div>`; });
-  s.clauses.forEach(c => {
-    const opts = c.options.length > 1
-      ? `<select class="noprint" onchange="setVar('${c.id}', this.value)">` +
-        c.options.map(o => `<option value="${o}" ${o===c.variant?"selected":""}>${esc(label(o))}</option>`).join("") + `</select>`
-      : "";
-    h += `<div class="clause"><b>${c.number}. ${esc(c.title)}</b>${opts}<div class="ctext">${contractText(c.text)}</div></div>`;
-  });
-  const g = s.signature;
-  h += `<div class="sigblock"><p>${esc(g.closing)}</p><div class="sigrow">` +
-    g.parties.map(p => `<div class="sigcol"><b>Signed by the ${esc(p.role)}</b><div class="line"></div><div>Name: ${contractText(p.name)}</div><div>Date: ${contractText(g.date)}</div><div>Place: ${contractText(g.place)}</div></div>`).join("") +
-    `</div>`;
-  if(g.witnesses){
-    h += `<p><b>Witnesses:</b></p><div class="sigrow">` +
-      Array.from({length: g.witnesses}, (_, i) => `<div class="sigcol"><b>Witness ${i+1}</b><div class="line"></div><div>Name: ____________________</div><div>Address: __________________</div></div>`).join("") +
-      `</div>`;
-  }
-  h += `</div><p class="noprint"><button onclick="window.print()">Print / Save as PDF</button></p></div>`;
-  $("out").innerHTML = h;
-  $("out").querySelectorAll("[data-field]").forEach(el => {
-    el.addEventListener("click", () => focusField(el.dataset.field));
-    if(el.matches("mark")) el.addEventListener("keydown", event => {
-      if(event.key === "Enter" || event.key === " "){
-        event.preventDefault();
-        focusField(el.dataset.field);
-      }
-    });
-  });
-}
+const s=S,errs=s.report.filter(r=>r.level==="error"),warns=s.report.filter(r=>r.level==="warn");
+const head=errs.length?[`${errs.length} to fix before you sign`,"bad"]:warns.length?[`Complete. ${warns.length} to check`,"warn"]:["Complete and consistent",""];
+let h=`<aside class="side noprint"><div class="panel"><h3>${esc(s.type_name)}</h3><p class="sub">Edit anything, then update the contract.</p>`;
+s.field_defs.forEach(f=>{
+const v=s.fields[f.key]??"",need=f.required&&!String(v).trim();
+h+=`<label for="f_${f.key}">${esc(f.label)}${f.required?" *":""}</label><input id="f_${f.key}" ${f.type==="date"?'type="date"':'type="text"'} class="${need?"need":""}" value="${esc(v)}">`;});
+h+=`<div class="row"><button class="btn" onclick="rebuild()">Update contract</button><button class="btn ghost" onclick="window.print()">Print / PDF</button></div></div>`;
+h+=`<div class="panel"><div class="status"><span class="dot ${head[1]}"></span>${head[0]}</div><ul class="items">${[...errs,...warns,...s.report.filter(r=>r.level==="ok")].map(item).join("")}</ul></div></aside>`;
+h+=`<article class="paper" id="paper"><h2>${esc(s.type_name.toUpperCase())}</h2>`;
+s.preamble.forEach((p,i)=>{h+=`<p class="pre"${i===0?' id="c0"':""}>${rich(p)}</p>`;});
+s.clauses.forEach(c=>{
+const sel=c.options.length>1?`<select class="noprint" aria-label="Wording for ${esc(c.title)}" onchange="setVar('${c.id}',this.value)">${c.options.map(o=>`<option value="${o}" ${o===c.variant?"selected":""}>${esc(label(o))}</option>`).join("")}</select>`:"";
+h+=`<div class="clause" id="c${c.number}"><div class="ctitle"><b>${c.number}. ${esc(c.title)}</b>${sel}</div><div class="ctext">${rich(c.text)}</div></div>`;});
+const g=s.signature;
+h+=`<div class="sig"><p>${esc(g.closing)}</p><div class="sigrow">${g.parties.map(p=>`<div class="sigcol"><b>Signed by the ${esc(p.role)}</b><div class="line"></div><div>Name: ${esc(p.name)}</div><div>Date: ${esc(g.date)}</div><div>Place: ${esc(g.place)}</div></div>`).join("")}</div>`;
+if(g.witnesses)h+=`<p><b>Witnesses</b></p><div class="sigrow">${Array.from({length:g.witnesses},(_,i)=>`<div class="sigcol"><b>Witness ${i+1}</b><div class="line"></div><div>Name:</div><div>Address:</div></div>`).join("")}</div>`;
+h+=`</div><p class="fine noprint">A drafting aid, not legal advice. Stamp duty, registration and leave rules vary by state, so have a lawyer review this before signing.</p></article>`;
+$("work").innerHTML=h;$("work").hidden=false;}
 </script>
 </body>
 </html>

@@ -7,7 +7,7 @@ Describe an agreement in plain language and ClientClause drafts it, checks that 
 
 Built for the HackIndia **AI for Lawyers Hackathon** (Problem Statement 3: Smart Contract Creation, tracks: AI Contract Drafting and Access to Justice).
 
-> Live demo: _add your link here_
+> Live demo: _add the public Koyeb link after deployment_
 
 ## The problem
 
@@ -104,6 +104,17 @@ uvicorn main:app --reload
 Open http://127.0.0.1:8000 and try this (made-up details):
 
 > I'm Riya Sharma, a freelance web developer. I'm building an e-commerce website for Acme Traders for 50,000 rupees. Work starts 1 December 2026 and is due 31 January 2027. Courts in Bengaluru.
+
+## Deploy a public demo on Koyeb
+
+The root `Dockerfile` runs the frontend and FastAPI backend together, so both use the same public URL. To deploy:
+
+1. Create a Koyeb Web Service from the GitHub repository's `main` branch, using the root `Dockerfile`.
+2. Select the Free instance and a supported free region (Frankfurt or Washington, D.C.). Expose port `8000` over HTTP.
+3. Add the AI provider environment variables in the Koyeb service settings. Keep API keys in Koyeb Secrets; never commit them to the repository. At least one configured provider and matching model is required. The app supports Groq (`GROQ_API_KEY`, `GROQ_MODEL`), NVIDIA (`NVIDIA_API_KEY`, `NVIDIA_MODEL`), Gemini (`GEMINI_API_KEY`), and OpenRouter (`OPENROUTER_API_KEY`, `OPENROUTER_MODEL`). Set `LLM_PRIORITY` to the provider order you want to use.
+4. After deployment succeeds, copy the generated public HTTPS URL into the Live demo line above.
+
+The free Koyeb instance is intended for previews and hobby projects. It has limited CPU and memory, and scales to zero after an hour without traffic, so the first request after idle may take longer.
 
 ## Add a new agreement type
 

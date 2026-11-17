@@ -97,6 +97,8 @@ NVIDIA_MODEL=a_chat_model_id_from_build.nvidia.com
 
 Only the providers you list in `LLM_PRIORITY` and have keys for are used. Model names change often, so copy current ids from each provider's console.
 
+API request bodies are capped at 13 MB by default (`MAX_API_BODY_BYTES`). The rate limiter uses the direct connection address and ignores `X-Forwarded-For` unless the request comes from a trusted proxy. If the app runs behind a reverse proxy, set `TRUSTED_PROXY_CIDRS` to the proxy's exact IP addresses or CIDR ranges, separated by commas. Do not use a range that includes untrusted clients. Without this setting, clients routed through the same proxy may share one rate-limit bucket.
+
 ```bash
 cd backend
 uvicorn main:app --reload

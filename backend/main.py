@@ -1,13 +1,16 @@
 import json
+import math
 import re
 from datetime import date
+from ipaddress import ip_address, ip_network
 from pathlib import Path
 
 import os
+import threading
 import time
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -22,22 +25,108 @@ for f in (ROOT / "contract_types").glob("*.json"):
 app = FastAPI()
 
 ORIGINS = [o.strip() for o in os.getenv("FRONTEND_ORIGINS", "").split(",") if o.strip()]
-app.add_middleware(CORSMiddleware, allow_origins=ORIGINS or ["*"],
-                   allow_methods=["*"], allow_headers=["*"])
 
 LIMIT = int(os.getenv("DRAFTS_PER_HOUR", "30"))
+RATE_WINDOW_SECONDS = 3600
+MAX_RATE_LIMIT_CLIENTS = 10000
+MAX_API_BODY_BYTES = int(os.getenv("MAX_API_BODY_BYTES", "13000000"))
+TRUSTED_PROXY_CIDRS = tuple(
+    ip_network(value.strip(), strict=False)
+    for value in os.getenv("TRUSTED_PROXY_CIDRS", "").split(",")
+    if value.strip()
+)
 _hits = {}
+_hits_lock = threading.Lock()
+
+
+def _is_trusted_proxy(address):
+    return any(address in network for network in TRUSTED_PROXY_CIDRS)
+
+
+def _client_ip(request):
+    peer = request.client.host if request.client else "unknown"
+    try:
+        peer_address = ip_address(peer)
+    except ValueError:
+        return peer[:64]
+    if not _is_trusted_proxy(peer_address):
+        return str(peer_address)
+
+    forwarded = request.headers.get("x-forwarded-for", "")
+    chain = []
+    for value in forwarded.split(","):
+        try:
+            chain.append(ip_address(value.strip()))
+        except ValueError:
+            continue
+    # Walk from the trusted connection toward the original client, ignoring
+    # proxy hops. The first untrusted address is the client identity.
+    for address in reversed(chain):
+        if not _is_trusted_proxy(address):
+            return str(address)
+    return str(peer_address)
 
 
 def check_rate(request):
-    fwd = request.headers.get("x-forwarded-for", "")
-    ip = fwd.split(",")[0].strip() or (request.client.host if request.client else "unknown")
-    now = time.time()
-    recent = [t for t in _hits.get(ip, []) if now - t < 3600]
-    if len(recent) >= LIMIT:
-        raise HTTPException(429, "Too many drafts from this connection. Please try again in a while.")
-    recent.append(now)
-    _hits[ip] = recent
+    ip = _client_ip(request)
+    now = time.monotonic()
+    with _hits_lock:
+        recent = [t for t in _hits.get(ip, []) if now - t < RATE_WINDOW_SECONDS]
+        if len(recent) >= LIMIT:
+            raise HTTPException(429, "Too many requests from this connection. Please try again in a while.")
+        if ip not in _hits and len(_hits) >= MAX_RATE_LIMIT_CLIENTS:
+            expired = [key for key, hits in _hits.items()
+                       if not any(now - timestamp < RATE_WINDOW_SECONDS for timestamp in hits)]
+            for key in expired:
+                _hits.pop(key, None)
+            if len(_hits) >= MAX_RATE_LIMIT_CLIENTS:
+                raise HTTPException(503, "Request limiter is at capacity. Please try again shortly.")
+        recent.append(now)
+        _hits[ip] = recent
+
+
+@app.middleware("http")
+async def limit_api_request_body(request: Request, call_next):
+    if not request.url.path.startswith("/api/"):
+        return await call_next(request)
+    content_length = request.headers.get("content-length")
+    if content_length:
+        try:
+            if int(content_length) > MAX_API_BODY_BYTES:
+                return JSONResponse(status_code=413, content={"detail": "Request body is too large."})
+        except ValueError:
+            return JSONResponse(status_code=400, content={"detail": "Invalid content length."})
+
+    received = 0
+    too_large = False
+    original_receive = request.receive
+
+    async def receive_limited():
+        nonlocal received, too_large
+        message = await original_receive()
+        if message["type"] == "http.request":
+            received += len(message.get("body", b""))
+            if received > MAX_API_BODY_BYTES:
+                too_large = True
+                return {"type": "http.disconnect"}
+        return message
+
+    bounded_request = Request(request.scope, receive=receive_limited)
+    try:
+        response = await call_next(bounded_request)
+    except Exception:
+        if too_large:
+            return JSONResponse(status_code=413, content={"detail": "Request body is too large."})
+        raise
+    if too_large:
+        return JSONResponse(status_code=413, content={"detail": "Request body is too large."})
+    return response
+
+
+# Keep CORS outside the size limiter so rejected API requests still include
+# the configured cross-origin headers.
+app.add_middleware(CORSMiddleware, allow_origins=ORIGINS or ["*"],
+                   allow_methods=["*"], allow_headers=["*"])
 BLANK = re.compile(r"\[[a-z0-9_ ]+\?\]")
 
 
@@ -424,7 +513,10 @@ def shown_values(t, fields):
         elif kind == "number":
             try:
                 num = float(v)
-            except ValueError:
+            except (TypeError, ValueError, OverflowError):
+                out[k] = str(v)
+                continue
+            if not math.isfinite(num):
                 out[k] = str(v)
                 continue
             if f.get("money"):
@@ -470,9 +562,20 @@ def build(t, fields, shown, variants):
 # ---------- Step 4: verify ----------
 def verify(t, fields, clauses, preamble, defaulted):
     report = []
+    invalid_numbers = set()
     for f in t["fields"]:
         if f.get("required") and fields.get(f["key"]) in (None, ""):
             report.append({"level": "error", "message": "Missing detail: " + f["label"]})
+        if f.get("type") == "number":
+            value = fields.get(f["key"])
+            if value not in (None, ""):
+                try:
+                    valid_number = math.isfinite(float(value))
+                except (TypeError, ValueError, OverflowError):
+                    valid_number = False
+                if not valid_number:
+                    invalid_numbers.add(f["key"])
+                    report.append({"level": "error", "message": f["label"] + " must be a finite number."})
     if any(BLANK.search(p) for p in preamble):
         report.append({"level": "warn",
                        "message": "The opening section (parties and background) still has blanks to fill, such as addresses."})
@@ -491,20 +594,20 @@ def verify(t, fields, clauses, preamble, defaulted):
                     report.append({"level": "error", "message": "Dates must be in YYYY-MM-DD format."})
         if r["type"] == "positive_number":
             v = fields.get(r["field"])
-            if v not in (None, ""):
+            if v not in (None, "") and r["field"] not in invalid_numbers:
                 try:
                     if float(v) <= 0:
                         report.append({"level": "error", "message": r["message"]})
-                except ValueError:
+                except (TypeError, ValueError, OverflowError):
                     report.append({"level": "error", "message": r["message"]})
         if r["type"] == "range":
             v = fields.get(r["field"])
-            if v not in (None, ""):
+            if v not in (None, "") and r["field"] not in invalid_numbers:
                 try:
                     x = float(v)
                     if x < r["min"] or x > r["max"]:
                         report.append({"level": "error", "message": r["message"]})
-                except ValueError:
+                except (TypeError, ValueError, OverflowError):
                     report.append({"level": "error", "message": r["message"]})
     if defaulted:
         report.append({"level": "warn",

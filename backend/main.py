@@ -7,6 +7,7 @@ import os
 import time
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -383,6 +384,29 @@ async def transcribe(request: Request, audio: UploadFile = File(...), mode: str 
     if not text:
         raise HTTPException(400, "I couldn't hear any speech. Try again closer to the microphone.")
     return {"text": text}
+
+
+class PdfIn(BaseModel):
+    type_id: str
+    fields: dict = {}
+    variants: dict = {}
+
+
+@app.post("/api/pdf")
+def make_pdf(body: PdfIn, request: Request):
+    check_rate(request)
+    t = TYPES.get(body.type_id)
+    if not t:
+        raise HTTPException(400, "Unknown contract type")
+    data = package(t, body.fields, body.variants)
+    try:
+        from pdfgen import build_pdf
+        pdf = build_pdf(data, ROOT / "frontend" / "logo.png")
+    except Exception as e:
+        raise HTTPException(500, "Could not build the PDF: " + str(e)[:120])
+    name = re.sub(r"[^a-z0-9]+", "-", t["name"].lower()).strip("-") + ".pdf"
+    return Response(content=pdf, media_type="application/pdf",
+                    headers={"Content-Disposition": 'attachment; filename="' + name + '"'})
 
 
 @app.get("/api/health")

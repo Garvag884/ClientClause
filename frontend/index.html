@@ -3,228 +3,705 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClientClause</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<title>ClientClause — Legal Contracts, Simplified</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap">
 <style>
-:root{--ink:#1c2b45;--muted:#5d6b82;--desk:#e8ecf2;--line:#d5dbe5;--mark:#ffe08a;--val:#e4ecff;--ok:#1f7a52;--bad:#b3261e;--warn:#8a5a00;
---ui:"Instrument Sans",system-ui,-apple-system,sans-serif;--serif:"Source Serif 4",Georgia,"Times New Roman",serif}
-*{box-sizing:border-box}
-body{margin:0;background:var(--desk);color:var(--ink);font:16px/1.5 var(--ui)}
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
-header{padding:18px 0}
-.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px}
-.brand img{height:28px;width:auto}
-.hero{max-width:680px;padding:36px 0 24px}
-h1{font:600 clamp(32px,5vw,48px)/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.01em}
-.lede{color:var(--muted);margin:0 0 22px;max-width:52ch}
-.ask{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px}
-.ask:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,43,69,.12)}
-.ask textarea{width:100%;height:112px;border:0;resize:vertical;padding:12px;font:inherit;color:var(--ink);background:transparent}
-.ask textarea:focus{outline:none}
-.bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px;flex-wrap:wrap}
-.hint{color:var(--muted);font-size:14px}
-.btn{font:600 15px var(--ui);padding:10px 18px;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
-.btn:hover{background:#2a3d5e}
-.btn.ghost{background:#fff;color:var(--ink)}
-.btn.ghost:hover{background:#f3f5f9}
-.btn:disabled{opacity:.6;cursor:wait}
-:focus-visible{outline:3px solid #6f8ee8;outline-offset:2px}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.chip{font:14px var(--ui);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
-.chip:hover{border-color:var(--ink)}
-.msg{color:var(--bad);margin-top:10px;min-height:1px}
-body.has-draft .hero{padding-top:4px}
-body.has-draft h1,body.has-draft .lede,body.has-draft .chips{display:none}
-body.has-draft .ask textarea{height:64px}
-.work{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;padding-bottom:60px}
-.side{position:sticky;top:16px;display:grid;gap:16px;max-height:calc(100vh - 32px);overflow:auto;padding-right:2px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
-.panel h3{margin:0 0 4px;font-size:17px}
-.sub{color:var(--muted);font-size:14px;margin:0 0 10px}
-label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}
-input{width:100%;font:15px var(--ui);padding:8px 10px;border:1px solid var(--line);border-radius:8px;color:var(--ink);background:#fff}
-input.need{border-left:4px solid #e0a800}
+/* ── Design tokens ── */
+:root{
+  --brand:#1b6e3e;
+  --brand-dark:#145430;
+  --brand-light:#e8f5ee;
+  --brand-hover:#1a7d47;
+  --accent:#f5a623;
+  --ink:#111827;
+  --muted:#6b7280;
+  --subtle:#9ca3af;
+  --surface:#ffffff;
+  --surface-alt:#f9fafb;
+  --border:#e5e7eb;
+  --border-strong:#d1d5db;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+  --radius-sm:8px;
+  --radius-md:12px;
+  --radius-lg:16px;
+  --ui:"Inter",system-ui,-apple-system,sans-serif;
+  --serif:"Merriweather",Georgia,serif;
+  /* legacy compat */
+  --ok:#1f7a52;--bad:#b3261e;--warn:#8a5a00;
+  --val:#e8f5ee;--mark:#fffbeb;--line:var(--border);
+}
+*{box-sizing:border-box;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--surface-alt);color:var(--ink);font:16px/1.6 var(--ui)}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── Layout ── */
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* ── Topbar ── */
+.topbar{background:#f0f7f3;border-bottom:1px solid #d4e9db;padding:9px 0;font-size:13px;color:#2d6049;text-align:center;font-weight:500;letter-spacing:.01em}
+.topbar strong{color:var(--brand-dark)}
+
+/* ── Header ── */
+header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:0 24px;max-width:1200px;margin:0 auto;height:64px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;color:var(--ink);letter-spacing:-.02em;text-decoration:none;flex-shrink:0}
+.brand-icon{width:34px;height:34px;background:var(--brand);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:20px;height:20px;fill:#fff}
+.brand span{color:var(--brand)}
+nav.primary{display:flex;align-items:center;gap:4px}
+nav.primary a{font:500 14px var(--ui);color:var(--muted);padding:7px 12px;border-radius:var(--radius-sm);transition:background .15s,color .15s;white-space:nowrap}
+nav.primary a:hover{background:var(--surface-alt);color:var(--ink);text-decoration:none}
+.header-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.btn-ghost-sm{font:500 14px var(--ui);color:var(--ink);padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:var(--surface);cursor:pointer;transition:all .15s}
+.btn-ghost-sm:hover{border-color:var(--ink);background:var(--surface-alt)}
+.btn-primary-sm{font:600 14px var(--ui);color:#fff;padding:8px 18px;border-radius:var(--radius-sm);border:1px solid var(--brand);background:var(--brand);cursor:pointer;transition:all .15s}
+.btn-primary-sm:hover{background:var(--brand-dark);border-color:var(--brand-dark)}
+
+/* ── Hero ── */
+.hero-wrap{background:linear-gradient(135deg,#f0faf4 0%,#e8f5ee 40%,#f0f7ff 100%);border-bottom:1px solid var(--border);padding:72px 24px 80px}
+.hero-inner{max-width:780px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--brand-light);color:var(--brand-dark);font:600 12px var(--ui);padding:5px 12px;border-radius:999px;margin-bottom:20px;border:1px solid #c3dfc9;letter-spacing:.04em;text-transform:uppercase}
+.hero-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--brand);flex-shrink:0}
+h1.hero-title{font:700 clamp(36px,5.5vw,56px)/1.1 var(--ui);color:var(--ink);margin:0 0 16px;letter-spacing:-.03em}
+h1.hero-title em{color:var(--brand);font-style:normal}
+.hero-sub{color:var(--muted);font-size:clamp(16px,2vw,19px);margin:0 0 36px;max-width:60ch;margin-left:auto;margin-right:auto;line-height:1.6}
+.hero-search-box{background:var(--surface);border:1.5px solid var(--border-strong);border-radius:var(--radius-lg);padding:6px;box-shadow:var(--shadow-lg);max-width:700px;margin:0 auto 24px;transition:border-color .2s,box-shadow .2s}
+.hero-search-box:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px rgba(27,110,62,.15),var(--shadow-lg)}
+.hero-search-box textarea{width:100%;border:0;resize:none;padding:14px 16px;font:16px/1.6 var(--ui);color:var(--ink);background:transparent;height:120px}
+.hero-search-box textarea:focus{outline:none}
+.hero-search-box textarea::placeholder{color:var(--subtle)}
+.hero-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:0 10px 8px;flex-wrap:wrap}
+.hero-hint{color:var(--subtle);font-size:12.5px;max-width:40ch;line-height:1.5}
+.btn-primary{font:600 15px var(--ui);color:#fff;padding:12px 24px;border-radius:var(--radius-sm);border:0;background:var(--brand);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn-primary:hover{background:var(--brand-dark)}
+.btn-primary:disabled{opacity:.6;cursor:wait}
+.btn-primary svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.chip{font:500 13px var(--ui);padding:6px 14px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);color:var(--ink);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-light)}
+.msg-error{color:var(--bad);margin-top:10px;font-size:14px;min-height:1px;text-align:center}
+
+/* ── Choice cards (landing) ── */
+.choice-wrap{max-width:900px;margin:0 auto;padding:72px 24px 80px;text-align:center}
+.choice-label{font:600 12px var(--ui);text-transform:uppercase;letter-spacing:.08em;color:var(--brand);margin-bottom:12px}
+.choice-wrap h1{font:700 clamp(32px,4.5vw,48px)/1.1 var(--ui);color:var(--ink);margin:0 0 12px;letter-spacing:-.02em}
+.choice-wrap p{color:var(--muted);font-size:17px;margin:0 0 40px}
+.choice-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:720px;margin:0 auto}
+.choice-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:28px 24px;text-align:left;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:12px}
+.choice-card:hover{border-color:var(--brand);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.choice-card-icon{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--brand-light);display:flex;align-items:center;justify-content:center}
+.choice-card-icon svg{width:22px;height:22px;stroke:var(--brand);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.choice-card b{display:block;font:600 18px var(--ui);color:var(--ink);margin:0}
+.choice-card span{color:var(--muted);font-size:14px;line-height:1.5}
+.choice-card-cta{margin-top:4px;font:600 14px var(--ui);color:var(--brand);display:flex;align-items:center;gap:4px}
+.choice-card-cta::after{content:"→"}
+
+/* ── Trust strip ── */
+.trust{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px 0}
+.trust-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:500}
+.trust-item svg{width:18px;height:18px;stroke:var(--brand);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* ── How it works ── */
+.how{padding:80px 0;background:var(--surface)}
+.how-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+.section-label{font:600 12px var(--ui);text-transform:uppercase;letter-spacing:.08em;color:var(--brand);margin-bottom:10px;text-align:center}
+.section-title{font:700 clamp(28px,3.5vw,38px)/1.2 var(--ui);color:var(--ink);margin:0 0 12px;text-align:center;letter-spacing:-.02em}
+.section-sub{color:var(--muted);font-size:17px;text-align:center;margin:0 auto 56px;max-width:52ch}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.step{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--brand);color:#fff;font:700 15px var(--ui);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step h3{font:600 18px var(--ui);color:var(--ink);margin:0}
+.step p{color:var(--muted);font-size:15px;line-height:1.6;margin:0}
+
+/* ── Documents grid ── */
+.docs-section{padding:80px 0;background:var(--surface-alt)}
+.docs-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+.doc-cats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.doc-cat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 18px;transition:all .2s;cursor:pointer}
+.doc-cat:hover{border-color:var(--brand);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.doc-cat-icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--brand-light);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.doc-cat-icon svg{width:20px;height:20px;stroke:var(--brand);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.doc-cat h4{font:600 15px var(--ui);color:var(--ink);margin:0 0 4px}
+.doc-cat p{color:var(--muted);font-size:13px;margin:0;line-height:1.5}
+
+/* ── CTA banner ── */
+.cta-banner{background:linear-gradient(135deg,var(--brand) 0%,#0f4f2a 100%);padding:72px 24px;text-align:center}
+.cta-banner h2{font:700 clamp(28px,4vw,40px)/1.2 var(--ui);color:#fff;margin:0 0 12px;letter-spacing:-.02em}
+.cta-banner p{color:rgba(255,255,255,.8);font-size:17px;margin:0 0 32px}
+.btn-white{font:600 15px var(--ui);color:var(--brand-dark);padding:14px 28px;border-radius:var(--radius-sm);border:0;background:#fff;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:8px}
+.btn-white:hover{background:#f0faf4;transform:translateY(-1px);box-shadow:var(--shadow-md)}
+
+/* ── Footer ── */
+footer{background:var(--ink);color:rgba(255,255,255,.65);padding:56px 24px 32px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-brand{font:700 20px var(--ui);color:#fff;letter-spacing:-.02em;margin-bottom:12px}
+.footer-brand span{color:#4ade80}
+.footer-desc{font-size:14px;line-height:1.7;max-width:28ch}
+.footer-col h5{font:600 13px var(--ui);text-transform:uppercase;letter-spacing:.06em;color:#fff;margin:0 0 14px}
+.footer-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.footer-col a{font-size:14px;color:rgba(255,255,255,.65);transition:color .15s}
+.footer-col a:hover{color:#fff;text-decoration:none}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.12);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-size:13px;margin:0}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.5)}
+.footer-links a:hover{color:#fff;text-decoration:none}
+
+/* ── App work area ── */
+.work{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start;padding:32px 24px 80px;max-width:1200px;margin:0 auto}
+.side{position:sticky;top:80px;display:grid;gap:16px;max-height:calc(100vh - 96px);overflow-y:auto;padding-right:2px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;box-shadow:var(--shadow-sm)}
+.panel h3{margin:0 0 2px;font:600 16px var(--ui);color:var(--ink)}
+.sub{color:var(--muted);font-size:13.5px;margin:0 0 14px}
+label{display:block;font:500 12.5px var(--ui);color:var(--muted);margin:14px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+input{width:100%;font:15px var(--ui);padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--ink);background:var(--surface);transition:border-color .15s}
+input:focus{outline:none;border-color:var(--brand)}
+input.need{border-left:4px solid var(--accent)}
 input.flash{animation:flash 1.4s}
-@keyframes flash{0%,60%{background:var(--mark)}100%{background:#fff}}
-.row{display:flex;gap:8px;margin-top:16px}
-.row .btn{flex:1}
-.status{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:8px}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--ok)}
+@keyframes flash{0%,60%{background:#fffbeb}100%{background:var(--surface)}}
+.row{display:flex;gap:8px;margin-top:18px}
+.row .btn{flex:1;font:600 14px var(--ui);padding:10px 14px;border-radius:var(--radius-sm);border:1px solid;cursor:pointer;transition:all .15s}
+.row .btn:not(.ghost){background:var(--brand);color:#fff;border-color:var(--brand)}
+.row .btn:not(.ghost):hover{background:var(--brand-dark)}
+.row .btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--border-strong)}
+.row .btn.ghost:hover{background:var(--surface-alt);border-color:var(--ink)}
+.btn{font:600 15px var(--ui);padding:11px 20px;border-radius:var(--radius-sm);border:1px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer;transition:all .15s}
+.btn:hover{background:var(--brand-dark)}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--border-strong)}
+.btn.ghost:hover{background:var(--surface-alt);border-color:var(--ink)}
+:focus-visible{outline:3px solid rgba(27,110,62,.4);outline-offset:2px}
+
+/* Status */
+.status{display:flex;align-items:center;gap:8px;font:600 14px var(--ui);margin-bottom:10px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex-shrink:0}
 .dot.bad{background:var(--bad)}.dot.warn{background:#e0a800}
 .items{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.items li{font-size:14px;display:flex;gap:8px;line-height:1.4}
-.ico{flex:none;width:18px;height:18px;border-radius:50%;font:700 12px/18px var(--ui);text-align:center;color:#fff;background:var(--ok)}
+.items li{font-size:13.5px;display:flex;gap:8px;line-height:1.5}
+.ico{flex:none;width:18px;height:18px;border-radius:50%;font:700 11px/18px var(--ui);text-align:center;color:#fff;background:var(--ok)}
 .error .ico{background:var(--bad)}.warn .ico{background:#c08a00}
-.ritem{all:unset;cursor:pointer;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.ritem{all:unset;cursor:pointer;color:var(--ink);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
 .ritem:hover{text-decoration-color:var(--ink)}
-.paper{position:relative;background:#fff;border:1px solid var(--line);border-radius:4px;padding:56px clamp(20px,6vw,72px);font:17px/1.65 var(--serif);box-shadow:0 1px 2px rgba(28,43,69,.08),0 12px 32px rgba(28,43,69,.08)}
-.paper h2{text-align:center;font-size:22px;letter-spacing:.04em;margin:0 0 28px}
-.pre{margin:0 0 12px;max-width:70ch}
-.clause{margin:22px 0}
-.ctitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.ctitle b{font-weight:600}
-.ctitle select{font:13px var(--ui);padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--muted)}
-.ctext{white-space:pre-wrap;margin-top:4px;max-width:70ch}
-.v{background:var(--val);border-radius:3px;padding:0 2px}
-.blank{font:inherit;background:var(--mark);border:0;border-bottom:2px solid #c99a00;border-radius:3px;padding:0 3px;cursor:pointer;color:var(--ink)}
-.sig{margin-top:36px;break-inside:avoid}
-.sigrow{display:flex;gap:32px;margin:18px 0;flex-wrap:wrap}
-.sigcol{flex:1;min-width:210px;font-size:15px;line-height:1.9}
-.line{border-bottom:1px solid var(--ink);height:44px;margin-bottom:4px}
-.fine{color:var(--muted);font-size:13px;max-width:70ch;margin-top:18px}
-.review{max-width:900px;margin:4px auto 42px}.review textarea{width:100%;min-height:190px;padding:12px;border:1px solid var(--line);border-radius:8px;font:15px/1.5 var(--ui);resize:vertical}.reviewbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}.reviewbar input{max-width:280px}.reviewout{display:grid;gap:12px;margin-top:18px}.issue{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}.issue h4{margin:5px 0}.issue p{margin:8px 0}.badge{font:600 12px var(--ui);text-transform:uppercase;color:var(--warn)}.badge.high{color:var(--bad)}.badge.low{color:var(--ok)}.review small{color:var(--muted)}
-.choice{max-width:820px;margin:48px auto 32px}.choice h1{margin-bottom:8px}.choice p{color:var(--muted);margin:0 0 22px}.choicecards{display:grid;grid-template-columns:1fr 1fr;gap:14px}.choicecard{min-height:130px;text-align:left;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:20px;cursor:pointer}.choicecard:hover{border-color:var(--ink);box-shadow:0 5px 18px rgba(28,43,69,.08)}.choicecard b{display:block;font:600 20px var(--ui);margin-bottom:8px}.choicecard span{color:var(--muted)}
-.wm{display:none}
-@media(max-width:900px){.work{grid-template-columns:1fr}.side{position:static;max-height:none}}
-@media(max-width:600px){.choicecards{grid-template-columns:1fr}.choice{margin-top:28px}}
-@media(prefers-reduced-motion:reduce){input.flash{animation:none;background:var(--mark)}}
+
+/* Paper / document */
+.paper{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:56px clamp(28px,7vw,80px);font:16px/1.75 var(--serif);box-shadow:0 2px 4px rgba(0,0,0,.06),0 16px 40px rgba(0,0,0,.1)}
+.paper h2{text-align:center;font:700 20px/1.3 var(--serif);letter-spacing:.06em;text-transform:uppercase;margin:0 0 10px;padding-bottom:16px;border-bottom:1px solid #9aa3b1;color:var(--ink)}
+.docmeta{text-align:center;color:var(--muted);font:12px/1.5 var(--ui);letter-spacing:.08em;text-transform:uppercase;margin:0 0 32px}
+.pre{margin:0 0 14px;max-width:72ch;text-align:justify;text-indent:1.6em}
+.clause{margin:22px 0;break-inside:avoid}
+.ctitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.ctitle b{font-weight:700;text-transform:uppercase;font-size:.92em;letter-spacing:.03em;color:var(--ink)}
+.ctitle select{font:13px var(--ui);padding:3px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--muted)}
+.ctext{white-space:pre-wrap;margin-top:4px;max-width:72ch;text-align:justify}
+.v{background:#e8f5ee;border-radius:4px;padding:1px 4px;color:var(--brand-dark)}
+.blank{font:inherit;background:#fffbeb;border:0;border-bottom:2px solid #d97706;border-radius:3px;padding:0 3px;cursor:pointer;color:var(--ink)}
+.sig{margin-top:44px;break-inside:avoid;border-top:1px solid #9aa3b1;padding-top:18px}
+.sigrow{display:flex;gap:36px;margin:20px 0;flex-wrap:wrap}
+.sigcol{flex:1;min-width:220px;font-size:15px;line-height:2}
+.line{border-bottom:1px solid var(--ink);height:48px;margin-bottom:4px}
+.fine{color:var(--muted);font-size:12.5px;max-width:72ch;margin-top:20px;font-family:var(--ui);font-style:italic}
+
+/* Review section */
+.review{max-width:900px;margin:4px auto 42px}
+.review textarea{width:100%;min-height:200px;padding:14px;border:1.5px solid var(--border);border-radius:var(--radius-md);font:15px/1.5 var(--ui);resize:vertical;transition:border-color .15s}
+.review textarea:focus{outline:none;border-color:var(--brand)}
+.reviewbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.reviewbar input{max-width:280px}
+.reviewout{display:grid;gap:14px;margin-top:20px}
+.issue{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:18px}
+.issue h4{margin:6px 0;font:600 15px var(--ui);color:var(--ink)}
+.issue p{margin:8px 0;font-size:14px;color:var(--ink)}
+.badge{font:600 11px var(--ui);text-transform:uppercase;letter-spacing:.05em;color:var(--warn)}
+.badge.high{color:var(--bad)}.badge.low{color:var(--ok)}
+.review small{color:var(--muted);font-size:13px}
+
+/* Page header for sub-sections */
+.page-header{background:var(--surface);border-bottom:1px solid var(--border);padding:28px 24px}
+.page-header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.page-header h2{font:700 22px var(--ui);color:var(--ink);margin:0;letter-spacing:-.01em}
+
+/* Responsive */
+@media(max-width:960px){
+  .work{grid-template-columns:1fr}
+  .side{position:static;max-height:none}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr}
+  .doc-cats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+  .choice-cards{grid-template-columns:1fr}
+  .header-inner{padding:0 16px}
+  nav.primary{display:none}
+  .doc-cats{grid-template-columns:1fr}
+  .hero-wrap{padding:48px 16px 56px}
+  .footer-top{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){input.flash{animation:none;background:#fffbeb}}
 @media print{
-body{background:#fff}
-header,.hero,.side,.noprint{display:none!important}
-.work{display:block;padding:0}
-.paper{border:0;box-shadow:none;padding:0;background:transparent}
-.paper>*{position:relative;z-index:1}
-.v{background:none;padding:0}
-.blank{background:none;border-bottom:1px solid #000;padding:0}
-.wm{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:70%;max-width:560px;opacity:.07;z-index:0;pointer-events:none}
+  body{background:#fff}
+  header,.hero-wrap,.hero,.side,.noprint,.trust,.how,.docs-section,.cta-banner,footer,.topbar,.page-header{display:none!important}
+  .work{display:block;padding:0}
+  .paper{border:0;border-radius:0;box-shadow:none;padding:0;background:transparent;font-size:11.5pt;line-height:1.65;color:#111}
+  .paper h2{font-size:16pt;color:#111;margin-bottom:8px;padding-bottom:12px}
+  .docmeta{color:#444;margin-bottom:24px}
+  .clause{margin:15pt 0;break-inside:avoid}
+  .ctitle b{font-size:10.5pt}
+  .sig{margin-top:28pt}
+  .paper>*{position:relative;z-index:1}
+  .v{background:none;padding:0;color:inherit}
+  .blank{background:none;border-bottom:1px solid #000;padding:0}
+  .wm{display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:70%;max-width:560px;opacity:.06;z-index:0;pointer-events:none}
 }
 </style>
 <link rel="stylesheet" href="voice.css">
 </head>
 <body>
 <img class="wm" src="logo.png" alt="" onerror="this.remove()">
-<header><div class="wrap brand"><img src="logo.png" alt="" onerror="this.remove()">ClientClause</div></header>
-<main class="wrap">
-<section class="choice" id="choice" aria-labelledby="choicetitle">
-<h1 id="choicetitle">What would you like to do?</h1><p>Choose a starting point and we’ll take you to the right place.</p>
-<div class="choicecards"><button type="button" class="choicecard" onclick="chooseMode('new')"><b>Make a new contract</b><span>Describe the agreement and create a draft.</span></button><button type="button" class="choicecard" onclick="chooseMode('improve')"><b>Improve an existing draft</b><span>Review a contract for unclear, missing, or potentially risky terms.</span></button></div>
-</section>
-<section class="hero" hidden>
-<h1>Say what the deal is. Get the contract.</h1>
-<p class="lede">Describe an agreement in your own words. ClientClause drafts it, checks that nothing is missing, and lets you adjust each clause. Works for freelance agreements, NDAs, employment and rent agreements.</p>
-<div class="ask">
-<textarea id="desc" aria-label="Describe your agreement" placeholder="For example: I'm Riya Sharma, a web developer building a website for Acme Traders for 50,000 rupees, 1 December 2026 to 31 January 2027. Courts in Bengaluru."></textarea>
-<div class="bar"><span class="hint">Privacy: your description is sent to the configured AI provider for processing and is not saved by ClientClause. Avoid confidential or sensitive personal information; use made-up details while testing.</span><span class="voice"><button type="button" class="mic" id="mic" aria-pressed="false"><span class="dotm"></span><span id="micl">Speak</span></button><select id="vlang" aria-label="Voice language"><option value="auto">Auto-detect</option><option value="en">English</option><option value="hi">Hindi</option><option value="translate">Any language to English</option></select></span><button class="btn" id="go" onclick="draft()">Draft contract</button></div>
+
+<!-- Topbar -->
+<div class="topbar">
+  ⚡ AI-powered contract drafting — <strong>Free to try</strong>. No sign-up required.
 </div>
-<div class="chips" id="chips"></div>
-<div class="msg" id="msg" role="alert"></div>
-</section>
-<section class="review" id="reviewsection" aria-labelledby="reviewtitle" hidden>
-<div class="panel"><button type="button" class="btn ghost" onclick="backToChoice()">← Back</button><h3 id="reviewtitle" style="margin-top:14px">Improve an existing draft</h3><p class="sub">Paste contract text or upload a PDF, TXT, or image. Scanned pages and photos are read with OCR; check extracted wording against the original.</p>
-<textarea id="reviewtext" aria-label="Contract text to review" placeholder="Paste the agreement text here…"></textarea>
-<div class="reviewbar"><label style="margin:0">Or choose a file<input id="reviewfile" type="file" accept=".pdf,.txt,.png,.jpg,.jpeg,.webp,.tif,.tiff,application/pdf,text/plain,image/*"></label><button class="btn" id="reviewgo" onclick="reviewExisting()">Review contract</button><small>Text is sent to the configured AI provider for review and is not saved by ClientClause.</small></div><div class="msg" id="reviewmsg" role="alert"></div><div id="reviewout" class="reviewout" aria-live="polite"></div></div>
-</section>
-<section class="work" id="work" hidden></section>
+
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      Client<span>Clause</span>
+    </a>
+    <nav class="primary" aria-label="Primary navigation">
+      <a href="#">Documents</a>
+      <a href="#">AI Review</a>
+      <a href="#">How it works</a>
+      <a href="#">Pricing</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-ghost-sm">Log in</button>
+      <button class="btn-primary-sm">Get started free</button>
+    </div>
+  </div>
+</header>
+
+<!-- Main content -->
+<main>
+
+  <!-- ── Choice landing ── -->
+  <section id="choice" aria-labelledby="choicetitle">
+    <!-- Hero (shown when "new contract" is selected or as default) -->
+    <div class="hero-wrap" id="heromain" style="display:none">
+      <div class="hero-inner">
+        <div class="hero-badge">AI-Powered · Instant · Legally-structured</div>
+        <h1 class="hero-title">Say what the deal is.<br><em>Get the contract.</em></h1>
+        <p class="hero-sub">Describe an agreement in plain English. ClientClause drafts it, checks for missing terms, and lets you refine every clause. Perfect for freelance, NDAs, employment &amp; rent agreements.</p>
+        <div class="hero-search-box">
+          <textarea id="desc" aria-label="Describe your agreement" placeholder="For example: I'm Riya Sharma, a web developer building a website for Acme Traders for ₹50,000. Work runs from 1 December 2026 to 31 January 2027. Courts in Bengaluru."></textarea>
+          <div class="hero-bar">
+            <span class="hero-hint">🔒 Your text is sent to the AI provider for processing only and is not stored by ClientClause.</span>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span class="voice">
+                <button type="button" class="mic" id="mic" aria-pressed="false"><span class="dotm"></span><span id="micl">Speak</span></button>
+                <select id="vlang" aria-label="Voice language">
+                  <option value="auto">Auto-detect</option>
+                  <option value="en">English</option>
+                  <option value="hi">Hindi</option>
+                  <option value="translate">Any → English</option>
+                </select>
+              </span>
+              <button class="btn-primary" id="go" onclick="draft()">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Draft contract
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="hero-chips" id="chips"></div>
+        <div class="msg-error" id="msg" role="alert"></div>
+      </div>
+    </div>
+
+    <!-- Choice cards (default) -->
+    <div id="choicecards" class="choice-wrap">
+      <div class="choice-label">What would you like to do?</div>
+      <h1 id="choicetitle">Legal documents, simplified</h1>
+      <p>Choose a starting point and we'll take you to the right place.</p>
+      <div class="choice-cards">
+        <button type="button" class="choice-card" onclick="chooseMode('new')">
+          <div class="choice-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <b>Make a new contract</b>
+          <span>Describe the agreement in plain English and get a complete, structured draft instantly.</span>
+          <div class="choice-card-cta">Start drafting</div>
+        </button>
+        <button type="button" class="choice-card" onclick="chooseMode('improve')">
+          <div class="choice-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <b>Review an existing draft</b>
+          <span>Upload or paste a contract — we'll flag unclear terms, missing clauses, and potential risks.</span>
+          <div class="choice-card-cta">Review contract</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trust strip (shown on choice screen) -->
+    <div class="trust" id="truststrip">
+      <div class="trust-inner">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Legally-structured output
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Draft in under 60 seconds
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          No data stored
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Freelance, NDA, Employment, Rent &amp; more
+        </div>
+      </div>
+    </div>
+
+    <!-- How it works (shown on choice screen) -->
+    <div class="how" id="howitworks">
+      <div class="how-inner">
+        <div class="section-label">Simple process</div>
+        <h2 class="section-title">How ClientClause works</h2>
+        <p class="section-sub">From description to signed-ready contract in three steps.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3>Describe your deal</h3>
+            <p>Type a plain-English description of your agreement — parties, work, payment, duration. No legal jargon needed.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3>Get your draft</h3>
+            <p>Our AI generates a complete, structured contract with all standard clauses. Blanks are highlighted for you to fill in.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3>Review &amp; download</h3>
+            <p>Adjust clause wording, fill in details, then print or save as PDF. Have a lawyer review before signing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document categories (shown on choice screen) -->
+    <div class="docs-section" id="doccats">
+      <div class="docs-inner">
+        <div class="section-label">Document types</div>
+        <h2 class="section-title">What can you draft?</h2>
+        <p class="section-sub">ClientClause handles the most common agreement types used by freelancers and small businesses.</p>
+        <div class="doc-cats">
+          <div class="doc-cat" onclick="chooseMode('new')">
+            <div class="doc-cat-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <h4>Freelance Agreement</h4>
+            <p>Service contracts for web developers, designers, writers &amp; consultants.</p>
+          </div>
+          <div class="doc-cat" onclick="chooseMode('new')">
+            <div class="doc-cat-icon">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <h4>NDA</h4>
+            <p>Non-disclosure agreements for partnerships, hiring &amp; business discussions.</p>
+          </div>
+          <div class="doc-cat" onclick="chooseMode('new')">
+            <div class="doc-cat-icon">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h4>Employment Contract</h4>
+            <p>Full-time and part-time employment agreements with salary, benefits &amp; notice.</p>
+          </div>
+          <div class="doc-cat" onclick="chooseMode('new')">
+            <div class="doc-cat-icon">
+              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <h4>Rent Agreement</h4>
+            <p>Residential tenancy agreements with rent, deposit, duration &amp; maintenance terms.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Banner (shown on choice screen) -->
+    <div class="cta-banner" id="ctabanner">
+      <h2>Ready to draft your first contract?</h2>
+      <p>Free to try. No account needed. Get a complete draft in under a minute.</p>
+      <button class="btn-white" onclick="chooseMode('new')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Draft a contract now
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ── Review section ── -->
+  <section id="reviewsection" aria-labelledby="reviewtitle" hidden>
+    <div class="page-header">
+      <div class="page-header-inner">
+        <h2 id="reviewtitle">Review an existing draft</h2>
+        <button type="button" class="btn ghost" onclick="backToChoice()">← Back</button>
+      </div>
+    </div>
+    <div style="max-width:900px;margin:32px auto;padding:0 24px 80px">
+      <div class="panel">
+        <h3>Upload or paste your contract</h3>
+        <p class="sub">Paste contract text or upload a PDF, TXT, or image. Scanned pages are read with OCR — check extracted wording against the original.</p>
+        <textarea id="reviewtext" aria-label="Contract text to review" placeholder="Paste the agreement text here…"></textarea>
+        <div class="reviewbar">
+          <label style="margin:0;cursor:pointer;font:500 14px var(--ui);color:var(--muted);display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Or choose a file
+            <input id="reviewfile" type="file" accept=".pdf,.txt,.png,.jpg,.jpeg,.webp,.tif,.tiff,application/pdf,text/plain,image/*" style="position:absolute;opacity:0;width:0;height:0">
+          </label>
+          <button class="btn" id="reviewgo" onclick="reviewExisting()">Review contract</button>
+          <small>Text is sent to the configured AI provider for review and is not saved by ClientClause.</small>
+        </div>
+        <div class="msg-error" id="reviewmsg" role="alert"></div>
+        <div id="reviewout" class="reviewout" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Draft work area ── -->
+  <section id="work" hidden></section>
+
 </main>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Client<span>Clause</span></div>
+        <p class="footer-desc">AI-powered contract drafting for freelancers and small businesses. Fast, structured, and free to try.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Documents</h5>
+        <ul>
+          <li><a href="#">Freelance Agreement</a></li>
+          <li><a href="#">NDA</a></li>
+          <li><a href="#">Employment Contract</a></li>
+          <li><a href="#">Rent Agreement</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Tools</h5>
+        <ul>
+          <li><a href="#">AI Contract Review</a></li>
+          <li><a href="#">Contract Improver</a></li>
+          <li><a href="#">Voice Input</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 ClientClause. A drafting aid, not legal advice. Have a qualified lawyer review before signing.</p>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
 <script src="config.js"></script>
 <script>
 const $=id=>document.getElementById(id);
-function chooseMode(mode){$("choice").hidden=true;if(mode==="new"){$("reviewsection").hidden=true;document.querySelector(".hero").hidden=false;document.querySelector(".hero").scrollIntoView({behavior:"smooth",block:"start"});}else{document.querySelector(".hero").hidden=true;$("reviewsection").hidden=false;$("reviewsection").scrollIntoView({behavior:"smooth",block:"start"});}}
-function backToChoice(){$("reviewsection").hidden=true;document.querySelector(".hero").hidden=true;$("choice").hidden=false;$("choice").scrollIntoView({behavior:"smooth",block:"start"});}
+
+// ── Mode switching ──
+function chooseMode(mode){
+  // Hide choice UI elements
+  $("choicecards").style.display="none";
+  $("truststrip").style.display="none";
+  $("howitworks").style.display="none";
+  $("doccats").style.display="none";
+  $("ctabanner").style.display="none";
+
+  if(mode==="new"){
+    $("reviewsection").hidden=true;
+    $("heromain").style.display="";
+    $("heromain").scrollIntoView({behavior:"smooth",block:"start"});
+  } else {
+    $("heromain").style.display="none";
+    $("reviewsection").hidden=false;
+    $("reviewsection").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+}
+
+function backToChoice(){
+  $("reviewsection").hidden=true;
+  $("heromain").style.display="none";
+  $("work").hidden=true;
+  $("choicecards").style.display="";
+  $("truststrip").style.display="";
+  $("howitworks").style.display="";
+  $("doccats").style.display="";
+  $("ctabanner").style.display="";
+  $("choice").scrollIntoView({behavior:"smooth",block:"start"});
+  document.body.classList.remove("has-draft");
+}
+
 fetch((window.API_BASE||"")+"/api/health").catch(()=>{});
 let S=null;
 let reviewSourceText="",reviewIssues=[];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 const SAMPLES={
-"Freelance":"I'm Riya Sharma, a freelance web developer. I'm building an e-commerce website for Acme Traders for 50,000 rupees. Work starts 1 December 2026 and is due 31 January 2027. Courts in Bengaluru.",
-"Employment":"I'm Arjun Mehta, joining Zesta Labs as a Backend Developer on 1 December 2026. Salary is 60000 rupees per month, 5 work from home days a month, 3 sick leaves, 30 days notice. Courts in Bengaluru.",
-"NDA":"My startup Zesta Labs is sharing product plans with Arjun Mehta so he can evaluate a partnership. Confidentiality for 3 years. Courts in Bengaluru.",
-"Rent":"I'm Meera Kapoor, renting a 2 BHK flat at 14 Lake View Apartments, Indiranagar, Bengaluru from Suresh Nair. Rent is 32,000 rupees a month, deposit 96,000, starting 1 January 2027 for 11 months. Courts in Bengaluru."};
+  "Freelance":"I'm Riya Sharma, a freelance web developer. I'm building an e-commerce website for Acme Traders for 50,000 rupees. Work starts 1 December 2026 and is due 31 January 2027. Courts in Bengaluru.",
+  "Employment":"I'm Arjun Mehta, joining Zesta Labs as a Backend Developer on 1 December 2026. Salary is 60000 rupees per month, 5 work from home days a month, 3 sick leaves, 30 days notice. Courts in Bengaluru.",
+  "NDA":"My startup Zesta Labs is sharing product plans with Arjun Mehta so he can evaluate a partnership. Confidentiality for 3 years. Courts in Bengaluru.",
+  "Rent":"I'm Meera Kapoor, renting a 2 BHK flat at 14 Lake View Apartments, Indiranagar, Bengaluru from Suresh Nair. Rent is 32,000 rupees a month, deposit 96,000, starting 1 January 2027 for 11 months. Courts in Bengaluru."};
 $("chips").innerHTML=Object.keys(SAMPLES).map(k=>`<button type="button" class="chip" data-s="${k}">Try: ${k}</button>`).join("");
 $("desc").addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")draft()});
+
 async function post(url,body){
-const r=await fetch((window.API_BASE||"")+url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-const d=await r.json();
-if(!r.ok)throw new Error(d.detail||"Something went wrong. Try again in a moment.");
-return d;}
+  const r=await fetch((window.API_BASE||"")+url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(!r.ok)throw new Error(d.detail||"Something went wrong. Try again in a moment.");
+  return d;}
+
 async function draft(){
-const text=$("desc").value.trim();
-$("msg").textContent="";$("go").disabled=true;$("go").textContent="Drafting...";
-try{S=await post("/api/draft",{text});S.variants={};render();
-document.body.classList.add("has-draft");$("work").scrollIntoView({behavior:"smooth"});}
-catch(e){$("msg").textContent=e.message;}
-finally{$("go").disabled=false;$("go").textContent="Draft contract";}}
+  const text=$("desc").value.trim();
+  $("msg").textContent="";$("go").disabled=true;$("go").textContent="Drafting…";
+  try{S=await post("/api/draft",{text});S.variants={};render();
+  document.body.classList.add("has-draft");$("work").scrollIntoView({behavior:"smooth"});}
+  catch(e){$("msg").textContent=e.message;}
+  finally{$("go").disabled=false;$("go").innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Draft contract';}}
+
 async function reviewExisting(){
-const text=$("reviewtext").value.trim(), file=$("reviewfile").files[0];
-if(!text&&!file){$("reviewmsg").textContent="Paste contract text or choose a file first.";return;}
-const btn=$("reviewgo");btn.disabled=true;btn.textContent="Reviewing…";$("reviewmsg").textContent="";$("reviewout").innerHTML="";
-try{let r;if(file){const form=new FormData();form.append("file",file);r=await fetch((window.API_BASE||"")+"/api/review/upload",{method:"POST",body:form});}else{r=await fetch((window.API_BASE||"")+"/api/review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});}
-const d=await r.json();if(!r.ok)throw new Error(d.detail||"Review failed. Please try again.");
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-reviewSourceText=String(d.source_text||text);reviewIssues=Array.isArray(d.issues)?d.issues:[];
-let h=d.extraction_warning?`<div class="issue"><b>Text extraction check</b><p>${esc(d.extraction_warning)}</p></div>`:"";
-h+=`<div class="panel"><h3>Review summary</h3><p>${esc(d.summary)}</p><small>AI issue spotting only; this does not establish whether the agreement is legally valid. Have a qualified lawyer review it before signing.</small></div>`;
-if(d.issues.length)h+=d.issues.map(i=>`<article class="issue"><span class="badge ${esc(i.priority)}">${esc(i.priority)} priority · ${esc(i.category)}</span><h4>${esc(i.title)}</h4>${i.excerpt?`<p><b>Text:</b> “${esc(i.excerpt)}”</p>`:""}<p><b>Why it may matter:</b> ${esc(i.why_it_matters)}</p><p><b>Suggested next step:</b> ${esc(i.suggestion)}</p></article>`).join("");else h+=`<div class="issue">No specific issues were returned. This is not a legal validation.</div>`;
-if(d.missing_topics.length)h+=`<div class="panel"><h3>Topics to check</h3><ul>${d.missing_topics.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;
-if(d.questions_for_lawyer.length)h+=`<div class="panel"><h3>Questions for a lawyer</h3><ul>${d.questions_for_lawyer.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;
-h+=`<div class="panel"><h3>Want to improve this draft?</h3><p class="sub">Create a revised working version using the review findings. Unknown details will stay marked for you to fill in.</p><button type="button" class="btn" id="makebetter" onclick="makeBetter()">Make this draft better</button><div id="betterout"></div></div>`;
-$("reviewout").innerHTML=h;
-}catch(e){$("reviewmsg").textContent=e.message;}finally{btn.disabled=false;btn.textContent="Review contract";}}
+  const text=$("reviewtext").value.trim(), file=$("reviewfile").files[0];
+  if(!text&&!file){$("reviewmsg").textContent="Paste contract text or choose a file first.";return;}
+  const btn=$("reviewgo");btn.disabled=true;btn.textContent="Reviewing…";$("reviewmsg").textContent="";$("reviewout").innerHTML="";
+  try{let r;if(file){const form=new FormData();form.append("file",file);r=await fetch((window.API_BASE||"")+"/api/review/upload",{method:"POST",body:form});}else{r=await fetch((window.API_BASE||"")+"/api/review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});}
+  const d=await r.json();if(!r.ok)throw new Error(d.detail||"Review failed. Please try again.");
+  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  reviewSourceText=String(d.source_text||text);reviewIssues=Array.isArray(d.issues)?d.issues:[];
+  let h=d.extraction_warning?`<div class="issue"><b>Text extraction check</b><p>${esc(d.extraction_warning)}</p></div>`:"";
+  h+=`<div class="panel"><h3>Review summary</h3><p>${esc(d.summary)}</p><small>AI issue spotting only; this does not establish whether the agreement is legally valid. Have a qualified lawyer review it before signing.</small></div>`;
+  if(d.issues.length)h+=d.issues.map(i=>`<article class="issue"><span class="badge ${esc(i.priority)}">${esc(i.priority)} priority · ${esc(i.category)}</span><h4>${esc(i.title)}</h4>${i.excerpt?`<p><b>Text:</b> "${esc(i.excerpt)}"</p>`:""}<p><b>Why it may matter:</b> ${esc(i.why_it_matters)}</p><p><b>Suggested next step:</b> ${esc(i.suggestion)}</p></article>`).join("");else h+=`<div class="issue">No specific issues were returned. This is not a legal validation.</div>`;
+  if(d.missing_topics.length)h+=`<div class="panel"><h3>Topics to check</h3><ul>${d.missing_topics.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;
+  if(d.questions_for_lawyer.length)h+=`<div class="panel"><h3>Questions for a lawyer</h3><ul>${d.questions_for_lawyer.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;
+  h+=`<div class="panel"><h3>Want to improve this draft?</h3><p class="sub">Create a revised working version using the review findings. Unknown details will stay marked for you to fill in.</p><button type="button" class="btn" id="makebetter" onclick="makeBetter()">Make this draft better</button><div id="betterout"></div></div>`;
+  $("reviewout").innerHTML=h;
+  }catch(e){$("reviewmsg").textContent=e.message;}finally{btn.disabled=false;btn.textContent="Review contract";}}
+
 async function makeBetter(){
-const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Improving draft…";$("betterout").innerHTML="";
-try{const r=await fetch((window.API_BASE||"")+"/api/review/improve",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:reviewSourceText,issues:reviewIssues})});const d=await r.json();if(!r.ok)throw new Error(d.detail||"Could not prepare an improved draft.");
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-let h=`<div class="issue" style="margin-top:14px"><h4>Improved working draft</h4><p>${esc(d.change_summary)}</p><small>AI-generated wording. Check every change and have a lawyer review this version before signing.</small>`;
-if(d.open_questions.length)h+=`<p><b>Still needs your input</b></p><ul>${d.open_questions.map(q=>`<li>${esc(q)}</li>`).join("")}</ul>`;
-h+=`<textarea id="improvedtext" aria-label="Editable improved contract draft" style="width:100%;min-height:300px;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:8px;font:14px/1.55 var(--serif)">${esc(d.revised_text)}</textarea><div class="reviewbar"><button type="button" class="btn" onclick="copyImproved()">Copy revised draft</button><button type="button" class="btn ghost" onclick="downloadImproved()">Download as TXT</button></div></div>`;
-$("betterout").innerHTML=h;
-}catch(e){$("betterout").innerHTML=`<p class="msg">${String(e.message||e).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}</p>`;}finally{btn.disabled=false;btn.textContent="Make this draft better";}}
+  const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Improving draft…";$("betterout").innerHTML="";
+  try{const r=await fetch((window.API_BASE||"")+"/api/review/improve",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:reviewSourceText,issues:reviewIssues})});const d=await r.json();if(!r.ok)throw new Error(d.detail||"Could not prepare an improved draft.");
+  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  let h=`<div class="issue" style="margin-top:14px"><h4>Improved working draft</h4><p>${esc(d.change_summary)}</p><small>AI-generated wording. Check every change and have a lawyer review this version before signing.</small>`;
+  if(d.open_questions.length)h+=`<p><b>Still needs your input</b></p><ul>${d.open_questions.map(q=>`<li>${esc(q)}</li>`).join("")}</ul>`;
+  h+=`<textarea id="improvedtext" aria-label="Editable improved contract draft" style="width:100%;min-height:300px;margin-top:14px;padding:14px;border:1.5px solid var(--border);border-radius:var(--radius-md);font:14px/1.6 var(--serif)">${esc(d.revised_text)}</textarea><div class="reviewbar"><button type="button" class="btn" onclick="copyImproved()">Copy revised draft</button><button type="button" class="btn ghost" onclick="downloadImproved()">Download as TXT</button></div></div>`;
+  $("betterout").innerHTML=h;
+  }catch(e){$("betterout").innerHTML=`<p class="msg-error">${String(e.message||e).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}</p>`;}finally{btn.disabled=false;btn.textContent="Make this draft better";}}
+
 async function copyImproved(){try{await navigator.clipboard.writeText($("improvedtext").value);$("reviewmsg").textContent="Revised draft copied.";}catch(e){$("reviewmsg").textContent="Copy wasn't available here; select the draft text and copy it.";}}
 function downloadImproved(){const blob=new Blob([$("improvedtext").value],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="improved-contract-draft.txt";a.click();URL.revokeObjectURL(url);}
+
 async function rebuild(){
-S.field_defs.forEach(f=>{const el=$("f_"+f.key);if(el)S.fields[f.key]=el.value.trim();});
-const y=window.scrollY;
-try{const d=await post("/api/build",{type_id:S.type_id,fields:S.fields,variants:S.variants});
-S={...S,...d};render();window.scrollTo(0,y);}
-catch(e){$("msg").textContent=e.message;}}
+  S.field_defs.forEach(f=>{const el=$("f_"+f.key);if(el)S.fields[f.key]=el.value.trim();});
+  const y=window.scrollY;
+  try{const d=await post("/api/build",{type_id:S.type_id,fields:S.fields,variants:S.variants,custom:S.custom||{}});
+  S={...S,...d};render();window.scrollTo(0,y);}
+  catch(e){$("msg").textContent=e.message;}}
 function setVar(id,v){S.variants[id]=v;rebuild();}
 const label=o=>o==="a"?"Favours "+S.side_a:o==="b"?"Favours "+S.side_b:"Balanced";
 function rich(text){
-const vals=S.field_defs.filter(f=>f.type!=="date"&&f.type!=="number").map(f=>String(S.fields[f.key]??"").trim()).filter(v=>v.length>2).map(v=>reEsc(esc(v))).sort((a,b)=>b.length-a.length);
-const months="(?:January|February|March|April|May|June|July|August|September|October|November|December)";
-const parts=["\\[[a-z0-9_ ]+\\?\\]","Rs\\. [\\d,]+(?:\\.\\d+)?(?:\\/-)?","\\d{1,2} "+months+" \\d{4}",...vals];
-return esc(text).replace(new RegExp(parts.join("|"),"g"),m=>{
-if(m.startsWith("[")&&m.endsWith("?]")){
-const k=m.slice(1,-2).replace(/ /g,"_").replace(/_words$/,"");
-return `<button type="button" class="blank" data-k="${k}" title="Fill in this detail">${m}</button>`;}
-return `<span class="v">${m}</span>`;});}
+  const vals=S.field_defs.filter(f=>f.type!=="date"&&f.type!=="number").map(f=>String(S.fields[f.key]??"").trim()).filter(v=>v.length>2).map(v=>reEsc(esc(v))).sort((a,b)=>b.length-a.length);
+  const months="(?:January|February|March|April|May|June|July|August|September|October|November|December)";
+  const parts=["\\[[a-z0-9_ ]+\\?\\]","Rs\\. [\\d,]+(?:\\.\\d+)?(?:\\/-)?","\\d{1,2} "+months+" \\d{4}",...vals];
+  return esc(text).replace(new RegExp(parts.join("|"),"g"),m=>{
+    if(m.startsWith("[")&&m.endsWith("?]")){
+      const k=m.slice(1,-2).replace(/ /g,"_").replace(/_words$/,"");
+      return `<button type="button" class="blank" data-k="${k}" title="Fill in this detail">${m}</button>`;}
+    return `<span class="v">${m}</span>`;});}
 function jump(k){
-const el=$("f_"+k);if(!el)return;
-el.scrollIntoView({block:"center",behavior:"smooth"});
-el.focus({preventScroll:true});
-el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1400);}
+  const el=$("f_"+k);if(!el)return;
+  el.scrollIntoView({block:"center",behavior:"smooth"});
+  el.focus({preventScroll:true});
+  el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1400);}
 document.addEventListener("click",e=>{
-const s=e.target.closest("[data-s]");if(s){$("desc").value=SAMPLES[s.dataset.s];$("desc").focus();return;}
-const k=e.target.closest("[data-k]");if(k){jump(k.dataset.k);return;}
-const c=e.target.closest("[data-c]");if(c){const t=$("c"+c.dataset.c);if(t)t.scrollIntoView({block:"center",behavior:"smooth"});}});
+  const s=e.target.closest("[data-s]");if(s){$("desc").value=SAMPLES[s.dataset.s];$("desc").focus();return;}
+  const k=e.target.closest("[data-k]");if(k){jump(k.dataset.k);return;}
+  const c=e.target.closest("[data-c]");if(c){const t=$("c"+c.dataset.c);if(t)t.scrollIntoView({block:"center",behavior:"smooth"});}});
 function item(r){
-let attr="",m;
-if(r.message.startsWith("Missing detail: ")){const f=S.field_defs.find(f=>f.label===r.message.slice(16));if(f)attr=` data-k="${f.key}"`;}
-else if((m=r.message.match(/^Clause (\d+)/)))attr=` data-c="${m[1]}"`;
-else if(r.message.startsWith("The opening section"))attr=` data-c="0"`;
-const txt=esc(r.message);
-const ico=r.level==="ok"?"✓":r.level==="error"?"×":"!";
-return `<li class="${r.level}"><span class="ico">${ico}</span>${attr?`<button type="button" class="ritem"${attr}>${txt}</button>`:`<span>${txt}</span>`}</li>`;}
+  let attr="",m;
+  if(r.message.startsWith("Missing detail: ")){const f=S.field_defs.find(f=>f.label===r.message.slice(16));if(f)attr=` data-k="${f.key}"}`;}
+  else if((m=r.message.match(/^Clause (\d+)/)))attr=` data-c="${m[1]}"`;
+  else if(r.message.startsWith("The opening section"))attr=` data-c="0"`;
+  const txt=esc(r.message);
+  const ico=r.level==="ok"?"✓":r.level==="error"?"×":"!";
+  return `<li class="${r.level}"><span class="ico">${ico}</span>${attr?`<button type="button" class="ritem"${attr}>${txt}</button>`:`<span>${txt}</span>`}</li>`;}
+
 function render(){
-const s=S,errs=s.report.filter(r=>r.level==="error"),warns=s.report.filter(r=>r.level==="warn");
-const head=errs.length?[`${errs.length} to fix before you sign`,"bad"]:warns.length?[`Complete. ${warns.length} to check`,"warn"]:["Complete and consistent",""];
-let h=`<aside class="side noprint"><div class="panel"><h3>${esc(s.type_name)}</h3><p class="sub">Edit anything, then update the contract.</p>`;
-s.field_defs.forEach(f=>{
-const v=s.fields[f.key]??"",need=f.required&&!String(v).trim();
-h+=`<label for="f_${f.key}">${esc(f.label)}${f.required?" *":""}</label><input id="f_${f.key}" ${f.type==="date"?'type="date"':'type="text"'} class="${need?"need":""}" value="${esc(v)}">`;});
-h+=`<div class="row"><button class="btn" onclick="rebuild()">Update contract</button><button class="btn ghost" onclick="window.print()">Print / PDF</button></div></div>`;
-h+=`<div class="panel"><div class="status"><span class="dot ${head[1]}"></span>${head[0]}</div><ul class="items">${[...errs,...warns,...s.report.filter(r=>r.level==="ok")].map(item).join("")}</ul></div></aside>`;
-h+=`<article class="paper" id="paper"><h2>${esc(s.type_name.toUpperCase())}</h2>`;
-s.preamble.forEach((p,i)=>{h+=`<p class="pre"${i===0?' id="c0"':""}>${rich(p)}</p>`;});
-s.clauses.forEach(c=>{
-const sel=c.options.length>1?`<select class="noprint" aria-label="Wording for ${esc(c.title)}" onchange="setVar('${c.id}',this.value)">${c.options.map(o=>`<option value="${o}" ${o===c.variant?"selected":""}>${esc(label(o))}</option>`).join("")}</select>`:"";
-h+=`<div class="clause" id="c${c.number}"><div class="ctitle"><b>${c.number}. ${esc(c.title)}</b>${sel}</div><div class="ctext">${rich(c.text)}</div></div>`;});
-const g=s.signature;
-h+=`<div class="sig"><p>${esc(g.closing)}</p><div class="sigrow">${g.parties.map(p=>`<div class="sigcol"><b>Signed by the ${esc(p.role)}</b><div class="line"></div><div>Name: ${esc(p.name)}</div><div>Date: ${esc(g.date)}</div><div>Place: ${esc(g.place)}</div></div>`).join("")}</div>`;
-if(g.witnesses)h+=`<p><b>Witnesses</b></p><div class="sigrow">${Array.from({length:g.witnesses},(_,i)=>`<div class="sigcol"><b>Witness ${i+1}</b><div class="line"></div><div>Name:</div><div>Address:</div></div>`).join("")}</div>`;
-h+=`</div><p class="fine noprint">A drafting aid, not legal advice. Stamp duty, registration and leave rules vary by state, so have a lawyer review this before signing.</p></article>`;
-$("work").innerHTML=h;$("work").hidden=false;}
+  // Show work area; hide hero + choice landing
+  $("choicecards").style.display="none";
+  $("truststrip").style.display="none";
+  $("howitworks").style.display="none";
+  $("doccats").style.display="none";
+  $("ctabanner").style.display="none";
+
+  const s=S,errs=s.report.filter(r=>r.level==="error"),warns=s.report.filter(r=>r.level==="warn");
+  const head=errs.length?[`${errs.length} to fix before you sign`,"bad"]:warns.length?[`Complete. ${warns.length} to check`,"warn"]:["Complete and consistent",""];
+
+  // Page header for work area
+  let ph=`<div class="page-header noprint"><div class="page-header-inner"><h2>${esc(s.type_name)}</h2><div style="display:flex;gap:8px"><button class="btn ghost" onclick="backToChoice()">← Back</button></div></div></div>`;
+
+  let wh=`<aside class="side noprint"><div class="panel"><h3>${esc(s.type_name)}</h3><p class="sub">Edit details, then update the contract.</p>`;
+  s.field_defs.forEach(f=>{
+    const v=s.fields[f.key]??"",need=f.required&&!String(v).trim();
+    wh+=`<label for="f_${f.key}">${esc(f.label)}${f.required?" *":""}</label><input id="f_${f.key}" ${f.type==="date"?'type="date"':'type="text"'} class="${need?"need":""}" value="${esc(v)}">`;});
+  wh+=`<div class="row"><button class="btn" onclick="rebuild()">Update contract</button><button class="btn ghost" onclick="window.print()">Print / PDF</button></div></div>`;
+  wh+=`<div class="panel"><div class="status"><span class="dot ${head[1]}"></span>${head[0]}</div><ul class="items">${[...errs,...warns,...s.report.filter(r=>r.level==="ok")].map(item).join("")}</ul></div></aside>`;
+  wh+=`<article class="paper" id="paper"><h2>${esc(s.type_name)}</h2><p class="docmeta">Agreement between the parties identified below</p>`;
+  s.preamble.forEach((p,i)=>{wh+=`<p class="pre"${i===0?' id="c0"':''}>${rich(p)}</p>`;});
+  s.clauses.forEach(c=>{
+    const sel=c.options.length>1?`<select class="noprint" aria-label="Wording for ${esc(c.title)}" onchange="setVar('${c.id}',this.value)">${c.options.map(o=>`<option value="${o}" ${o===c.variant?"selected":""}>${esc(label(o))}</option>`).join("")}</select>`:"";
+    wh+=`<div class="clause" id="c${c.number}"><div class="ctitle"><b>${c.number}. ${esc(c.title)}</b>${sel}</div><div class="ctext">${rich(c.text)}</div></div>`;});
+  const g=s.signature;
+  wh+=`<div class="sig"><p>${esc(g.closing)}</p><div class="sigrow">${g.parties.map(p=>`<div class="sigcol"><b>Signed by the ${esc(p.role)}</b><div class="line"></div><div>Name: ${esc(p.name)}</div><div>Date: ${esc(g.date)}</div><div>Place: ${esc(g.place)}</div></div>`).join("")}</div>`;
+  if(g.witnesses)wh+=`<p><b>Witnesses</b></p><div class="sigrow">${Array.from({length:g.witnesses},(_,i)=>`<div class="sigcol"><b>Witness ${i+1}</b><div class="line"></div><div>Name:</div><div>Address:</div></div>`).join("")}</div>`;
+  wh+=`</div><p class="fine noprint">A drafting aid, not legal advice. Stamp duty, registration and leave rules vary by state — have a lawyer review this before signing.</p></article>`;
+
+  $("work").innerHTML=wh;
+  $("work").hidden=false;
+
+  // Inject page header before work section
+  const existing=document.querySelector(".work-page-header");
+  if(existing)existing.remove();
+  const hdr=document.createElement("div");
+  hdr.className="work-page-header noprint";
+  hdr.innerHTML=ph;
+  $("work").parentNode.insertBefore(hdr,document.getElementById("work"));
+}
 </script>
 <script src="voice.js"></script>
 <script src="edit.js"></script>

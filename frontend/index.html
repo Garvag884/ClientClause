@@ -94,7 +94,7 @@ header,.hero,.side,.noprint{display:none!important}
 <main class="wrap">
 <section class="hero">
 <h1>Say what the deal is. Get the contract.</h1>
-<p class="lede">Describe an agreement in your own words. ClientClause drafts it, checks that nothing is missing, and lets you adjust each clause. Works for freelance agreements, NDAs and employment agreements.</p>
+<p class="lede">Describe an agreement in your own words. ClientClause drafts it, checks that nothing is missing, and lets you adjust each clause. Works for freelance agreements, NDAs, employment and rent agreements.</p>
 <div class="ask">
 <textarea id="desc" aria-label="Describe your agreement" placeholder="For example: I'm Riya Sharma, a web developer building a website for Acme Traders for 50,000 rupees, 1 December 2026 to 31 January 2027. Courts in Bengaluru."></textarea>
 <div class="bar"><span class="hint">Privacy: your description is sent to the configured AI provider for processing and is not saved by ClientClause. Avoid confidential or sensitive personal information; use made-up details while testing.</span><span class="voice"><button type="button" class="mic" id="mic" aria-pressed="false"><span class="dotm"></span><span id="micl">Speak</span></button><select id="vlang" aria-label="Voice language"><option value="auto">Auto-detect</option><option value="en">English</option><option value="hi">Hindi</option><option value="translate">Any language to English</option></select></span><button class="btn" id="go" onclick="draft()">Draft contract</button></div>
@@ -114,7 +114,8 @@ const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 const SAMPLES={
 "Freelance":"I'm Riya Sharma, a freelance web developer. I'm building an e-commerce website for Acme Traders for 50,000 rupees. Work starts 1 December 2026 and is due 31 January 2027. Courts in Bengaluru.",
 "Employment":"I'm Arjun Mehta, joining Zesta Labs as a Backend Developer on 1 December 2026. Salary is 60000 rupees per month, 5 work from home days a month, 3 sick leaves, 30 days notice. Courts in Bengaluru.",
-"NDA":"My startup Zesta Labs is sharing product plans with Arjun Mehta so he can evaluate a partnership. Confidentiality for 3 years. Courts in Bengaluru."};
+"NDA":"My startup Zesta Labs is sharing product plans with Arjun Mehta so he can evaluate a partnership. Confidentiality for 3 years. Courts in Bengaluru.",
+"Rent":"I'm Meera Kapoor, renting a 2 BHK flat at 14 Lake View Apartments, Indiranagar, Bengaluru from Suresh Nair. Rent is 32,000 rupees a month, deposit 96,000, starting 1 January 2027 for 11 months. Courts in Bengaluru."};
 $("chips").innerHTML=Object.keys(SAMPLES).map(k=>`<button type="button" class="chip" data-s="${k}">Try: ${k}</button>`).join("");
 $("desc").addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")draft()});
 async function post(url,body){

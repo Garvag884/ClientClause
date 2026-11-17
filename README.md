@@ -30,6 +30,7 @@ Missing details are highlighted in the contract and in the checklist, and clicki
 | Freelance services | Scope, payment terms, GST and TDS, revisions, IP ownership, termination |
 | Non-disclosure (NDA) | Definition of confidential information, permitted disclosures, exclusions, duration, remedies |
 | Employment | Probation, salary, working hours, leave, benefits, conduct, notice and final settlement |
+| Rent agreement | Rent and yearly increase, security deposit, lock-in and notice, repairs, handover, stamp duty and registration |
 
 ## How accuracy is protected
 

@@ -49,6 +49,7 @@ class BuildIn(BaseModel):
     type_id: str
     fields: dict = {}
     variants: dict = {}
+    custom: dict = {}
 
 
 # ---------- Indian number formatting ----------
@@ -303,25 +304,71 @@ def verify(t, fields, clauses, preamble, defaulted):
     return report
 
 
-def package(t, fields, variants):
+def apply_custom(clauses, custom):
+    custom = custom or {}
+    edits = custom.get("edits") or {}
+    removed = set(custom.get("removed") or [])
+    added = custom.get("added") or []
+    out, gone = [], []
+    for c in clauses:
+        if c["id"] in removed:
+            gone.append(c["title"])
+            continue
+        c = dict(c)
+        txt = str(edits.get(c["id"], "")).strip()
+        if txt:
+            c.update(text=txt[:2000], custom=True, options=[], variant="balanced")
+        out.append(c)
+    for a in added[:10]:
+        title = str(a.get("title", "")).strip()[:120]
+        txt = str(a.get("text", "")).strip()[:2000]
+        if not title or not txt:
+            continue
+        after = a.get("after")
+        item = {"id": str(a.get("id", "custom"))[:40], "number": 0, "title": title,
+                "risk": "medium", "variant": "balanced", "options": [], "text": txt,
+                "custom": True, "added_after": after}
+        idx = next((i for i, c in enumerate(out) if c["id"] == after), len(out) - 1)
+        while after and idx + 1 < len(out) and out[idx + 1].get("added_after") == after:
+            idx += 1
+        out.insert(idx + 1, item)
+    for i, c in enumerate(out, start=1):
+        c["number"] = i
+    return out, gone
+
+
+def custom_notes(clauses, gone):
+    notes = []
+    for c in clauses:
+        if c.get("custom"):
+            notes.append({"level": "warn", "message":
+                f"Clause {c['number']} ({c['title']}) was edited or added with AI help. It is not from the vetted clause library, so read it closely and have a lawyer review it."})
+    for title in gone:
+        notes.append({"level": "warn", "message":
+            f"You removed the '{title}' clause. Check that the agreement still covers that topic."})
+    return notes
+
+
+def package(t, fields, variants, custom=None):
     fields = apply_defaults(t, fields)
     shown = shown_values(t, fields)
     preamble = [fill(p, shown) for p in t.get("preamble", [])]
-    clauses = build(t, fields, shown, variants)
+    clauses, gone = apply_custom(build(t, fields, shown, variants), custom)
     signature = {
         "closing": t.get("closing", "IN WITNESS WHEREOF, the Parties have signed this Agreement on the date and at the place stated at its beginning."),
         "date": shown.get("agreement_date", ""),
         "place": shown.get("signing_place", ""),
-        "parties": [{"role": s["role"], "name": shown.get(s["name_field"], "")}
-                    for s in t.get("signatories", [])],
+        "parties": [{"role": sg["role"], "name": shown.get(sg["name_field"], "")}
+                    for sg in t.get("signatories", [])],
         "witnesses": t.get("witnesses", 2),
     }
+    report = verify(t, fields, clauses, preamble, defaulted_labels(t, fields)) + custom_notes(clauses, gone)
     return {
         "type_id": t["id"], "type_name": t["name"],
         "side_a": t["side_a"], "side_b": t["side_b"],
         "field_defs": t["fields"], "fields": fields,
         "preamble": preamble, "clauses": clauses, "signature": signature,
-        "report": verify(t, fields, clauses, preamble, defaulted_labels(t, fields)),
+        "report": report,
     }
 
 
@@ -352,7 +399,7 @@ def rebuild(body: BuildIn):
     t = TYPES.get(body.type_id)
     if not t:
         raise HTTPException(400, "Unknown contract type")
-    return package(t, body.fields, body.variants)
+    return package(t, body.fields, body.variants, body.custom)
 
 
 @app.post("/api/transcribe")
@@ -390,6 +437,7 @@ class PdfIn(BaseModel):
     type_id: str
     fields: dict = {}
     variants: dict = {}
+    custom: dict = {}
 
 
 @app.post("/api/pdf")
@@ -398,7 +446,7 @@ def make_pdf(body: PdfIn, request: Request):
     t = TYPES.get(body.type_id)
     if not t:
         raise HTTPException(400, "Unknown contract type")
-    data = package(t, body.fields, body.variants)
+    data = package(t, body.fields, body.variants, body.custom)
     try:
         from pdfgen import build_pdf
         pdf = build_pdf(data, ROOT / "frontend" / "logo.png")
@@ -407,6 +455,104 @@ def make_pdf(body: PdfIn, request: Request):
     name = re.sub(r"[^a-z0-9]+", "-", t["name"].lower()).strip("-") + ".pdf"
     return Response(content=pdf, media_type="application/pdf",
                     headers={"Content-Disposition": 'attachment; filename="' + name + '"'})
+
+
+class EditIn(BaseModel):
+    type_id: str
+    fields: dict = {}
+    variants: dict = {}
+    custom: dict = {}
+    instruction: str
+
+
+@app.post("/api/edit")
+def edit_contract(body: EditIn, request: Request):
+    check_rate(request)
+    ins = body.instruction.strip()
+    if len(ins) < 4:
+        raise HTTPException(400, "Please describe the change you want.")
+    if len(ins) > 1500:
+        raise HTTPException(400, "Please keep the request under 1500 characters.")
+    t = TYPES.get(body.type_id)
+    if not t:
+        raise HTTPException(400, "Unknown contract type")
+    cur = package(t, body.fields, body.variants, body.custom)
+    lib = {c["id"]: c for c in t["clauses"]}
+    ids = {c["id"]: c for c in cur["clauses"]}
+    fdefs = {f["key"]: f for f in t["fields"]}
+    fields_view = [{"key": f["key"], "label": f["label"], "type": f.get("type", "text"),
+                    "value": cur["fields"].get(f["key"], "")} for f in t["fields"]]
+    clauses_view = [{"id": c["id"], "title": c["title"], "text": c["text"],
+                     "variants": list(lib[c["id"]]["variants"].keys()) if c["id"] in lib else []}
+                    for c in cur["clauses"]]
+    prompt = (
+        "You edit a draft Indian " + t["name"] + " (a = favours the " + t["side_a"] +
+        ", b = favours the " + t["side_b"] + ", balanced = neutral). Reply with JSON only.\n"
+        "Fields: " + json.dumps(fields_view) + "\n"
+        "Clauses: " + json.dumps(clauses_view) + "\n"
+        "User request: " + ins + "\n\n"
+        'Reply format: {"summary": "one short sentence", "ops": [ ... ]} where each op is one of:\n'
+        '{"op":"set_field","key":"<field key>","value":"<new value>"}\n'
+        '{"op":"set_variant","clause_id":"<id>","variant":"a|balanced|b"}\n'
+        '{"op":"remove_clause","clause_id":"<id>"}\n'
+        '{"op":"edit_clause","clause_id":"<id>","text":"<full new clause text>"}\n'
+        '{"op":"add_clause","title":"<title>","text":"<clause text>","after":"<clause id or null>"}\n'
+        "Rules: Prefer set_field for facts (names, amounts, dates, durations) and set_variant to shift a clause "
+        "towards one side. Use edit_clause only when the wording itself must change, and add_clause only for a "
+        "new topic. Dates are YYYY-MM-DD and numbers are digits only. Written clause text must be plain, neutral, "
+        "consistent with Indian law, must not invent names, amounts or dates the user did not give, and must not "
+        "use placeholders. Use only clause ids from the list. Use remove_clause only when clearly asked. "
+        'If the request is not about changing this contract, return {"summary":"<short reason>","ops":[]}. '
+        "At most 6 ops."
+    )
+    try:
+        data = ask_json(prompt)
+    except Exception as e:
+        raise HTTPException(502, "AI error: " + str(e)[:150])
+    raw = data.get("ops") if isinstance(data, dict) else []
+    ops, changes = [], []
+    for o in (raw or [])[:6]:
+        if not isinstance(o, dict):
+            continue
+        kind = o.get("op")
+        if kind == "set_field" and o.get("key") in fdefs:
+            f = fdefs[o["key"]]
+            v = str(o.get("value", "")).strip()
+            if f.get("type") == "number":
+                v = re.sub(r"[^\d.]", "", v)
+            elif f.get("type") == "date" and v:
+                try:
+                    date.fromisoformat(v)
+                except ValueError:
+                    continue
+            if not v and f.get("required"):
+                continue
+            old = str(cur["fields"].get(o["key"], "")) or "(blank)"
+            ops.append({"op": "set_field", "key": o["key"], "value": v})
+            changes.append({"kind": "field", "text": f["label"] + ": " + old + "  ->  " + (v or "(blank)")})
+        elif kind == "set_variant" and o.get("clause_id") in lib and o.get("variant") in lib[o["clause_id"]]["variants"]:
+            label = {"a": "favours the " + t["side_a"], "b": "favours the " + t["side_b"]}.get(o["variant"], "balanced")
+            ops.append({"op": "set_variant", "clause_id": o["clause_id"], "variant": o["variant"]})
+            changes.append({"kind": "variant", "text": lib[o["clause_id"]]["title"] + ": use the wording that is " + label})
+        elif kind == "remove_clause" and o.get("clause_id") in ids:
+            ops.append({"op": "remove_clause", "clause_id": o["clause_id"]})
+            changes.append({"kind": "remove", "text": "Remove the clause: " + ids[o["clause_id"]]["title"]})
+        elif kind == "edit_clause" and o.get("clause_id") in ids:
+            txt = str(o.get("text", "")).strip()
+            if not 20 <= len(txt) <= 2000:
+                continue
+            ops.append({"op": "edit_clause", "clause_id": o["clause_id"], "text": txt})
+            changes.append({"kind": "text", "text": "Rewrite: " + ids[o["clause_id"]]["title"],
+                            "before": ids[o["clause_id"]]["text"], "after": txt})
+        elif kind == "add_clause":
+            title, txt = str(o.get("title", "")).strip(), str(o.get("text", "")).strip()
+            if not (3 <= len(title) <= 120 and 20 <= len(txt) <= 2000):
+                continue
+            after = o.get("after") if o.get("after") in ids else None
+            ops.append({"op": "add_clause", "title": title, "text": txt, "after": after})
+            changes.append({"kind": "text", "text": "Add a new clause: " + title, "after": txt})
+    summary = str(data.get("summary", ""))[:300] if isinstance(data, dict) else ""
+    return {"summary": summary, "ops": ops, "changes": changes}
 
 
 @app.get("/api/health")

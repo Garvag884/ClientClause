@@ -72,8 +72,11 @@ input.flash{animation:flash 1.4s}
 .sigcol{flex:1;min-width:210px;font-size:15px;line-height:1.9}
 .line{border-bottom:1px solid var(--ink);height:44px;margin-bottom:4px}
 .fine{color:var(--muted);font-size:13px;max-width:70ch;margin-top:18px}
+.review{max-width:900px;margin:4px auto 42px}.review textarea{width:100%;min-height:190px;padding:12px;border:1px solid var(--line);border-radius:8px;font:15px/1.5 var(--ui);resize:vertical}.reviewbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}.reviewbar input{max-width:280px}.reviewout{display:grid;gap:12px;margin-top:18px}.issue{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}.issue h4{margin:5px 0}.issue p{margin:8px 0}.badge{font:600 12px var(--ui);text-transform:uppercase;color:var(--warn)}.badge.high{color:var(--bad)}.badge.low{color:var(--ok)}.review small{color:var(--muted)}
+.choice{max-width:820px;margin:48px auto 32px}.choice h1{margin-bottom:8px}.choice p{color:var(--muted);margin:0 0 22px}.choicecards{display:grid;grid-template-columns:1fr 1fr;gap:14px}.choicecard{min-height:130px;text-align:left;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:20px;cursor:pointer}.choicecard:hover{border-color:var(--ink);box-shadow:0 5px 18px rgba(28,43,69,.08)}.choicecard b{display:block;font:600 20px var(--ui);margin-bottom:8px}.choicecard span{color:var(--muted)}
 .wm{display:none}
 @media(max-width:900px){.work{grid-template-columns:1fr}.side{position:static;max-height:none}}
+@media(max-width:600px){.choicecards{grid-template-columns:1fr}.choice{margin-top:28px}}
 @media(prefers-reduced-motion:reduce){input.flash{animation:none;background:var(--mark)}}
 @media print{
 body{background:#fff}
@@ -92,7 +95,11 @@ header,.hero,.side,.noprint{display:none!important}
 <img class="wm" src="logo.png" alt="" onerror="this.remove()">
 <header><div class="wrap brand"><img src="logo.png" alt="" onerror="this.remove()">ClientClause</div></header>
 <main class="wrap">
-<section class="hero">
+<section class="choice" id="choice" aria-labelledby="choicetitle">
+<h1 id="choicetitle">What would you like to do?</h1><p>Choose a starting point and we’ll take you to the right place.</p>
+<div class="choicecards"><button type="button" class="choicecard" onclick="chooseMode('new')"><b>Make a new contract</b><span>Describe the agreement and create a draft.</span></button><button type="button" class="choicecard" onclick="chooseMode('improve')"><b>Improve an existing draft</b><span>Review a contract for unclear, missing, or potentially risky terms.</span></button></div>
+</section>
+<section class="hero" hidden>
 <h1>Say what the deal is. Get the contract.</h1>
 <p class="lede">Describe an agreement in your own words. ClientClause drafts it, checks that nothing is missing, and lets you adjust each clause. Works for freelance agreements, NDAs, employment and rent agreements.</p>
 <div class="ask">
@@ -102,13 +109,21 @@ header,.hero,.side,.noprint{display:none!important}
 <div class="chips" id="chips"></div>
 <div class="msg" id="msg" role="alert"></div>
 </section>
+<section class="review" id="reviewsection" aria-labelledby="reviewtitle" hidden>
+<div class="panel"><button type="button" class="btn ghost" onclick="backToChoice()">← Back</button><h3 id="reviewtitle" style="margin-top:14px">Improve an existing draft</h3><p class="sub">Paste contract text or upload a PDF, TXT, or image. Scanned pages and photos are read with OCR; check extracted wording against the original.</p>
+<textarea id="reviewtext" aria-label="Contract text to review" placeholder="Paste the agreement text here…"></textarea>
+<div class="reviewbar"><label style="margin:0">Or choose a file<input id="reviewfile" type="file" accept=".pdf,.txt,.png,.jpg,.jpeg,.webp,.tif,.tiff,application/pdf,text/plain,image/*"></label><button class="btn" id="reviewgo" onclick="reviewExisting()">Review contract</button><small>Text is sent to the configured AI provider for review and is not saved by ClientClause.</small></div><div class="msg" id="reviewmsg" role="alert"></div><div id="reviewout" class="reviewout" aria-live="polite"></div></div>
+</section>
 <section class="work" id="work" hidden></section>
 </main>
 <script src="config.js"></script>
 <script>
 const $=id=>document.getElementById(id);
+function chooseMode(mode){$("choice").hidden=true;if(mode==="new"){$("reviewsection").hidden=true;document.querySelector(".hero").hidden=false;document.querySelector(".hero").scrollIntoView({behavior:"smooth",block:"start"});}else{document.querySelector(".hero").hidden=true;$("reviewsection").hidden=false;$("reviewsection").scrollIntoView({behavior:"smooth",block:"start"});}}
+function backToChoice(){$("reviewsection").hidden=true;document.querySelector(".hero").hidden=true;$("choice").hidden=false;$("choice").scrollIntoView({behavior:"smooth",block:"start"});}
 fetch((window.API_BASE||"")+"/api/health").catch(()=>{});
 let S=null;
+let reviewSourceText="",reviewIssues=[];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 const SAMPLES={
@@ -130,6 +145,33 @@ try{S=await post("/api/draft",{text});S.variants={};render();
 document.body.classList.add("has-draft");$("work").scrollIntoView({behavior:"smooth"});}
 catch(e){$("msg").textContent=e.message;}
 finally{$("go").disabled=false;$("go").textContent="Draft contract";}}
+async function reviewExisting(){
+const text=$("reviewtext").value.trim(), file=$("reviewfile").files[0];
+if(!text&&!file){$("reviewmsg").textContent="Paste contract text or choose a file first.";return;}
+const btn=$("reviewgo");btn.disabled=true;btn.textContent="Reviewing…";$("reviewmsg").textContent="";$("reviewout").innerHTML="";
+try{let r;if(file){const form=new FormData();form.append("file",file);r=await fetch((window.API_BASE||"")+"/api/review/upload",{method:"POST",body:form});}else{r=await fetch((window.API_BASE||"")+"/api/review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});}
+const d=await r.json();if(!r.ok)throw new Error(d.detail||"Review failed. Please try again.");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+reviewSourceText=String(d.source_text||text);reviewIssues=Array.isArray(d.issues)?d.issues:[];
+let h=d.extraction_warning?`<div class="issue"><b>Text extraction check</b><p>${esc(d.extraction_warning)}</p></div>`:"";
+h+=`<div class="panel"><h3>Review summary</h3><p>${esc(d.summary)}</p><small>AI issue spotting only; this does not establish whether the agreement is legally valid. Have a qualified lawyer review it before signing.</small></div>`;
+if(d.issues.length)h+=d.issues.map(i=>`<article class="issue"><span class="badge ${esc(i.priority)}">${esc(i.priority)} priority · ${esc(i.category)}</span><h4>${esc(i.title)}</h4>${i.excerpt?`<p><b>Text:</b> “${esc(i.excerpt)}”</p>`:""}<p><b>Why it may matter:</b> ${esc(i.why_it_matters)}</p><p><b>Suggested next step:</b> ${esc(i.suggestion)}</p></article>`).join("");else h+=`<div class="issue">No specific issues were returned. This is not a legal validation.</div>`;
+if(d.missing_topics.length)h+=`<div class="panel"><h3>Topics to check</h3><ul>${d.missing_topics.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;
+if(d.questions_for_lawyer.length)h+=`<div class="panel"><h3>Questions for a lawyer</h3><ul>${d.questions_for_lawyer.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;
+h+=`<div class="panel"><h3>Want to improve this draft?</h3><p class="sub">Create a revised working version using the review findings. Unknown details will stay marked for you to fill in.</p><button type="button" class="btn" id="makebetter" onclick="makeBetter()">Make this draft better</button><div id="betterout"></div></div>`;
+$("reviewout").innerHTML=h;
+}catch(e){$("reviewmsg").textContent=e.message;}finally{btn.disabled=false;btn.textContent="Review contract";}}
+async function makeBetter(){
+const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Improving draft…";$("betterout").innerHTML="";
+try{const r=await fetch((window.API_BASE||"")+"/api/review/improve",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:reviewSourceText,issues:reviewIssues})});const d=await r.json();if(!r.ok)throw new Error(d.detail||"Could not prepare an improved draft.");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let h=`<div class="issue" style="margin-top:14px"><h4>Improved working draft</h4><p>${esc(d.change_summary)}</p><small>AI-generated wording. Check every change and have a lawyer review this version before signing.</small>`;
+if(d.open_questions.length)h+=`<p><b>Still needs your input</b></p><ul>${d.open_questions.map(q=>`<li>${esc(q)}</li>`).join("")}</ul>`;
+h+=`<textarea id="improvedtext" aria-label="Editable improved contract draft" style="width:100%;min-height:300px;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:8px;font:14px/1.55 var(--serif)">${esc(d.revised_text)}</textarea><div class="reviewbar"><button type="button" class="btn" onclick="copyImproved()">Copy revised draft</button><button type="button" class="btn ghost" onclick="downloadImproved()">Download as TXT</button></div></div>`;
+$("betterout").innerHTML=h;
+}catch(e){$("betterout").innerHTML=`<p class="msg">${String(e.message||e).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}</p>`;}finally{btn.disabled=false;btn.textContent="Make this draft better";}}
+async function copyImproved(){try{await navigator.clipboard.writeText($("improvedtext").value);$("reviewmsg").textContent="Revised draft copied.";}catch(e){$("reviewmsg").textContent="Copy wasn't available here; select the draft text and copy it.";}}
+function downloadImproved(){const blob=new Blob([$("improvedtext").value],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="improved-contract-draft.txt";a.click();URL.revokeObjectURL(url);}
 async function rebuild(){
 S.field_defs.forEach(f=>{const el=$("f_"+f.key);if(el)S.fields[f.key]=el.value.trim();});
 const y=window.scrollY;

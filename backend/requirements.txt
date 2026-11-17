@@ -4,4 +4,8 @@ python-dotenv
 openai
 google-genai
 python-multipart
+pypdf
+pypdfium2
+pillow
+pytesseract
 reportlab

@@ -4,73 +4,80 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ClientClause — AI Contract Generator</title>
+<meta name="description" content="Describe your deal in plain English and get a structured contract draft in about a minute. Review existing contracts for risky or missing clauses. Free to try, no sign-up.">
+<meta name="theme-color" content="#17304f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ClientClause — Legal contracts, simplified with AI">
+<meta property="og:description" content="Plain-English deal in, structured contract draft out. Free to try, no sign-up.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2317304f'/%3E%3Cstop offset='1' stop-color='%232b4f7e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M10 16.5l4 4 8-9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap">
 <style>
 /* ═══════════════════════════════════════════════════
-   DESIGN TOKENS — LegittAI inspired
+   DESIGN TOKENS — formal navy theme
 ═══════════════════════════════════════════════════ */
 :root {
   /* Brand */
-  --brand:       #263b4d;
-  --brand-hover: #344e62;
-  --brand-dark:  #1d3040;
-  --brand-subtle:#a3885b18;
-  --brand-border:#a3885b55;
-  --brand-glow:  #a3885b14;
-  --shadow-brand: 0 2px 5px #263b4d18, 0 8px 18px #263b4d12;
-  --shadow-brand-lg: 0 4px 12px #263b4d22, 0 16px 30px #263b4d16;
+  --brand:       #17304f;
+  --brand-hover: #25456f;
+  --brand-dark:  #0f2240;
+  --brand-subtle:#17304f14;
+  --brand-border:#17304f33;
+  --brand-glow:  #17304f40;
+  --shadow-brand: 0 1px 2px #0f224055;
+  --shadow-brand-lg: 0 2px 6px #0f224055;
 
   /* Text */
-  --text-primary:   #1e2d39;
-  --text-secondary: #5e676b;
-  --text-muted:     #788080;
-  --text-faint:     #aab;
+  --text-primary:   #14181f;
+  --text-secondary: #3f4756;
+  --text-muted:     #5b6472;
+  --text-faint:     #6f7785;
   --text-inverse:   #fff;
 
   /* Surfaces */
   --surface:       #fff;
-  --surface-raised: #f8f8fc;
-  --surface-sunken: #f2f2f8;
-  --surface-dark:   #09090f;
-  --surface-dark-2: #0f0f1a;
-  --surface-dark-3: #15152a;
+  --surface-raised: #f6f7f9;
+  --surface-sunken: #eef0f3;
+  --surface-dark:   #0c1829;
+  --surface-dark-2: #101f36;
+  --surface-dark-3: #14253f;
 
   /* Borders */
   --border:        rgba(0,0,0,.07);
   --border-strong: rgba(0,0,0,.12);
   --border-dark:   rgba(255,255,255,.08);
-  --border-brand:  rgba(108,53,222,.25);
+  --border-brand:  rgba(23,48,79,.25);
 
   /* Misc */
-  --bg-page: #f5f3ef;
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
+  --bg-page: #f6f5f1;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 10px;
   --radius-full: 9999px;
   --shadow-xs: 0 1px 2px rgba(0,0,0,.06);
   --shadow-sm: 0 1px 4px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.05);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,.07), 0 24px 48px rgba(0,0,0,.06);
+  --shadow-md: 0 2px 8px rgba(15,34,64,.08);
+  --shadow-lg: 0 4px 16px rgba(15,34,64,.08);
   --ease-out: cubic-bezier(.16,1,.3,1);
 
   /* Legacy compat */
-  --ok:#00a877; --bad:#c0392b; --warn:#8a5a00;
-  --val:#ede9fb; --mark:#fffbeb; --line:var(--border);
+  --ok:#00a877; --ok-text:#0b7a57; --bad:#c0392b; --warn:#8a5a00;
+  --val:#e6ebf2; --mark:#fffbeb; --line:var(--border);
   --ui: "Inter", system-ui, -apple-system, sans-serif;
-  --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  --gold: #a3885b;
+  --display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --accent: #7a5f26;
+  --serif: Georgia, "Times New Roman", serif;
 }
 
 /* ═══════════════════════════════════════════════════
    RESET & BASE
 ═══════════════════════════════════════════════════ */
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
-html { -webkit-font-smoothing:antialiased; scroll-behavior:smooth; font-size:16px }
+html { -webkit-font-smoothing:antialiased; scroll-behavior:smooth; font-size:16px; scroll-padding-top:76px }
 body { font-family:var(--ui); background:var(--bg-page); color:var(--text-primary); line-height:1.6; overflow-x:hidden }
 a { color:inherit; text-decoration:none }
 button { font-family:inherit; cursor:pointer }
@@ -95,8 +102,8 @@ img, svg { display:block; max-width:100% }
 .btn:active { transform:scale(.98) }
 .btn-sm   { font-size:13px; padding:.4rem 1rem; border-radius:var(--radius-xs) }
 .btn-md   { font-size:14px; padding:.6rem 1.2rem }
-.btn-lg   { font-size:15px; padding:.85rem 2rem; border-radius:10px }
-.btn-xl   { font-size:16px; padding:1rem 2.25rem; border-radius:12px }
+.btn-lg   { font-size:15px; padding:.85rem 2rem; border-radius:var(--radius-sm) }
+.btn-xl   { font-size:16px; padding:1rem 2.25rem; border-radius:var(--radius-sm) }
 
 .btn-primary {
   background:var(--brand); color:#fff; border-color:var(--brand);
@@ -139,11 +146,12 @@ img, svg { display:block; max-width:100% }
 }
 .brand-mark {
   width:32px; height:32px; border-radius:9px;
-  background:linear-gradient(135deg, var(--brand), #9b5de5);
+  background:linear-gradient(135deg, var(--brand), #2b4f7e);
   display:flex; align-items:center; justify-content:center;
   box-shadow:var(--shadow-brand);
 }
-.brand-mark svg { width:18px; height:18px; fill:#fff }
+.brand-mark svg { width:18px; height:18px; fill:none; stroke:#fff }
+.brand-text { display:inline-block; white-space:nowrap }
 .brand em { color:var(--brand); font-style:normal }
 
 nav.main-nav { display:flex; align-items:center; gap:2px }
@@ -153,6 +161,22 @@ nav.main-nav a {
   transition:background .15s, color .15s;
 }
 nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primary) }
+
+/* Mobile menu (≤680px) */
+.mobile-menu { display:none; position:relative }
+.mobile-menu summary {
+  list-style:none; cursor:pointer; width:40px; height:40px; border-radius:var(--radius-sm);
+  display:flex; align-items:center; justify-content:center; color:var(--text-primary);
+  border:1px solid var(--border-strong); background:var(--surface);
+}
+.mobile-menu summary::-webkit-details-marker { display:none }
+.mobile-menu-panel {
+  position:absolute; right:0; top:48px; min-width:200px; padding:8px;
+  background:var(--surface); border:1px solid var(--border-strong);
+  border-radius:var(--radius-md); box-shadow:var(--shadow-lg); display:grid; gap:2px;
+}
+.mobile-menu-panel a { padding:10px 12px; border-radius:var(--radius-sm); font-size:15px; font-weight:500; color:var(--text-secondary) }
+.mobile-menu-panel a:hover { background:var(--surface-raised); color:var(--text-primary) }
 
 .header-cta { display:flex; align-items:center; gap:8px; flex-shrink:0 }
 
@@ -178,7 +202,7 @@ nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primar
    HERO
 ═══════════════════════════════════════════════════ */
 .hero {
-  padding:88px 0 72px;
+  padding:64px 0 40px;
   text-align:center;
   position:relative;
   overflow:hidden;
@@ -199,22 +223,36 @@ nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primar
   color:var(--text-primary); margin-bottom:18px;
 }
 .hero-title .grad {
-  background:linear-gradient(135deg, var(--brand) 0%, #9b5de5 100%);
+  background:linear-gradient(135deg, var(--brand) 0%, #2b4f7e 100%);
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
   background-clip:text;
 }
 
 .hero-sub {
   font-size:clamp(15px, 2vw, 18px); color:var(--text-secondary);
-  line-height:1.75; max-width:580px; margin:0 auto 36px;
+  line-height:1.75; max-width:600px; margin:0 auto 32px; text-wrap:balance;
 }
+.hero-title, .section-title, .choice-title { text-wrap:balance }
+.section-sub { text-wrap:balance }
+
+.hero-alt { margin-top:22px; font-size:14px; color:var(--text-secondary) }
+.link-btn {
+  background:none; border:0; padding:2px 4px; border-radius:var(--radius-xs);
+  font:600 14px var(--ui); color:var(--brand); cursor:pointer;
+}
+.link-btn:hover { text-decoration:underline; text-underline-offset:3px }
+.trust-row {
+  list-style:none; display:flex; flex-wrap:wrap; justify-content:center;
+  gap:8px 28px; margin-top:26px; font-size:13px; color:var(--text-muted); font-weight:500;
+}
+.trust-row li::before { content:"✓"; color:var(--ok); font-weight:700; margin-right:7px }
 
 /* Input box */
 .hero-box {
   max-width:680px; margin:0 auto 20px;
   background:var(--surface); border:1.5px solid var(--border-strong);
   border-radius:var(--radius-xl); overflow:hidden;
-  box-shadow:var(--shadow-lg), 0 0 0 1px rgba(108,53,222,.06);
+  box-shadow:var(--shadow-lg), 0 0 0 1px rgba(23,48,79,.06);
   transition:border-color .2s, box-shadow .2s;
 }
 .hero-box:focus-within {
@@ -258,7 +296,7 @@ nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primar
 .choice-content { position:relative; z-index:1 }
 .choice-eyebrow { display:block; font-size:12px; font-weight:700; letter-spacing:.12em; color:var(--brand); text-transform:uppercase; margin-bottom:14px }
 .choice-title { font-size:clamp(2.4rem, 6vw, 4rem); font-weight:800; letter-spacing:-.04em; line-height:1.07; color:var(--text-primary); margin-bottom:16px }
-.choice-title .grad { background:linear-gradient(135deg, var(--brand) 0%, #9b5de5 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
+.choice-title .grad { background:linear-gradient(135deg, var(--brand) 0%, #2b4f7e 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
 .choice-sub { font-size:17px; color:var(--text-secondary); line-height:1.75; max-width:520px; margin:0 auto 48px }
 
 .choice-cards { display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:760px; margin:0 auto 0; padding:0 24px }
@@ -285,7 +323,7 @@ nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primar
 /* ═══════════════════════════════════════════════════
    STATS
 ═══════════════════════════════════════════════════ */
-.stats-section { padding:60px 0 0 }
+.stats-section { padding:32px 0 0 }
 .stats-row { display:flex; flex-wrap:wrap; justify-content:center; gap:0; border:1px solid var(--border); border-radius:var(--radius-xl); background:var(--surface); overflow:hidden; box-shadow:var(--shadow-sm) }
 .stat-item {
   flex:1; min-width:160px; padding:28px 20px; text-align:center;
@@ -293,13 +331,13 @@ nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primar
 }
 .stat-item:last-child { border-right:none }
 .stat-value { font-size:2rem; font-weight:800; letter-spacing:-.04em; color:var(--text-primary); line-height:1; margin-bottom:4px }
-.stat-value .grad { background:linear-gradient(135deg, var(--brand), #9b5de5); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
+.stat-value .grad { background:linear-gradient(135deg, var(--brand), #2b4f7e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
 .stat-label { font-size:12px; color:var(--text-muted); line-height:1.4; font-weight:500 }
 
 /* ═══════════════════════════════════════════════════
    FEATURE CARDS
 ═══════════════════════════════════════════════════ */
-.features-section { padding:96px 0 }
+.features-section { padding:88px 0 }
 .section-header { text-align:center; margin-bottom:56px }
 .section-eyebrow { display:block; font-size:12px; font-weight:700; letter-spacing:.12em; color:var(--brand); text-transform:uppercase; margin-bottom:12px }
 .section-title { font-size:clamp(1.75rem, 4vw, 2.5rem); font-weight:800; letter-spacing:-.035em; color:var(--text-primary); margin-bottom:14px; line-height:1.12 }
@@ -312,7 +350,7 @@ nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primar
   transition:box-shadow .2s, border-color .2s, transform .2s;
   position:relative; overflow:hidden;
 }
-.feature-card:hover { box-shadow:var(--shadow-md); border-color:rgba(108,53,222,.2); transform:translateY(-2px) }
+.feature-card:hover { box-shadow:var(--shadow-md); border-color:rgba(23,48,79,.2); transform:translateY(-2px) }
 .feature-icon {
   width:40px; height:40px; border-radius:var(--radius-sm);
   background:var(--brand-subtle); border:1px solid var(--brand-border);
@@ -332,7 +370,7 @@ nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primar
 .how-step:last-child { border-right:none }
 .step-num {
   width:36px; height:36px; border-radius:50%;
-  background:linear-gradient(135deg, var(--brand), #9b5de5);
+  background:linear-gradient(135deg, var(--brand), #2b4f7e);
   color:#fff; font:700 15px var(--ui);
   display:flex; align-items:center; justify-content:center;
   margin-bottom:16px; box-shadow:var(--shadow-brand);
@@ -349,12 +387,16 @@ nav.main-nav a:hover { background:var(--surface-raised); color:var(--text-primar
   background:var(--surface); border:1px solid var(--border);
   border-radius:var(--radius-lg); padding:22px 20px;
   cursor:pointer; transition:all .2s;
+  display:block; width:100%; text-align:left; font:inherit; color:inherit;
 }
+.doc-cta { display:block; margin-top:12px; font:600 12.5px var(--ui); color:var(--brand) }
+.doc-card:hover .doc-cta::after { transform:translateX(3px) }
+.doc-cta::after { content:" →"; display:inline-block; transition:transform .15s }
 .doc-card:hover { border-color:var(--brand); box-shadow:var(--shadow-md); transform:translateY(-2px) }
 .doc-card-icon { width:36px; height:36px; border-radius:var(--radius-sm); background:var(--brand-subtle); border:1px solid var(--brand-border); display:flex; align-items:center; justify-content:center; margin-bottom:12px }
 .doc-card-icon svg { width:18px; height:18px; stroke:var(--brand); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round }
-.doc-card h4 { font:600 14px/1.3 var(--ui); color:var(--text-primary); margin-bottom:5px }
-.doc-card p { font-size:12.5px; color:var(--text-muted); line-height:1.5 }
+.doc-title { display:block; font:600 14px/1.3 var(--ui); color:var(--text-primary); margin-bottom:5px }
+.doc-desc { display:block; font-size:12.5px; color:var(--text-muted); line-height:1.5 }
 
 /* ═══════════════════════════════════════════════════
    FAQ
@@ -412,7 +454,7 @@ footer {
 }
 .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:48px }
 .footer-brand { font:800 20px var(--ui); color:#fff; letter-spacing:-.03em; margin-bottom:10px }
-.footer-brand em { color:#a78bfa; font-style:normal }
+.footer-brand em { color:#9fb4d1; font-style:normal }
 .footer-desc { font-size:13.5px; line-height:1.7; max-width:26ch }
 .footer-col h5 { font:700 11px var(--ui); text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.85); margin-bottom:14px }
 .footer-col ul { display:flex; flex-direction:column; gap:8px }
@@ -469,7 +511,7 @@ footer {
 .issue p { margin:8px 0; font-size:13.5px; color:var(--text-secondary); line-height:1.65 }
 .badge-warn { font:700 11px var(--ui); text-transform:uppercase; letter-spacing:.04em; color:var(--warn) }
 .badge-high { color:var(--bad) }
-.badge-low  { color:var(--ok) }
+.badge-low  { color:var(--ok-text) }
 .badge { font:700 11px var(--ui); text-transform:uppercase; letter-spacing:.04em }
 .review small { font-size:12px; color:var(--text-muted) }
 
@@ -477,11 +519,11 @@ footer {
    WORK AREA (draft view)
 ═══════════════════════════════════════════════════ */
 .work {
-  display:grid; grid-template-columns:300px 1fr;
+  display:grid; grid-template-columns:340px minmax(0,1fr);
   gap:24px; align-items:start; padding:32px 24px 80px;
   max-width:1200px; margin:0 auto;
 }
-.side { position:sticky; top:76px; display:grid; gap:16px; max-height:calc(100vh - 90px); overflow-y:auto; padding-right:2px }
+.side { position:sticky; top:76px; display:grid; grid-template-columns:minmax(0,1fr); gap:16px; max-height:calc(100vh - 90px); overflow-y:auto; padding-right:2px }
 
 label { display:block; font-size:12px; font-weight:600; color:var(--text-muted); margin:14px 0 4px; text-transform:uppercase; letter-spacing:.05em }
 input {
@@ -493,10 +535,10 @@ input {
 input:focus { outline:none; border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-subtle) }
 input.need { border-left:4px solid var(--brand) }
 input.flash { animation:flash 1.4s }
-@keyframes flash { 0%,60% { background:#ede9fb } 100% { background:var(--surface) } }
+@keyframes flash { 0%,60% { background:#e6ebf2 } 100% { background:var(--surface) } }
 
-.row { display:flex; gap:8px; margin-top:18px }
-.row .btn { flex:1; justify-content:center }
+.row { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px }
+.row .btn { flex:1 1 auto; justify-content:center }
 
 /* Status */
 .status { display:flex; align-items:center; gap:8px; font:600 14px var(--ui); margin-bottom:10px }
@@ -528,7 +570,7 @@ input.flash { animation:flash 1.4s }
 .ctitle select { font:13px var(--ui); padding:3px 8px; border:1.5px solid var(--border-strong); border-radius:6px; background:var(--surface); color:var(--text-muted) }
 .ctext { white-space:pre-wrap; margin-top:4px; max-width:72ch; text-align:justify }
 .v { background:var(--brand-subtle); border-radius:4px; padding:1px 4px; color:var(--brand-dark) }
-.blank { font:inherit; background:#ede9fb; border:0; border-bottom:2px solid var(--brand); border-radius:3px; padding:0 3px; cursor:pointer; color:var(--text-primary) }
+.blank { font:inherit; background:#e6ebf2; border:0; border-bottom:2px solid var(--brand); border-radius:3px; padding:0 3px; cursor:pointer; color:var(--text-primary) }
 .sig { margin-top:44px; break-inside:avoid; border-top:1px solid #9aa3b1; padding-top:18px }
 .sigrow { display:flex; gap:36px; margin:20px 0; flex-wrap:wrap }
 .sigcol { flex:1; min-width:220px; font-size:15px; line-height:2 }
@@ -568,10 +610,14 @@ input.flash { animation:flash 1.4s }
 @media (max-width:680px) {
   .choice-cards { grid-template-columns:1fr }
   nav.main-nav { display:none }
+  .mobile-menu { display:block }
+  .header-cta .btn { padding:.5rem .9rem }
   .features-grid { grid-template-columns:1fr }
   .docs-grid { grid-template-columns:1fr 1fr }
   .footer-top { grid-template-columns:1fr }
-  .hero { padding:60px 0 48px }
+  .hero { padding:44px 0 32px }
+  .hero-box-bar { justify-content:flex-start }
+  .hero-box textarea { height:150px }
   .choice-wrap { padding:60px 0 0 }
   .cta-block { padding:52px 20px }
 }
@@ -579,7 +625,9 @@ input.flash { animation:flash 1.4s }
   .docs-grid { grid-template-columns:1fr }
 }
 @media (prefers-reduced-motion:reduce) {
-  input.flash { animation:none; background:#ede9fb }
+  html { scroll-behavior:auto }
+  *,*::before,*::after { transition-duration:.01ms !important; animation-duration:.01ms !important }
+  input.flash { animation:none; background:#e6ebf2 }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -599,129 +647,71 @@ input.flash { animation:flash 1.4s }
   .wm { display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:70%; max-width:560px; opacity:.05; z-index:0; pointer-events:none }
 }
 
-/* Reference direction: warm paper, ink navy, restrained brass, editorial serif. */
-body { background:#f5f3ef; color:#1e2d39 }
-.container { max-width:1480px; padding-inline:clamp(22px,3.2vw,56px) }
-.site-header { background:rgba(248,247,244,.96); box-shadow:none; border-bottom:1px solid #dedbd5 }
-#choice,#desc,#howrow,#featuresrow,#docsrow,#faqrow,#privacyfaq,#legalfaq { scroll-margin-top:100px }
-.header-inner { height:82px }
-.brand { font-size:22px; letter-spacing:-.045em }
-.brand-mark { width:46px; height:46px; border-radius:10px; background:#efebe2; border:1px solid #d8ceb9; box-shadow:none }
-.brand-mark svg { width:27px; height:27px; stroke:#a3885b }
-nav.main-nav { gap:30px }
-nav.main-nav a { color:#5f686c; font-size:15px }
-.header-note { color:#687174; font-size:14px; margin-right:10px }
-.btn { border-radius:6px }
-.btn-primary,.btn-primary-dark { background:#263b4d; border-color:#263b4d; box-shadow:none }
-.btn-primary:hover,.btn-primary-dark:hover { background:#344e62; border-color:#344e62; box-shadow:0 8px 18px #263b4d22 }
-.hero { min-height:670px; display:flex; align-items:center; padding:42px 0 54px; background:#f5f3ef; text-align:left }
-.hero-glow { display:none }
-.hero-content { z-index:1; text-align:left }
-.hero-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(500px,.92fr); align-items:center; gap:clamp(48px,7vw,120px) }
-.hero-copy { padding-block:38px }
-.hero-eyebrow { display:flex; align-items:center; gap:16px; margin-bottom:34px; color:#826e49; font-size:13px; letter-spacing:.15em }
-.hero-eyebrow span { display:inline-block; width:36px; height:1px; background:#a3885b }
-.hero-title { max-width:770px; font:400 clamp(3.8rem,6vw,6.2rem)/.99 var(--serif); letter-spacing:-.055em; margin:0 0 28px; color:#1e2d39 }
-.hero-title em { color:#a3885b; font-style:italic }
-.hero-sub { max-width:680px; margin:0 0 28px; color:#646d70; font-size:clamp(17px,1.5vw,21px); line-height:1.75 }
-.hero-promises { display:flex; flex-wrap:wrap; gap:26px; color:#586367; font-size:15px }
-.hero-promises b { color:#a3885b; font-size:20px; margin-right:9px }
-.workspace-card { width:100%; max-width:none; margin:0; padding:clamp(28px,3vw,44px); border:1px solid #dedbd5; border-radius:10px; background:#fff; box-shadow:0 18px 55px #2434440b; overflow:visible }
-.workspace-heading { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:28px }
-.workspace-kicker,.examples>b { display:block; color:#8b806d; text-transform:uppercase; letter-spacing:.15em; font-weight:700; font-size:12px }
-.workspace-heading h2 { margin-top:10px; color:#1e2d39; font:400 clamp(2rem,3vw,2.8rem)/1.1 var(--serif); letter-spacing:-.035em }
-.private-badge { color:#75817d; white-space:nowrap; font-size:14px }
-.workspace-tabs { display:grid; grid-template-columns:1fr 1fr; border-bottom:1px solid #dcdad5; margin-bottom:27px }
-.workspace-tab { display:flex; justify-content:center; align-items:center; gap:12px; padding:15px 8px; border:0; border-bottom:3px solid transparent; color:#858b8c; background:transparent; font:500 15px var(--ui) }
-.workspace-tab span { color:inherit; font-size:20px }
-.workspace-tab.active { color:#263b4d; border-color:#a3885b; font-weight:700 }
-.prompt-label { display:block; margin-bottom:11px; color:#61696b; text-transform:uppercase; letter-spacing:.08em; font-size:12px; font-weight:700 }
-.workspace-card textarea { display:block; width:100%; height:150px; min-height:120px; resize:vertical; padding:18px; border:1px solid #d5d5d1; border-radius:5px; background:#fff; color:#263541; font:15px/1.6 var(--ui) }
-.workspace-card textarea::placeholder { color:#a0a3a2 }
-.workspace-card textarea:focus { outline:2px solid #a3885b66; border-color:#a3885b }
-.hero-box-bar { padding:20px 0 23px; border:0; gap:14px }
-.hero-hint { max-width:230px; color:#8a9090; font-size:13px }
-.workspace-card .btn { padding:15px 20px; min-height:54px }
-.examples { border-top:1px solid #e2e0db; padding-top:20px }
-.hero-chips { justify-content:flex-start; gap:6px; margin-top:10px }
-.chip { padding:4px 0; margin-right:16px; border:0; border-radius:0; color:#586773; background:transparent; font-size:13px; text-align:left }
-.chip:hover { color:#a3885b; background:transparent; text-decoration:underline }
-.legal-note { margin-top:20px; color:#9a9c99; font-size:12px; line-height:1.6 }
-.msg-error { color:#a23932 }
-.stats-section { padding:22px 0; background:#f5f3ef; border-top:1px solid #dedbd5; border-bottom:1px solid #dedbd5 }
-.stats-row { gap:0; justify-content:space-between }
-.stat-item { flex:1; border-right:1px solid #d9d7d2 }
-.stat-item:last-child { border:0 }
-.stat-value { font:600 20px var(--ui) }
-.stat-value .grad,.grad { color:#a3885b; background:none; -webkit-text-fill-color:currentColor }
-.stat-label { color:#7d8585; font-size:13px }
-.features-section,.how-section,.docs-section,.faq-section { padding:96px 0; background:#f5f3ef }
-.how-section { border-block:1px solid #dedbd5 }
-.section-header { margin-bottom:40px; text-align:center }
-.how-section .section-header,.docs-section .section-header { max-width:none }
-.how-section .section-title,.docs-section .section-title { max-width:850px; margin-inline:auto }
-.faq-section .container { display:block }
-.faq-section .section-header { margin:0 0 40px; position:static }
-.faq-section .section-title { max-width:850px; margin-inline:auto }
-.faq-section .faq-list { margin:0 auto; width:100%; max-width:720px }
-.section-eyebrow,.choice-eyebrow { color:#826e49; letter-spacing:.15em }
-.section-title,.choice-title { max-width:850px; color:#1e2d39; font:400 clamp(2.5rem,4.5vw,4rem)/1.12 var(--serif); letter-spacing:-.045em }
-.features-section .section-title { max-width:none; font-size:clamp(2.35rem,3.25vw,3.5rem) }
-.section-sub { color:#777f80 }
-.features-grid,.docs-grid { gap:0; border:1px solid #dedbd5; background:#f8f7f4 }
-.feature-card,.doc-card { min-height:220px; border:0; border-right:1px solid #dedbd5; border-bottom:1px solid #dedbd5; border-radius:0; background:transparent; box-shadow:none; padding:30px }
-.feature-card:hover,.doc-card:hover { transform:none; box-shadow:none; background:#fff }
-.feature-card h3,.doc-card h4,.how-step h3 { color:#263b4d }
-.feature-card p,.doc-card p,.how-step p { color:#7b8283 }
-.feature-icon,.doc-card-icon,.step-num { color:#a3885b; background:#efebe2; border:1px solid #ded5c3; box-shadow:none }
-.how-grid { border-top:1px solid #d9d7d2; border-bottom:1px solid #d9d7d2 }
-.how-step { border-color:#d9d7d2 }
-.step-num { display:inline-flex; align-items:center; justify-content:center; width:auto; height:auto; padding:4px 8px; border:0; border-radius:0; background:transparent; font:italic 18px var(--serif) }
-.faq-list { border-top:1px solid #d9d7d2 }
-.faq-item { border-color:#d9d7d2 }
-.faq-item summary { color:#263b4d }
-.faq-item summary::after { color:#a3885b }
-.faq-answer { color:#747d7e }
-.cta-block { border-radius:0; background:#1e3040; box-shadow:none }
-.cta-block h2 { font-family:var(--serif); font-weight:400 }
-footer { background:#1e3040 }
-.footer-brand em { color:#c2aa7b }
-.footer-desc,.footer-bottom { color:#b6c0c4 }
-.footer-col h5 { color:#d0b988 }
-.page-banner { background:#1e3040 }
-.btn-outline { color:#263b4d; border-color:#b9b7b0 }
-.btn-outline:hover { background:#efebe2; border-color:#a3885b }
-:focus-visible { outline-color:#a3885b }
-@media(max-width:950px) {
-  .hero-layout { grid-template-columns:1fr; gap:16px }
-  .hero { padding-top:26px }
-  .hero-copy { padding-block:20px }
-  .hero-title { font-size:clamp(3.2rem,10vw,5.3rem) }
-  .workspace-card { max-width:760px; justify-self:center }
+/* ═══════════════════════════════════════════════════
+   FIXES
+═══════════════════════════════════════════════════ */
+[hidden] { display:none !important }
+.footer-col ul { list-style:none; padding:0; margin:0 }
+.filebtn:focus-within { outline:2px solid var(--brand); outline-offset:3px; border-radius:var(--radius-xs) }
+.filename { font-size:13px; color:var(--text-secondary); display:inline-flex; align-items:center; gap:6px; max-width:100% }
+.filename span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px }
+.msg-ok { color:var(--ok-text) }
+
+/* Draft / Review tabs */
+.mode-tabs { display:inline-flex; gap:4px; padding:4px; margin:0 0 18px; background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius-md) }
+.mode-tabs button { font:600 14px var(--ui); padding:9px 20px; border:0; background:transparent; border-radius:var(--radius-sm); color:var(--text-secondary); cursor:pointer; transition:background .15s,color .15s }
+.mode-tabs button:hover { color:var(--text-primary); background:var(--surface-raised) }
+.mode-tabs button[aria-selected="true"] { background:var(--brand); color:#fff }
+.mode-tabs button:focus-visible { outline:2px solid var(--brand); outline-offset:2px }
+.hero-note { font-size:12.5px; color:var(--text-muted); margin-top:4px }
+#panel-review .reviewout { text-align:left; max-width:820px; margin:28px auto 0 }
+.issue .badge { padding:0; background:none; border:0 }
+@media (max-width:480px) { .mode-tabs { display:flex } .mode-tabs button { flex:1; padding:9px 10px } }
+
+/* ═══════════════════════════════════════════════════
+   FORMAL THEME OVERRIDES
+═══════════════════════════════════════════════════ */
+.hero-glow, .choice-glow, .cta-block::before, .page-banner::before { display:none }
+.hero { background:var(--bg-page); border-bottom:1px solid var(--border) }
+
+/* Serif display type */
+.hero-title, .choice-title, .section-title, .cta-block h2, .page-banner h2, .footer-brand {
+  font-family:var(--display); font-weight:600; letter-spacing:-.015em;
 }
-@media(max-width:680px) {
-  .header-inner { height:68px }
-  .header-note { display:none }
-  .brand { font-size:18px }
-  .brand-mark { width:38px; height:38px }
-  .header-cta .btn { font-size:12px; padding:10px 12px }
-  nav.main-nav { display:none }
-  .hero { min-height:0; padding:26px 0 40px }
-  .hero-eyebrow { margin-bottom:22px; font-size:10px }
-  .hero-title { font-size:clamp(3rem,14vw,4.4rem) }
-  .hero-sub { font-size:16px }
-  .hero-promises { gap:12px; font-size:13px }
-  .workspace-card { padding:22px 18px }
-  .workspace-heading h2 { font-size:2rem }
-  .private-badge { font-size:12px }
-  .workspace-tab { font-size:12px; gap:6px }
-  .workspace-card textarea { height:130px }
-  .hero-box-bar { align-items:flex-start }
-  .hero-hint { max-width:150px }
-  .workspace-card .btn { padding:13px; font-size:13px }
-  .features-section,.how-section,.docs-section,.faq-section { padding:64px 0 }
-  .feature-card,.doc-card { min-height:0; padding:22px }
+.hero-title { font-size:clamp(2.2rem, 5vw, 3.5rem); line-height:1.12 }
+.section-title, .cta-block h2 { font-size:clamp(1.65rem, 3.4vw, 2.2rem); line-height:1.2 }
+.page-banner h2 { font-size:26px }
+.brand { font-family:var(--display); font-size:21px; font-weight:700; letter-spacing:-.01em }
+
+/* Solid accent instead of gradient text */
+.hero-title .grad, .choice-title .grad, .stat-value .grad {
+  background:none; -webkit-background-clip:initial; background-clip:initial;
+  -webkit-text-fill-color:currentColor; color:var(--brand); font-style:italic;
 }
+.stat-value { font-family:var(--display); font-weight:600; letter-spacing:-.01em }
+.stat-value .grad { font-style:normal }
+
+/* Eyebrows in a muted brass tone */
+.hero-eyebrow, .section-eyebrow, .choice-eyebrow { color:var(--accent); letter-spacing:.14em }
+
+/* Flat, squared components */
+.brand-mark { background:var(--brand); box-shadow:none; border-radius:var(--radius-sm) }
+.step-num { background:var(--brand); box-shadow:none; border-radius:var(--radius-sm) }
+.btn-primary, .btn-primary-dark { box-shadow:var(--shadow-brand) }
+.btn-primary:hover, .btn-primary-dark:hover, .btn-outline:hover, .btn-ghost-dark:hover { transform:none }
+.chip { border-radius:var(--radius-sm); font-weight:500 }
+.pill, .badge { border-radius:var(--radius-xs) }
+.feature-card:hover, .doc-card:hover { transform:none; box-shadow:var(--shadow-md) }
+.feature-card, .doc-card, .stats-row, .how-grid { box-shadow:none }
+.hero-box { box-shadow:var(--shadow-md) }
+.site-header { backdrop-filter:none; -webkit-backdrop-filter:none; background:#fff; box-shadow:none }
+.cta-block, .page-banner { background:var(--surface-dark); border-color:var(--border-dark) }
+.cta-block p { color:rgba(255,255,255,.7) }
+.page-banner p { color:rgba(255,255,255,.72) }
+footer { background:var(--surface-dark) }
+.footer-desc, .footer-bottom p { color:rgba(255,255,255,.65) }
+.footer-links a { color:rgba(255,255,255,.55) }
+.paper { box-shadow:0 1px 3px rgba(15,34,64,.08), 0 12px 32px rgba(15,34,64,.08) }
 </style>
 <link rel="stylesheet" href="voice.css">
 </head>
@@ -735,18 +725,27 @@ footer { background:#1e3040 }
   <div class="container header-inner">
     <a href="/" class="brand">
       <div class="brand-mark">
-        <svg viewBox="0 0 24 24"><path d="M12 3v17M5 6h14M6 6l-3 8h6L6 6Zm12 0-3 8h6l-3-8ZM8 21h8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
       </div>
-      Client<em>Clause</em>
+      <span class="brand-text">Client<em>Clause</em></span>
     </a>
     <nav class="main-nav" aria-label="Primary">
-      <a href="#howrow">How it works</a>
-      <a href="#featuresrow">Capabilities</a>
-      <a href="#faqrow">FAQ</a>
+      <a href="#docsrow" onclick="goTo('docsrow');return false">Documents</a>
+      <a href="#" onclick="chooseMode('improve');return false">AI Review</a>
+      <a href="#howrow" onclick="goTo('howrow');return false">How it works</a>
+      <a href="#faqrow" onclick="goTo('faqrow');return false">FAQ</a>
     </nav>
     <div class="header-cta">
-      <span class="header-note">No account needed</span>
-      <button class="btn btn-primary btn-md" onclick="document.getElementById('desc').focus();window.scrollTo({top:0,behavior:'smooth'})">Get started <span aria-hidden="true">→</span></button>
+      <button type="button" class="btn btn-primary btn-md" onclick="chooseMode('new')">Draft a contract</button>
+      <details class="mobile-menu" id="mmenu">
+        <summary aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></summary>
+        <div class="mobile-menu-panel">
+          <a href="#docsrow" onclick="goTo('docsrow');return false">Documents</a>
+          <a href="#" onclick="chooseMode('improve');return false">AI Review</a>
+          <a href="#howrow" onclick="goTo('howrow');return false">How it works</a>
+          <a href="#faqrow" onclick="goTo('faqrow');return false">FAQ</a>
+        </div>
+      </details>
     </div>
   </div>
 </header>
@@ -759,24 +758,23 @@ footer { background:#1e3040 }
 ══════════════════════════════════════════════════ -->
 <section id="choice" aria-labelledby="choicetitle">
 
-  <!-- Hero input (shown after choosing "new") -->
-  <div id="heromain">
-    <div class="hero">
+  <!-- Landing (default view) -->
+  <div id="choicecards">
+    <div class="hero" id="heromain">
       <div class="hero-glow"></div>
-      <div class="container hero-content hero-layout">
-        <div class="hero-copy">
-          <span class="hero-eyebrow"><span></span> Practical legal documents, made clear</span>
-          <h1 class="hero-title" id="choicetitle">Good agreements<br>begin with <em>clarity.</em></h1>
-          <p class="hero-sub">Create a thoughtful first draft or review an existing agreement—with a guided process designed to make the details easier to understand.</p>
-          <div class="hero-promises"><span><b>✓</b> Plain-language guidance</span><span><b>✓</b> You stay in control</span></div>
+      <div class="container hero-content">
+        <span class="hero-eyebrow">AI Contract Generator · Free to try</span>
+        <h1 class="hero-title" id="choicetitle">Legal contracts,<br><span class="grad">simplified with AI</span></h1>
+        <p class="hero-sub" id="herosub">Describe your deal in plain English. ClientClause drafts a complete contract, flags missing terms, and lets you refine every clause.</p>
+        <div class="mode-tabs" role="tablist" aria-label="What would you like to do?">
+          <button type="button" role="tab" id="tab-new" aria-selected="true" aria-controls="panel-new" onclick="setHeroMode('new')">Draft a contract</button>
+          <button type="button" role="tab" id="tab-review" aria-selected="false" aria-controls="panel-review" tabindex="-1" onclick="setHeroMode('review')">Review a contract</button>
         </div>
-        <div class="hero-box workspace-card">
-          <div class="workspace-heading"><div><span class="workspace-kicker">Document workspace</span><h2>How can we help?</h2></div><span class="private-badge">♧ &nbsp;Private</span></div>
-          <div class="workspace-tabs"><button class="workspace-tab active" type="button" onclick="chooseMode('new')"><span>▤</span>Create a draft</button><button class="workspace-tab" type="button" onclick="chooseMode('improve')"><span>♧</span>Review a document</button></div>
-          <label class="prompt-label" for="desc">What do you need an agreement for?</label>
+        <div id="panel-new" role="tabpanel" aria-labelledby="tab-new">
+        <div class="hero-box">
           <textarea id="desc" aria-label="Describe your agreement" placeholder="For example: I'm Riya Sharma, a freelance web developer building an e-commerce site for Acme Traders for ₹50,000. Work runs Dec 1 – Jan 31 2027. Courts in Bengaluru."></textarea>
           <div class="hero-box-bar">
-            <span class="hero-hint">Be specific; you can refine details later.</span>
+            <span class="hero-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-right:5px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sent to AI for processing only — not stored by ClientClause.</span>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
               <span class="voice">
                 <button type="button" class="mic" id="mic" aria-pressed="false"><span class="dotm"></span><span id="micl">Speak</span></button>
@@ -789,20 +787,41 @@ footer { background:#1e3040 }
               </span>
               <button class="btn btn-primary btn-md" id="go" onclick="draft()">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-                Start a draft <span aria-hidden="true">→</span>
+                Draft contract
               </button>
             </div>
           </div>
-          <div class="examples"><b>Try an example</b><div class="hero-chips" id="chips"></div></div>
-          <p class="legal-note">ClientClause provides drafting assistance, not legal advice. Have important documents reviewed by a qualified attorney.</p>
+        </div>
+        <div class="hero-chips" id="chips" aria-label="Example prompts"></div>
         <div class="msg-error" id="msg" role="alert"></div>
-      </div>
+        </div>
+        <div id="panel-review" role="tabpanel" aria-labelledby="tab-review" hidden>
+          <div class="hero-box">
+            <textarea id="reviewtext" aria-label="Contract text to review" placeholder="Paste your contract text here, or choose a PDF, TXT or image file. We'll flag unclear terms, missing clauses and risks."></textarea>
+            <div class="hero-box-bar">
+              <span class="hero-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-right:5px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sent to AI for review only — not stored by ClientClause.</span>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <label class="filebtn" style="margin:0;cursor:pointer;font:600 13px var(--ui);color:var(--text-muted);display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Choose a file
+          <input id="reviewfile" type="file" accept=".pdf,.txt,.png,.jpg,.jpeg,.webp,.tif,.tiff,application/pdf,text/plain,image/*" style="position:absolute;opacity:0;width:0;height:0">
+        </label>
+                <span class="filename" id="reviewfilebox" hidden><span id="reviewfilename"></span><button type="button" class="link-btn" id="reviewfileclear">Remove</button></span>
+                <button type="button" class="btn btn-primary btn-md" id="reviewgo" onclick="reviewExisting()">Review contract</button>
+              </div>
+            </div>
+          </div>
+          <p class="hero-note">PDF, TXT or image files. Scanned pages are read with OCR, so verify extracted text against the original.</p>
+          <div class="msg-error" id="reviewmsg" role="alert"></div>
+          <div id="reviewout" class="reviewout" aria-live="polite"></div>
+        </div>
+        <ul class="trust-row" aria-label="Highlights">
+          <li>No account needed</li>
+          <li>Not stored by ClientClause</li>
+          <li>A drafting aid, not legal advice</li>
+        </ul>
       </div>
     </div>
-  </div>
-
-  <!-- Choice cards (default view) -->
-  <div id="choicecards">
 
     <!-- Stats -->
     <div class="stats-section" id="statsrow">
@@ -904,29 +923,33 @@ footer { background:#1e3040 }
         <div class="section-header">
           <span class="section-eyebrow">Supported documents</span>
           <h2 class="section-title">What can you generate?</h2>
-          <p class="section-sub">The most common agreement types for freelancers and small businesses — with more coming soon.</p>
+          <p class="section-sub">Pick a document type to start from an example, then edit it to match your deal.</p>
         </div>
         <div class="docs-grid">
-          <div class="doc-card" onclick="chooseMode('new')">
+          <button type="button" class="doc-card" onclick="useSample('Freelance')">
             <div class="doc-card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-            <h4>Freelance Agreement</h4>
-            <p>Service contracts for developers, designers, writers &amp; consultants.</p>
-          </div>
-          <div class="doc-card" onclick="chooseMode('new')">
+            <span class="doc-title">Freelance Agreement</span>
+            <span class="doc-desc">Service contracts for developers, designers, writers &amp; consultants.</span>
+            <span class="doc-cta">Start with an example</span>
+          </button>
+          <button type="button" class="doc-card" onclick="useSample('NDA')">
             <div class="doc-card-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-            <h4>Non-Disclosure (NDA)</h4>
-            <p>Confidentiality agreements for partnerships, hiring, and business talks.</p>
-          </div>
-          <div class="doc-card" onclick="chooseMode('new')">
+            <span class="doc-title">Non-Disclosure (NDA)</span>
+            <span class="doc-desc">Confidentiality agreements for partnerships, hiring, and business talks.</span>
+            <span class="doc-cta">Start with an example</span>
+          </button>
+          <button type="button" class="doc-card" onclick="useSample('Employment')">
             <div class="doc-card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-            <h4>Employment Contract</h4>
-            <p>Full-time and part-time agreements with salary, notice, and benefits.</p>
-          </div>
-          <div class="doc-card" onclick="chooseMode('new')">
+            <span class="doc-title">Employment Contract</span>
+            <span class="doc-desc">Full-time and part-time agreements with salary, notice, and benefits.</span>
+            <span class="doc-cta">Start with an example</span>
+          </button>
+          <button type="button" class="doc-card" onclick="useSample('Rent')">
             <div class="doc-card-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-            <h4>Rent Agreement</h4>
-            <p>Residential tenancy contracts with rent, deposit, and maintenance terms.</p>
-          </div>
+            <span class="doc-title">Rent Agreement</span>
+            <span class="doc-desc">Residential tenancy contracts with rent, deposit, and maintenance terms.</span>
+            <span class="doc-cta">Start with an example</span>
+          </button>
         </div>
       </div>
     </div>
@@ -943,11 +966,11 @@ footer { background:#1e3040 }
             <summary>Is ClientClause really free?</summary>
             <div class="faq-answer">Yes — generating and reviewing contracts is free with no account required. You only need to have a compatible AI backend configured to handle the processing.</div>
           </details>
-          <details class="faq-item" id="privacyfaq">
+          <details class="faq-item">
             <summary>Is my data stored anywhere?</summary>
             <div class="faq-answer">No. Your description text is sent directly to the configured AI provider for processing and is not saved by ClientClause. Avoid including confidential personal details when testing.</div>
           </details>
-          <details class="faq-item" id="legalfaq">
+          <details class="faq-item">
             <summary>Are these contracts legally valid?</summary>
             <div class="faq-answer">ClientClause generates structured drafts for reference. They are a starting point, not a substitute for professional legal advice. Have a qualified lawyer review any contract before signing.</div>
           </details>
@@ -983,38 +1006,7 @@ footer { background:#1e3040 }
 
 </section>
 
-<!-- ══════════════════════════════════════════════════
-     REVIEW SECTION
-══════════════════════════════════════════════════ -->
-<section id="reviewsection" aria-labelledby="reviewtitle" hidden>
-  <div class="page-banner">
-    <div class="container page-banner-inner">
-      <div>
-        <h2 id="reviewtitle">Review an existing draft</h2>
-        <p>Paste or upload a contract — we'll flag issues and suggest improvements.</p>
-      </div>
-      <button type="button" class="btn btn-ghost-dark btn-md" onclick="backToChoice()">← Back</button>
-    </div>
-  </div>
-  <div class="review-wrap">
-    <div class="panel">
-      <h3>Upload or paste your contract</h3>
-      <p class="sub">Accepts PDF, TXT, or image files. Scanned pages are read with OCR — verify extracted text against the original.</p>
-      <textarea id="reviewtext" aria-label="Contract text to review" placeholder="Paste the agreement text here…"></textarea>
-      <div class="reviewbar">
-        <label style="margin:0;cursor:pointer;font:600 13px var(--ui);color:var(--text-muted);display:flex;align-items:center;gap:6px">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Choose a file
-          <input id="reviewfile" type="file" accept=".pdf,.txt,.png,.jpg,.jpeg,.webp,.tif,.tiff,application/pdf,text/plain,image/*" style="position:absolute;opacity:0;width:0;height:0">
-        </label>
-        <button class="btn btn-primary btn-md" id="reviewgo" onclick="reviewExisting()">Review contract</button>
-        <small>Text is sent to the AI provider for review only — not stored by ClientClause.</small>
-      </div>
-      <div class="msg-error" id="reviewmsg" role="alert"></div>
-      <div id="reviewout" class="reviewout" aria-live="polite"></div>
-    </div>
-  </div>
-</section>
+
 
 <!-- ══════════════════════════════════════════════════
      DRAFT WORK AREA
@@ -1034,34 +1026,36 @@ footer { background:#1e3040 }
       <div class="footer-col">
         <h5>Documents</h5>
         <ul>
-          <li><a href="#desc" data-s="Freelance" onclick="chooseMode('new')">Freelance Agreement</a></li>
-          <li><a href="#desc" data-s="NDA" onclick="chooseMode('new')">NDA</a></li>
-          <li><a href="#desc" data-s="Employment" onclick="chooseMode('new')">Employment Contract</a></li>
-          <li><a href="#desc" data-s="Rent" onclick="chooseMode('new')">Rent Agreement</a></li>
+          <li><a href="#" onclick="useSample('Freelance');return false">Freelance Agreement</a></li>
+          <li><a href="#" onclick="useSample('NDA');return false">NDA</a></li>
+          <li><a href="#" onclick="useSample('Employment');return false">Employment Contract</a></li>
+          <li><a href="#" onclick="useSample('Rent');return false">Rent Agreement</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h5>Tools</h5>
         <ul>
-          <li><a href="#reviewsection" onclick="chooseMode('improve')">AI Contract Review</a></li>
-          <li><a href="#reviewsection" onclick="chooseMode('improve')">Improve a draft</a></li>
-          <li><a href="#desc" onclick="chooseMode('new');document.getElementById('mic').focus()">Voice Input</a></li>
+          <li><a href="#" onclick="chooseMode('improve');return false">AI Contract Review</a></li>
+          <li><a href="#" onclick="chooseMode('improve');return false">Contract Improver</a></li>
+          <li><a href="#" onclick="goTo('featuresrow');return false">Voice Input</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h5>Company</h5>
         <ul>
-          <li><a href="#choice" onclick="backToChoice()">About ClientClause</a></li>
-          <li><a href="#privacyfaq" onclick="backToChoice()">Data handling</a></li>
-          <li><a href="#legalfaq" onclick="backToChoice()">Legal disclaimer</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <p>© 2026 ClientClause. A drafting aid, not legal advice. Have a qualified lawyer review before signing.</p>
       <div class="footer-links">
-        <a href="#privacyfaq" onclick="backToChoice()">Data handling</a>
-        <a href="#legalfaq" onclick="backToChoice()">Legal disclaimer</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
       </div>
     </div>
   </div>
@@ -1081,28 +1075,67 @@ const LANDING_IDS = ["choicecards","statsrow","featuresrow","howrow","docsrow","
 function hideLanding() { LANDING_IDS.forEach(id=>{ const el=$(id); if(el) el.style.display="none" }) }
 function showLanding() { LANDING_IDS.forEach(id=>{ const el=$(id); if(el) el.style.display="" }) }
 
-/* ── Mode switching ── */
-function chooseMode(mode){
-  hideLanding();
-  if(mode==="new"){
-    $("reviewsection").hidden=true;
-    $("heromain").style.display="";
-    window.scrollTo({top:0,behavior:"smooth"});
-  } else {
-    $("heromain").style.display="none";
-    $("reviewsection").hidden=false;
-    $("reviewsection").scrollIntoView({behavior:"smooth",block:"start"});
-  }
-}
+/* ── View switching ── */
+const smooth=()=>matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth";
+function closeMenu(){ const m=$("mmenu"); if(m) m.open=false }
 
-function backToChoice(){
-  $("reviewsection").hidden=true;
-  $("heromain").style.display="";
+/* Show the landing page and hide review / draft views */
+function resetViews(){
   $("work").hidden=true;
   document.querySelector(".work-page-header")?.remove();
   showLanding();
   document.body.classList.remove("has-draft");
-  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+const HERO_SUB={
+  new:"Describe your deal in plain English. ClientClause drafts a complete contract, flags missing terms, and lets you refine every clause.",
+  review:"Paste or upload your contract. ClientClause flags unclear terms, missing clauses and risks, then suggests a cleaner draft."
+};
+function setHeroMode(m){
+  const rev=m==="review";
+  $("tab-new").setAttribute("aria-selected",String(!rev));
+  $("tab-review").setAttribute("aria-selected",String(rev));
+  $("tab-new").tabIndex=rev?-1:0;
+  $("tab-review").tabIndex=rev?0:-1;
+  $("panel-new").hidden=rev;
+  $("panel-review").hidden=!rev;
+  $("herosub").textContent=HERO_SUB[m];
+}
+document.querySelector(".mode-tabs").addEventListener("keydown",e=>{
+  if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
+  const rev=$("tab-review").getAttribute("aria-selected")==="true";
+  const next=rev?"new":"review"; setHeroMode(next); $("tab-"+next).focus(); e.preventDefault();
+});
+
+/* Nav / CTA entry point: both modes live in the same hero box */
+function chooseMode(mode){
+  closeMenu();
+  resetViews();
+  const rev=mode!=="new";
+  setHeroMode(rev?"review":"new");
+  window.scrollTo({top:0,behavior:smooth()});
+  setTimeout(()=>$(rev?"reviewtext":"desc").focus({preventScroll:true}),250);
+}
+
+function backToChoice(){
+  resetViews();
+  window.scrollTo({top:0,behavior:smooth()});
+}
+
+/* Scroll to a landing section (leaving review/draft view first if needed) */
+function goTo(id){
+  closeMenu();
+  if($("choicecards").style.display==="none") resetViews();
+  $(id)?.scrollIntoView({behavior:smooth(),block:"start"});
+}
+
+/* Pre-fill the prompt box with an example for a document type */
+function useSample(key){
+  resetViews();
+  setHeroMode("new");
+  $("desc").value=SAMPLES[key]||"";
+  window.scrollTo({top:0,behavior:smooth()});
+  setTimeout(()=>$("desc").focus({preventScroll:true}),250);
 }
 
 /* ── Health ping ── */
@@ -1119,23 +1152,36 @@ const SAMPLES={
 };
 $("chips").innerHTML=Object.keys(SAMPLES).map(k=>`<button type="button" class="chip" data-s="${k}">Try: ${k}</button>`).join("");
 $("desc").addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")draft()});
+$("reviewtext").addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")reviewExisting()});
 
 /* ── API ── */
-async function post(url,body){
-  const r=await fetch((window.API_BASE||"")+url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-  const d=await r.json();
-  if(!r.ok)throw new Error(d.detail||"Something went wrong. Try again in a moment.");
+async function api(url,opts){
+  let r;
+  try{ r=await fetch((window.API_BASE||"")+url,opts); }
+  catch(e){ throw new Error("Can't reach the server. Check your connection and that the backend is running, then try again."); }
+  let d=null; try{ d=await r.json(); }catch(e){}
+  if(!r.ok){
+    const det=d&&d.detail;
+    const msg=typeof det==="string"?det:Array.isArray(det)?det.map(x=>x&&x.msg).filter(Boolean).join("; "):"";
+    throw new Error(msg||(r.status>=500?"The server had a problem. Please try again in a moment.":"Something went wrong. Please try again."));
+  }
+  if(d===null) throw new Error("The server sent an unexpected response. Please try again.");
   return d;
 }
+const post=(url,body)=>api(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+const arr=x=>Array.isArray(x)?x:[];
 
 /* ── Draft ── */
 async function draft(){
+  if($("go").disabled) return;
   const text=$("desc").value.trim();
+  if(!text){$("msg").textContent="Describe your agreement first, or try one of the examples above.";$("desc").focus();return;}
+  if(text.length<25){$("msg").textContent="Add a few more details: who is involved, what is being done, how much, and for how long.";$("desc").focus();return;}
   $("msg").textContent="";$("go").disabled=true;$("go").textContent="Drafting…";
   try{
     S=await post("/api/draft",{text});S.variants={};render();
     document.body.classList.add("has-draft");
-    $("work").scrollIntoView({behavior:"smooth"});
+    $("work").scrollIntoView({behavior:smooth()});
   }catch(e){$("msg").textContent=e.message;}
   finally{
     $("go").disabled=false;
@@ -1145,24 +1191,26 @@ async function draft(){
 
 /* ── Review existing ── */
 async function reviewExisting(){
+  if($("reviewgo").disabled) return;
   const text=$("reviewtext").value.trim(), file=$("reviewfile").files[0];
   if(!text&&!file){$("reviewmsg").textContent="Paste contract text or choose a file first.";return;}
   const btn=$("reviewgo");btn.disabled=true;btn.textContent="Reviewing…";
-  $("reviewmsg").textContent="";$("reviewout").innerHTML="";
+  $("reviewmsg").className="msg-error";$("reviewmsg").textContent="";$("reviewout").innerHTML="";
   try{
-    let r;
-    if(file){const form=new FormData();form.append("file",file);r=await fetch((window.API_BASE||"")+"/api/review/upload",{method:"POST",body:form});}
-    else{r=await fetch((window.API_BASE||"")+"/api/review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});}
-    const d=await r.json();if(!r.ok)throw new Error(d.detail||"Review failed. Please try again.");
-    reviewSourceText=String(d.source_text||text);reviewIssues=Array.isArray(d.issues)?d.issues:[];
+    let d;
+    if(file){const form=new FormData();form.append("file",file);d=await api("/api/review/upload",{method:"POST",body:form});}
+    else{d=await post("/api/review",{text});}
+    reviewSourceText=String(d.source_text||text);reviewIssues=arr(d.issues);
+    const missing=arr(d.missing_topics),lawyerQs=arr(d.questions_for_lawyer);
     let h=d.extraction_warning?`<div class="issue"><b>Text extraction check</b><p>${esc(d.extraction_warning)}</p></div>`:"";
     h+=`<div class="panel"><h3>Review summary</h3><p>${esc(d.summary)}</p><small>AI issue spotting only — not a legal validation. Have a qualified lawyer review before signing.</small></div>`;
-    if(d.issues.length)h+=d.issues.map(i=>`<article class="issue"><span class="badge badge-${esc(i.priority)}">${esc(i.priority)} priority · ${esc(i.category)}</span><h4>${esc(i.title)}</h4>${i.excerpt?`<p><b>Text:</b> "${esc(i.excerpt)}"</p>`:""}<p><b>Why it may matter:</b> ${esc(i.why_it_matters)}</p><p><b>Suggested next step:</b> ${esc(i.suggestion)}</p></article>`).join("");
+    if(reviewIssues.length)h+=reviewIssues.map(i=>`<article class="issue"><span class="badge badge-${esc(i.priority)}">${esc(i.priority)} priority · ${esc(i.category)}</span><h4>${esc(i.title)}</h4>${i.excerpt?`<p><b>Text:</b> "${esc(i.excerpt)}"</p>`:""}<p><b>Why it may matter:</b> ${esc(i.why_it_matters)}</p><p><b>Suggested next step:</b> ${esc(i.suggestion)}</p></article>`).join("");
     else h+=`<div class="issue">No specific issues were returned. This is not a legal validation.</div>`;
-    if(d.missing_topics.length)h+=`<div class="panel"><h3>Topics to check</h3><ul style="margin-top:8px;padding-left:18px">${d.missing_topics.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
-    if(d.questions_for_lawyer.length)h+=`<div class="panel"><h3>Questions for a lawyer</h3><ul style="margin-top:8px;padding-left:18px">${d.questions_for_lawyer.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
+    if(missing.length)h+=`<div class="panel"><h3>Topics to check</h3><ul style="margin-top:8px;padding-left:18px">${missing.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
+    if(lawyerQs.length)h+=`<div class="panel"><h3>Questions for a lawyer</h3><ul style="margin-top:8px;padding-left:18px">${lawyerQs.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
     h+=`<div class="panel"><h3>Want to improve this draft?</h3><p class="sub">Create a revised version using the review findings. Unknown details stay marked for you to fill in.</p><button type="button" class="btn btn-primary btn-md" id="makebetter" onclick="makeBetter()">Make this draft better</button><div id="betterout"></div></div>`;
     $("reviewout").innerHTML=h;
+    $("reviewout").scrollIntoView({behavior:smooth(),block:"start"});
   }catch(e){$("reviewmsg").textContent=e.message;}
   finally{btn.disabled=false;btn.textContent="Review contract";}
 }
@@ -1171,10 +1219,10 @@ async function reviewExisting(){
 async function makeBetter(){
   const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Improving draft…";$("betterout").innerHTML="";
   try{
-    const r=await fetch((window.API_BASE||"")+"/api/review/improve",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:reviewSourceText,issues:reviewIssues})});
-    const d=await r.json();if(!r.ok)throw new Error(d.detail||"Could not prepare an improved draft.");
+    const d=await post("/api/review/improve",{text:reviewSourceText,issues:reviewIssues});
     let h=`<div class="issue" style="margin-top:16px"><h4>Improved working draft</h4><p>${esc(d.change_summary)}</p><small>AI-generated wording. Check every change and have a lawyer review before signing.</small>`;
-    if(d.open_questions.length)h+=`<p style="margin-top:12px"><b>Still needs your input</b></p><ul style="padding-left:18px;margin-top:6px">${d.open_questions.map(q=>`<li style="font-size:13.5px;color:var(--text-secondary);margin-bottom:4px">${esc(q)}</li>`).join("")}</ul>`;
+    const openQs=arr(d.open_questions);
+    if(openQs.length)h+=`<p style="margin-top:12px"><b>Still needs your input</b></p><ul style="padding-left:18px;margin-top:6px">${openQs.map(q=>`<li style="font-size:13.5px;color:var(--text-secondary);margin-bottom:4px">${esc(q)}</li>`).join("")}</ul>`;
     h+=`<textarea id="improvedtext" aria-label="Editable improved contract draft" style="width:100%;min-height:300px;margin-top:14px;padding:14px;border:1.5px solid var(--border-strong);border-radius:var(--radius-md);font:14px/1.65 Georgia,serif;color:var(--text-primary)">${esc(d.revised_text)}</textarea>
         <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
           <button type="button" class="btn btn-primary btn-md" onclick="copyImproved()">Copy revised draft</button>
@@ -1186,20 +1234,30 @@ async function makeBetter(){
 }
 
 async function copyImproved(){
-  try{await navigator.clipboard.writeText($("improvedtext").value);$("reviewmsg").textContent="Revised draft copied.";}
-  catch(e){$("reviewmsg").textContent="Copy wasn't available here; select the text and copy manually.";}
+  const m=$("reviewmsg");
+  try{await navigator.clipboard.writeText($("improvedtext").value);m.className="msg-error msg-ok";m.textContent="Revised draft copied.";}
+  catch(e){m.className="msg-error";m.textContent="Copy wasn't available here; select the text and copy manually.";}
 }
 function downloadImproved(){
   const blob=new Blob([$("improvedtext").value],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
   a.href=url;a.download="improved-contract-draft.txt";a.click();URL.revokeObjectURL(url);
 }
 
+/* ── Review file chooser ── */
+function syncFile(){
+  const f=$("reviewfile").files[0];
+  $("reviewfilebox").hidden=!f;
+  $("reviewfilename").textContent=f?f.name:"";
+}
+$("reviewfile").addEventListener("change",syncFile);
+$("reviewfileclear").addEventListener("click",()=>{$("reviewfile").value="";syncFile();});
+
 /* ── Rebuild ── */
 async function rebuild(){
   S.field_defs.forEach(f=>{const el=$("f_"+f.key);if(el)S.fields[f.key]=el.value.trim();});
   const y=window.scrollY;
   try{const d=await post("/api/build",{type_id:S.type_id,fields:S.fields,variants:S.variants,custom:S.custom||{}});S={...S,...d};render();window.scrollTo(0,y);}
-  catch(e){$("msg")&&($("msg").textContent=e.message);}
+  catch(e){const m=$("workmsg");if(m)m.textContent=e.message;}
 }
 function setVar(id,v){S.variants[id]=v;rebuild();}
 const label=o=>o==="a"?"Favours "+S.side_a:o==="b"?"Favours "+S.side_b:"Balanced";
@@ -1218,15 +1276,17 @@ function rich(text){
 
 function jump(k){
   const el=$("f_"+k);if(!el)return;
-  el.scrollIntoView({block:"center",behavior:"smooth"});
+  el.scrollIntoView({block:"center",behavior:smooth()});
   el.focus({preventScroll:true});
   el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1400);
 }
 
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeMenu(); });
 document.addEventListener("click",e=>{
+  const mm=$("mmenu"); if(mm&&mm.open&&!mm.contains(e.target)) mm.open=false;
   const s=e.target.closest("[data-s]");if(s){$("desc").value=SAMPLES[s.dataset.s];$("desc").focus();return;}
   const k=e.target.closest("[data-k]");if(k){jump(k.dataset.k);return;}
-  const c=e.target.closest("[data-c]");if(c){const t=$("c"+c.dataset.c);if(t)t.scrollIntoView({block:"center",behavior:"smooth"});}
+  const c=e.target.closest("[data-c]");if(c){const t=$("c"+c.dataset.c);if(t)t.scrollIntoView({block:"center",behavior:smooth()});}
 });
 
 function item(r){
@@ -1241,8 +1301,6 @@ function item(r){
 
 function render(){
   hideLanding();
-  $("heromain").style.display="none";
-  $("reviewsection").hidden=true;
 
   const s=S,errs=s.report.filter(r=>r.level==="error"),warns=s.report.filter(r=>r.level==="warn");
   const head=errs.length?[`${errs.length} to fix before you sign`,"bad"]:warns.length?[`Complete. ${warns.length} to check`,"warn"]:["Complete and consistent",""];
@@ -1259,7 +1317,7 @@ function render(){
     const v=s.fields[f.key]??"",need=f.required&&!String(v).trim();
     h+=`<label for="f_${f.key}">${esc(f.label)}${f.required?" *":""}</label><input id="f_${f.key}" ${f.type==="date"?'type="date"':'type="text"'} class="${need?"need":""}" value="${esc(v)}">`;
   });
-  h+=`<div class="row"><button class="btn btn-primary btn-md" onclick="rebuild()">Update contract</button><button class="btn btn-outline btn-md" onclick="window.print()">Print / PDF</button></div></div>`;
+  h+=`<div class="row"><button class="btn btn-primary btn-md" onclick="rebuild()">Update contract</button><button class="btn btn-outline btn-md" onclick="window.print()">Print / PDF</button></div><div class="msg-error" id="workmsg" role="alert" style="text-align:left"></div></div>`;
   h+=`<div class="panel"><div class="status"><span class="dot ${head[1]}"></span>${head[0]}</div><ul class="items">${[...errs,...warns,...s.report.filter(r=>r.level==="ok")].map(item).join("")}</ul></div></aside>`;
   h+=`<article class="paper" id="paper"><h2>${esc(s.type_name)}</h2><p class="docmeta">Agreement between the parties identified below</p>`;
   s.preamble.forEach((p,i)=>{h+=`<p class="pre"${i===0?' id="c0"':''}>${rich(p)}</p>`;});

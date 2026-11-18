@@ -5,38 +5,162 @@
   "side_a": "Landlord",
   "side_b": "Tenant",
   "signatories": [
-    {"role": "Landlord", "name_field": "landlord_name"},
-    {"role": "Tenant", "name_field": "tenant_name"}
+    {
+      "role": "Landlord",
+      "name_field": "landlord_name"
+    },
+    {
+      "role": "Tenant",
+      "name_field": "tenant_name"
+    }
   ],
   "witnesses": 2,
   "fields": [
-    {"key": "landlord_name", "label": "Landlord's full name", "required": true},
-    {"key": "landlord_address", "label": "Landlord's address"},
-    {"key": "tenant_name", "label": "Tenant's full name", "required": true},
-    {"key": "tenant_address", "label": "Tenant's permanent address"},
-    {"key": "property_type", "label": "Type of property (for example flat, house, shop)", "default": "residential flat"},
-    {"key": "property_address", "label": "Full address of the property being rented", "required": true},
-    {"key": "property_use", "label": "Permitted use (for example residential purposes only, or office use)", "default": "residential purposes only"},
-    {"key": "monthly_rent", "label": "Monthly rent in rupees", "type": "number", "money": true, "required": true},
-    {"key": "rent_due", "label": "When rent is due each month", "default": "by the 5th day of each calendar month"},
-    {"key": "security_deposit", "label": "Security deposit in rupees (0 if none)", "type": "number", "money": true, "required": true},
-    {"key": "start_date", "label": "Date the tenancy starts", "type": "date", "required": true},
-    {"key": "tenancy_months", "label": "Length of the tenancy in months", "type": "number", "default": "11"},
-    {"key": "lock_in_months", "label": "Lock-in period in months", "type": "number", "default": "3"},
-    {"key": "notice_period_days", "label": "Notice period in days", "type": "number", "default": "30"},
-    {"key": "annual_increase_percent", "label": "Yearly rent increase (percent)", "type": "number", "default": "5"},
-    {"key": "maintenance_payer", "label": "Who pays society maintenance (write the Landlord or the Tenant)", "default": "the Landlord"},
-    {"key": "jurisdiction_city", "label": "City whose courts will have jurisdiction", "required": true},
-    {"key": "agreement_date", "label": "Date of the agreement", "type": "date", "default": "@today"},
-    {"key": "signing_place", "label": "Place of signing", "default_from": "jurisdiction_city"}
+    {
+      "key": "landlord_name",
+      "label": "Landlord's full name",
+      "required": true
+    },
+    {
+      "key": "landlord_address",
+      "label": "Landlord's address"
+    },
+    {
+      "key": "tenant_name",
+      "label": "Tenant's full name",
+      "required": true
+    },
+    {
+      "key": "tenant_address",
+      "label": "Tenant's permanent address"
+    },
+    {
+      "key": "property_type",
+      "label": "Type of property (for example flat, house, shop)",
+      "default": "residential flat"
+    },
+    {
+      "key": "property_address",
+      "label": "Full address of the property being rented",
+      "required": true
+    },
+    {
+      "key": "property_use",
+      "label": "Permitted use (for example residential purposes only, or office use)",
+      "default": "residential purposes only"
+    },
+    {
+      "key": "monthly_rent",
+      "label": "Monthly rent in rupees",
+      "type": "number",
+      "money": true,
+      "required": true
+    },
+    {
+      "key": "rent_due",
+      "label": "When rent is due each month",
+      "default": "by the 5th day of each calendar month"
+    },
+    {
+      "key": "security_deposit",
+      "label": "Security deposit in rupees (0 if none)",
+      "type": "number",
+      "money": true,
+      "required": true
+    },
+    {
+      "key": "start_date",
+      "label": "Date the tenancy starts",
+      "type": "date",
+      "required": true
+    },
+    {
+      "key": "tenancy_months",
+      "label": "Length of the tenancy in months",
+      "type": "number",
+      "default": "11"
+    },
+    {
+      "key": "lock_in_months",
+      "label": "Lock-in period in months",
+      "type": "number",
+      "default": "3"
+    },
+    {
+      "key": "notice_period_days",
+      "label": "Notice period in days",
+      "type": "number",
+      "default": "30"
+    },
+    {
+      "key": "annual_increase_percent",
+      "label": "Yearly rent increase (percent)",
+      "type": "number",
+      "default": "5"
+    },
+    {
+      "key": "maintenance_payer",
+      "label": "Who pays society maintenance (write the Landlord or the Tenant)",
+      "default": "the Landlord"
+    },
+    {
+      "key": "jurisdiction_city",
+      "label": "City whose courts will have jurisdiction",
+      "required": true
+    },
+    {
+      "key": "agreement_date",
+      "label": "Date of the agreement",
+      "type": "date",
+      "default": "@today"
+    },
+    {
+      "key": "signing_place",
+      "label": "Place of signing",
+      "default_from": "jurisdiction_city"
+    }
   ],
   "rules": [
-    {"type": "positive_number", "field": "monthly_rent", "message": "The monthly rent must be a positive number."},
-    {"type": "range", "field": "security_deposit", "min": 0, "max": 100000000, "message": "The security deposit looks unusual. Please check the amount."},
-    {"type": "range", "field": "tenancy_months", "min": 1, "max": 60, "message": "The tenancy should be between 1 and 60 months."},
-    {"type": "range", "field": "lock_in_months", "min": 0, "max": 36, "message": "The lock-in period should be between 0 and 36 months."},
-    {"type": "range", "field": "notice_period_days", "min": 0, "max": 180, "message": "The notice period should be between 0 and 180 days."},
-    {"type": "range", "field": "annual_increase_percent", "min": 0, "max": 25, "message": "The yearly rent increase should be between 0 and 25 percent."}
+    {
+      "type": "positive_number",
+      "field": "monthly_rent",
+      "message": "The monthly rent must be a positive number."
+    },
+    {
+      "type": "range",
+      "field": "security_deposit",
+      "min": 0,
+      "max": 100000000,
+      "message": "The security deposit looks unusual. Please check the amount."
+    },
+    {
+      "type": "range",
+      "field": "tenancy_months",
+      "min": 1,
+      "max": 60,
+      "message": "The tenancy should be between 1 and 60 months."
+    },
+    {
+      "type": "range",
+      "field": "lock_in_months",
+      "min": 0,
+      "max": 36,
+      "message": "The lock-in period should be between 0 and 36 months."
+    },
+    {
+      "type": "range",
+      "field": "notice_period_days",
+      "min": 0,
+      "max": 180,
+      "message": "The notice period should be between 0 and 180 days."
+    },
+    {
+      "type": "range",
+      "field": "annual_increase_percent",
+      "min": 0,
+      "max": 25,
+      "message": "The yearly rent increase should be between 0 and 25 percent."
+    }
   ],
   "preamble": [
     "This RENT AGREEMENT (the \"Agreement\") is made at {{signing_place}} on {{agreement_date}}",
@@ -47,39 +171,171 @@
     "NOW, THEREFORE, the Parties agree as follows:"
   ],
   "clauses": [
-    {"id": "property", "title": "Property and Permitted Use", "risk": "medium", "variants": {
-      "balanced": "(a) The Landlord lets, and the Tenant takes on rent, the {{property_type}} situated at {{property_address}} (the \"Property\"), together with the fixtures and fittings listed in the inventory that both Parties sign at handover.\n(b) The Tenant will use the Property only for {{property_use}}.\n(c) The Tenant will not sublet the Property, share it for payment, or transfer this tenancy to anyone without the Landlord's written consent.\n(d) The Tenant will not carry on any illegal or dangerous activity and will not cause nuisance to neighbours."}},
-    {"id": "term", "title": "Term of Tenancy", "risk": "medium", "variants": {
-      "balanced": "(a) The tenancy starts on {{start_date}} and continues for {{tenancy_months}} months (the \"Term\"), unless it is ended earlier under this Agreement.\n(b) The Parties may renew the tenancy by a written agreement signed before the Term ends, on terms they agree at that time.\n(c) If the Tenant stays on after the Term without a written renewal, the tenancy continues month to month on the same terms, and either Party may end it by giving the notice required under this Agreement."}},
-    {"id": "rent", "title": "Rent", "risk": "high", "variants": {
-      "a": "(a) The Tenant will pay rent of Rs. {{monthly_rent}} (Rupees {{monthly_rent_words}}) per month, {{rent_due}}, by bank transfer or another traceable method agreed in writing.\n(b) Rent that is not paid by the due date carries a late charge of 2% per month on the overdue amount until it is paid.\n(c) The rent increases by {{annual_increase_percent}}% at the end of every 12 months of the tenancy.\n(d) If rent remains unpaid 15 days after the due date, the Landlord may end the tenancy by giving 7 days' written notice.",
-      "balanced": "(a) The Tenant will pay rent of Rs. {{monthly_rent}} (Rupees {{monthly_rent_words}}) per month, {{rent_due}}, by bank transfer or another traceable method agreed in writing.\n(b) The Landlord will give a written receipt for each payment, or the bank record will serve as proof of payment.\n(c) The rent increases by {{annual_increase_percent}}% at the end of every 12 months of the tenancy.\n(d) Rent not paid within 7 days after the due date carries interest at 1% per month on the overdue amount until it is paid.",
-      "b": "(a) The Tenant will pay rent of Rs. {{monthly_rent}} (Rupees {{monthly_rent_words}}) per month, {{rent_due}}, by bank transfer or another traceable method agreed in writing.\n(b) The Landlord will give a written receipt for every payment.\n(c) The rent will not increase during the first 12 months. Any later increase will be at most {{annual_increase_percent}}% a year and must be agreed in writing at least 60 days before it applies.\n(d) Rent paid within 10 days after the due date carries no penalty."}},
-    {"id": "deposit", "title": "Security Deposit", "risk": "high", "variants": {
-      "a": "(a) The Tenant will pay a refundable, interest-free security deposit of Rs. {{security_deposit}} (Rupees {{security_deposit_words}}) before taking possession.\n(b) The Landlord may deduct unpaid rent, unpaid utility bills and the cost of damage beyond normal wear and tear, and will refund the balance within 30 days after the Tenant returns vacant possession.\n(c) The Tenant may not treat the deposit as rent for the last months of the tenancy.",
-      "balanced": "(a) The Tenant will pay a refundable, interest-free security deposit of Rs. {{security_deposit}} (Rupees {{security_deposit_words}}) before taking possession.\n(b) The Landlord may deduct unpaid rent, unpaid utility bills and the cost of damage beyond normal wear and tear. The Landlord will give an itemised written statement of any deduction and refund the balance within 15 days after the Tenant returns vacant possession and the keys.\n(c) The Tenant may not treat the deposit as rent for the last months of the tenancy.",
-      "b": "(a) The Tenant will pay a refundable, interest-free security deposit of Rs. {{security_deposit}} (Rupees {{security_deposit_words}}) before taking possession, and the Landlord will give a written receipt for it.\n(b) The Landlord may deduct only unpaid rent, unpaid utility bills and proven damage beyond normal wear and tear, and must give receipts or estimates for any deduction.\n(c) The Landlord will refund the balance within 7 days after the Tenant returns vacant possession. If the refund is late, the unpaid amount carries interest at 1% per month."}},
-    {"id": "lockin", "title": "Lock-in Period and Termination", "risk": "high", "variants": {
-      "a": "(a) Neither Party may end this Agreement during the first {{lock_in_months}} months (the \"Lock-in Period\"). If the Tenant leaves earlier, the Tenant will pay the rent for the rest of the Lock-in Period.\n(b) After the Lock-in Period, either Party may end this Agreement by giving {{notice_period_days}} days' written notice. If the Tenant leaves without giving full notice, the Tenant will pay rent for the unserved part of the notice period, which the Landlord may deduct from the security deposit.\n(c) The Landlord may end this Agreement immediately by written notice if the Tenant seriously breaches it and does not fix the breach within 7 days of notice.",
-      "balanced": "(a) Neither Party may end this Agreement during the first {{lock_in_months}} months (the \"Lock-in Period\"). A Party that does so will pay the other one month's rent as compensation.\n(b) After the Lock-in Period, either Party may end this Agreement by giving {{notice_period_days}} days' written notice.\n(c) Either Party may end this Agreement by giving 15 days' written notice if the other seriously breaches it and does not fix the breach within that period.",
-      "b": "(a) The Landlord may not end this Agreement during the Term, except for non-payment of rent for two months in a row or a serious breach that the Tenant does not fix within 15 days of written notice.\n(b) The Tenant may end this Agreement at any time after the first {{lock_in_months}} months by giving {{notice_period_days}} days' written notice.\n(c) The Landlord will not cut off water, electricity or access, or remove the Tenant's belongings, to force the Tenant out, and must use lawful process to recover the Property."}},
-    {"id": "utilities", "title": "Utilities and Maintenance Charges", "risk": "medium", "variants": {
-      "balanced": "(a) The Tenant will pay electricity, water, gas, internet and similar bills for its own use directly to the provider, and will keep them paid.\n(b) Society or association maintenance charges will be paid by {{maintenance_payer}}.\n(c) Property tax and other charges that belong to ownership of the Property will be paid by the Landlord."}},
-    {"id": "repairs", "title": "Repairs and Care of the Property", "risk": "medium", "variants": {
-      "balanced": "(a) The Tenant will take reasonable care of the Property, will pay for repairs to damage caused by the Tenant or its visitors, and will pay for day-to-day minor repairs such as bulbs, taps and switches.\n(b) The Landlord will pay for major and structural repairs and for faults that the Tenant did not cause, and will carry them out within a reasonable time after written notice.\n(c) The Tenant will not make structural changes or alter the layout without the Landlord's written consent, and will restore any permitted change when leaving unless the Landlord agrees otherwise."}},
-    {"id": "inspection", "title": "Inspection and Privacy", "risk": "low", "variants": {
-      "balanced": "(a) The Landlord may inspect the Property at reasonable times after giving at least 24 hours' notice.\n(b) The Landlord may enter without notice only in an emergency, such as fire or flooding, and will otherwise respect the Tenant's privacy."}},
-    {"id": "verification", "title": "Verification and Compliance", "risk": "low", "variants": {
-      "balanced": "(a) The Tenant will give the Landlord the identity documents needed for any police or local authority verification that the law requires, and the Landlord may submit them.\n(b) Each Party will follow the laws and the society or building rules that apply to the Property."}},
-    {"id": "handover", "title": "Handover and Return of the Property", "risk": "medium", "variants": {
-      "balanced": "(a) The Landlord will hand over vacant possession of the Property on the start date, together with an inventory of fixtures and fittings signed by both Parties.\n(b) When the tenancy ends, the Tenant will return vacant possession and the keys in the same condition as at handover, apart from normal wear and tear, and will clear all dues."}},
-    {"id": "law", "title": "Governing Law and Dispute Resolution", "risk": "low", "variants": {
-      "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have jurisdiction."}},
-    {"id": "notices", "title": "Notices", "risk": "low", "variants": {
-      "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address that the Parties have confirmed in writing. An email notice is treated as received on the next working day."}},
-    {"id": "general", "title": "General", "risk": "low", "variants": {
-      "balanced": "(a) This Agreement is the entire agreement between the Parties about the Property and replaces earlier discussions.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) A failure to enforce a right is not a waiver of it.\n(e) It may be signed in counterparts, including electronically."}},
-    {"id": "stamp", "title": "Stamp Duty and Registration", "risk": "medium", "variants": {
-      "balanced": "This Agreement will be stamped as required by the stamp law that applies at the place where the Property is located. Where the law requires registration for the length of this tenancy, the Parties will register it, and the stamp duty and registration costs will be shared equally unless they agree otherwise in writing."}}
+    {
+      "id": "property",
+      "title": "Property and Permitted Use",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Landlord lets, and the Tenant takes on rent, the {{property_type}} situated at {{property_address}} (the \"Property\"), together with the fixtures and fittings listed in the inventory that both Parties sign at handover.\n(b) The Tenant will use the Property only for {{property_use}}.\n(c) The Tenant will not sublet the Property, share it for payment, or transfer this tenancy to anyone without the Landlord's written consent.\n(d) The Tenant will not carry on any illegal or dangerous activity and will not cause nuisance to neighbours."
+      }
+    },
+    {
+      "id": "term",
+      "title": "Term of Tenancy",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The tenancy starts on {{start_date}} and continues for {{tenancy_months}} months (the \"Term\"), unless it is ended earlier under this Agreement.\n(b) The Parties may renew the tenancy by a written agreement signed before the Term ends, on terms they agree at that time.\n(c) If the Tenant stays on after the Term without a written renewal, the tenancy continues month to month on the same terms, and either Party may end it by giving the notice required under this Agreement."
+      }
+    },
+    {
+      "id": "rent",
+      "title": "Rent",
+      "risk": "high",
+      "variants": {
+        "a": "(a) The Tenant will pay rent of Rs. {{monthly_rent}} (Rupees {{monthly_rent_words}}) per month, {{rent_due}}, by bank transfer or another traceable method agreed in writing.\n(b) Rent that is not paid by the due date carries a late charge of 2% per month on the overdue amount until it is paid.\n(c) The rent increases by {{annual_increase_percent}}% at the end of every 12 months of the tenancy.\n(d) If rent remains unpaid 15 days after the due date, the Landlord may end the tenancy by giving 7 days' written notice.",
+        "balanced": "(a) The Tenant will pay rent of Rs. {{monthly_rent}} (Rupees {{monthly_rent_words}}) per month, {{rent_due}}, by bank transfer or another traceable method agreed in writing.\n(b) The Landlord will give a written receipt for each payment, or the bank record will serve as proof of payment.\n(c) The rent increases by {{annual_increase_percent}}% at the end of every 12 months of the tenancy.\n(d) Rent not paid within 7 days after the due date carries interest at 1% per month on the overdue amount until it is paid.",
+        "b": "(a) The Tenant will pay rent of Rs. {{monthly_rent}} (Rupees {{monthly_rent_words}}) per month, {{rent_due}}, by bank transfer or another traceable method agreed in writing.\n(b) The Landlord will give a written receipt for every payment.\n(c) The rent will not increase during the first 12 months. Any later increase will be at most {{annual_increase_percent}}% a year and must be agreed in writing at least 60 days before it applies.\n(d) Rent paid within 10 days after the due date carries no penalty."
+      }
+    },
+    {
+      "id": "deposit",
+      "title": "Security Deposit",
+      "risk": "high",
+      "variants": {
+        "a": "(a) The Tenant will pay a refundable, interest-free security deposit of Rs. {{security_deposit}} (Rupees {{security_deposit_words}}) before taking possession.\n(b) The Landlord may deduct unpaid rent, unpaid utility bills and the cost of damage beyond normal wear and tear, and will refund the balance within 30 days after the Tenant returns vacant possession.\n(c) The Tenant may not treat the deposit as rent for the last months of the tenancy.",
+        "balanced": "(a) The Tenant will pay a refundable, interest-free security deposit of Rs. {{security_deposit}} (Rupees {{security_deposit_words}}) before taking possession.\n(b) The Landlord may deduct unpaid rent, unpaid utility bills and the cost of damage beyond normal wear and tear. The Landlord will give an itemised written statement of any deduction and refund the balance within 15 days after the Tenant returns vacant possession and the keys.\n(c) The Tenant may not treat the deposit as rent for the last months of the tenancy.",
+        "b": "(a) The Tenant will pay a refundable, interest-free security deposit of Rs. {{security_deposit}} (Rupees {{security_deposit_words}}) before taking possession, and the Landlord will give a written receipt for it.\n(b) The Landlord may deduct only unpaid rent, unpaid utility bills and proven damage beyond normal wear and tear, and must give receipts or estimates for any deduction.\n(c) The Landlord will refund the balance within 7 days after the Tenant returns vacant possession. If the refund is late, the unpaid amount carries interest at 1% per month."
+      }
+    },
+    {
+      "id": "lockin",
+      "title": "Lock-in Period and Termination",
+      "risk": "high",
+      "variants": {
+        "a": "(a) Neither Party may end this Agreement during the first {{lock_in_months}} months (the \"Lock-in Period\"). If the Tenant leaves earlier, the Tenant will pay the rent for the rest of the Lock-in Period.\n(b) After the Lock-in Period, either Party may end this Agreement by giving {{notice_period_days}} days' written notice. If the Tenant leaves without giving full notice, the Tenant will pay rent for the unserved part of the notice period, which the Landlord may deduct from the security deposit.\n(c) The Landlord may end this Agreement immediately by written notice if the Tenant seriously breaches it and does not fix the breach within 7 days of notice.",
+        "balanced": "(a) Neither Party may end this Agreement during the first {{lock_in_months}} months (the \"Lock-in Period\"). A Party that does so will pay the other one month's rent as compensation.\n(b) After the Lock-in Period, either Party may end this Agreement by giving {{notice_period_days}} days' written notice.\n(c) Either Party may end this Agreement by giving 15 days' written notice if the other seriously breaches it and does not fix the breach within that period.",
+        "b": "(a) The Landlord may not end this Agreement during the Term, except for non-payment of rent for two months in a row or a serious breach that the Tenant does not fix within 15 days of written notice.\n(b) The Tenant may end this Agreement at any time after the first {{lock_in_months}} months by giving {{notice_period_days}} days' written notice.\n(c) The Landlord will not cut off water, electricity or access, or remove the Tenant's belongings, to force the Tenant out, and must use lawful process to recover the Property."
+      }
+    },
+    {
+      "id": "utilities",
+      "title": "Utilities and Maintenance Charges",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Tenant will pay electricity, water, gas, internet and similar bills for its own use directly to the provider, and will keep them paid.\n(b) Society or association maintenance charges will be paid by {{maintenance_payer}}.\n(c) Property tax and other charges that belong to ownership of the Property will be paid by the Landlord."
+      }
+    },
+    {
+      "id": "repairs",
+      "title": "Repairs and Care of the Property",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Tenant will take reasonable care of the Property, will pay for repairs to damage caused by the Tenant or its visitors, and will pay for day-to-day minor repairs such as bulbs, taps and switches.\n(b) The Landlord will pay for major and structural repairs and for faults that the Tenant did not cause, and will carry them out within a reasonable time after written notice.\n(c) The Tenant will not make structural changes or alter the layout without the Landlord's written consent, and will restore any permitted change when leaving unless the Landlord agrees otherwise."
+      }
+    },
+    {
+      "id": "inspection",
+      "title": "Inspection and Privacy",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Landlord may inspect the Property at reasonable times after giving at least 24 hours' notice.\n(b) The Landlord may enter without notice only in an emergency, such as fire or flooding, and will otherwise respect the Tenant's privacy."
+      }
+    },
+    {
+      "id": "verification",
+      "title": "Verification and Compliance",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Tenant will give the Landlord the identity documents needed for any police or local authority verification that the law requires, and the Landlord may submit them.\n(b) Each Party will follow the laws and the society or building rules that apply to the Property."
+      }
+    },
+    {
+      "id": "handover",
+      "title": "Handover and Return of the Property",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Landlord will hand over vacant possession of the Property on the start date, together with an inventory of fixtures and fittings signed by both Parties.\n(b) When the tenancy ends, the Tenant will return vacant possession and the keys in the same condition as at handover, apart from normal wear and tear, and will clear all dues."
+      }
+    },
+    {
+      "id": "conduct",
+      "title": "House Rules and Conduct",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Tenant will follow the rules of the building or society, keep noise at reasonable levels, and keep the Property and shared areas clean.\n(b) Pets, smoking and similar matters will follow the building rules and any written terms the Parties agree.\n(c) The Tenant will not store hazardous or illegal materials in the Property."
+      }
+    },
+    {
+      "id": "common_areas",
+      "title": "Common Areas and Parking",
+      "risk": "low",
+      "variants": {
+        "balanced": "The Tenant may use the common areas and any parking space allotted to the Property, as allowed by the society or building rules, and will not block access or leave vehicles in a way that affects others."
+      }
+    },
+    {
+      "id": "insurance",
+      "title": "Insurance and Personal Belongings",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Tenant is responsible for insuring its own belongings. The Landlord is not liable for loss of or damage to them unless caused by the Landlord's negligence.\n(b) The Landlord will tell the Tenant of any building insurance condition that affects use of the Property."
+      }
+    },
+    {
+      "id": "landlord_assurances",
+      "title": "Landlord's Assurances",
+      "risk": "high",
+      "variants": {
+        "balanced": "The Landlord confirms that it is the owner of the Property, or is lawfully authorised to let it out, that there is no legal dispute or charge that would stop the Tenant from using the Property peacefully, and that the Tenant may use the Property without disturbance as long as it follows this Agreement."
+      }
+    },
+    {
+      "id": "tax",
+      "title": "Taxes and Receipts",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Landlord will pay property tax and is responsible for its own income tax on the rent.\n(b) If the law requires the Tenant to deduct tax at source from the rent, the Tenant may do so and will give the Landlord the deduction certificate.\n(c) On request, the Landlord will give rent receipts, including for any claim the Tenant makes for house rent allowance."
+      }
+    },
+    {
+      "id": "sale",
+      "title": "Sale or Transfer of the Property",
+      "risk": "medium",
+      "variants": {
+        "balanced": "If the Landlord sells or transfers the Property during the Term, the Landlord will make sure the new owner agrees in writing to honour this Agreement, including the return of the security deposit, and will tell the Tenant promptly."
+      }
+    },
+    {
+      "id": "law",
+      "title": "Governing Law and Dispute Resolution",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have jurisdiction."
+      }
+    },
+    {
+      "id": "notices",
+      "title": "Notices",
+      "risk": "low",
+      "variants": {
+        "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address that the Parties have confirmed in writing. An email notice is treated as received on the next working day."
+      }
+    },
+    {
+      "id": "general",
+      "title": "General",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) This Agreement is the entire agreement between the Parties about the Property and replaces earlier discussions.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) A failure to enforce a right is not a waiver of it.\n(e) It may be signed in counterparts, including electronically."
+      }
+    },
+    {
+      "id": "stamp",
+      "title": "Stamp Duty and Registration",
+      "risk": "medium",
+      "variants": {
+        "balanced": "This Agreement will be stamped as required by the stamp law that applies at the place where the Property is located. Where the law requires registration for the length of this tenancy, the Parties will register it, and the stamp duty and registration costs will be shared equally unless they agree otherwise in writing."
+      }
+    }
   ]
 }

@@ -5,32 +5,127 @@
   "side_a": "Freelancer",
   "side_b": "Client",
   "signatories": [
-    {"role": "Freelancer", "name_field": "freelancer_name"},
-    {"role": "Client", "name_field": "client_name"}
+    {
+      "role": "Freelancer",
+      "name_field": "freelancer_name"
+    },
+    {
+      "role": "Client",
+      "name_field": "client_name"
+    }
   ],
   "witnesses": 2,
   "fields": [
-    {"key": "freelancer_name", "label": "Freelancer's full name", "required": true},
-    {"key": "freelancer_address", "label": "Freelancer's address"},
-    {"key": "client_name", "label": "Client's name (person or company)", "required": true},
-    {"key": "client_address", "label": "Client's address"},
-    {"key": "project_description", "label": "Description of the work", "required": true},
-    {"key": "total_fee", "label": "Total fee in rupees", "type": "number", "money": true, "required": true},
-    {"key": "start_date", "label": "Start date", "type": "date", "required": true},
-    {"key": "end_date", "label": "Expected completion date", "type": "date", "required": true},
-    {"key": "advance_percent", "label": "Advance payment (percent of the fee)", "type": "number", "default": "30"},
-    {"key": "payment_days", "label": "Days allowed to pay the balance after delivery", "type": "number", "default": "15"},
-    {"key": "revision_rounds", "label": "Free revision rounds included", "type": "number", "default": "2"},
-    {"key": "jurisdiction_city", "label": "City whose courts will have jurisdiction", "required": true},
-    {"key": "agreement_date", "label": "Date of the agreement", "type": "date", "default": "@today"},
-    {"key": "signing_place", "label": "Place of signing", "default_from": "jurisdiction_city"}
+    {
+      "key": "freelancer_name",
+      "label": "Freelancer's full name",
+      "required": true
+    },
+    {
+      "key": "freelancer_address",
+      "label": "Freelancer's address"
+    },
+    {
+      "key": "client_name",
+      "label": "Client's name (person or company)",
+      "required": true
+    },
+    {
+      "key": "client_address",
+      "label": "Client's address"
+    },
+    {
+      "key": "project_description",
+      "label": "Description of the work",
+      "required": true
+    },
+    {
+      "key": "total_fee",
+      "label": "Total fee in rupees",
+      "type": "number",
+      "money": true,
+      "required": true
+    },
+    {
+      "key": "start_date",
+      "label": "Start date",
+      "type": "date",
+      "required": true
+    },
+    {
+      "key": "end_date",
+      "label": "Expected completion date",
+      "type": "date",
+      "required": true
+    },
+    {
+      "key": "advance_percent",
+      "label": "Advance payment (percent of the fee)",
+      "type": "number",
+      "default": "30"
+    },
+    {
+      "key": "payment_days",
+      "label": "Days allowed to pay the balance after delivery",
+      "type": "number",
+      "default": "15"
+    },
+    {
+      "key": "revision_rounds",
+      "label": "Free revision rounds included",
+      "type": "number",
+      "default": "2"
+    },
+    {
+      "key": "jurisdiction_city",
+      "label": "City whose courts will have jurisdiction",
+      "required": true
+    },
+    {
+      "key": "agreement_date",
+      "label": "Date of the agreement",
+      "type": "date",
+      "default": "@today"
+    },
+    {
+      "key": "signing_place",
+      "label": "Place of signing",
+      "default_from": "jurisdiction_city"
+    }
   ],
   "rules": [
-    {"type": "date_order", "before": "start_date", "after": "end_date", "message": "The completion date must be after the start date."},
-    {"type": "positive_number", "field": "total_fee", "message": "The total fee must be a positive number."},
-    {"type": "range", "field": "advance_percent", "min": 0, "max": 100, "message": "The advance must be between 0 and 100 percent."},
-    {"type": "range", "field": "payment_days", "min": 0, "max": 365, "message": "Payment days must be between 0 and 365."},
-    {"type": "range", "field": "revision_rounds", "min": 0, "max": 20, "message": "Revision rounds must be between 0 and 20."}
+    {
+      "type": "date_order",
+      "before": "start_date",
+      "after": "end_date",
+      "message": "The completion date must be after the start date."
+    },
+    {
+      "type": "positive_number",
+      "field": "total_fee",
+      "message": "The total fee must be a positive number."
+    },
+    {
+      "type": "range",
+      "field": "advance_percent",
+      "min": 0,
+      "max": 100,
+      "message": "The advance must be between 0 and 100 percent."
+    },
+    {
+      "type": "range",
+      "field": "payment_days",
+      "min": 0,
+      "max": 365,
+      "message": "Payment days must be between 0 and 365."
+    },
+    {
+      "type": "range",
+      "field": "revision_rounds",
+      "min": 0,
+      "max": 20,
+      "message": "Revision rounds must be between 0 and 20."
+    }
   ],
   "preamble": [
     "This FREELANCE SERVICES AGREEMENT (the \"Agreement\") is made at {{signing_place}} on {{agreement_date}}",
@@ -41,47 +136,199 @@
     "NOW, THEREFORE, the Parties agree as follows:"
   ],
   "clauses": [
-    {"id": "scope", "title": "Engagement and Scope of Work", "risk": "medium", "variants": {
-      "balanced": "(a) The Client engages the Freelancer, and the Freelancer agrees, to provide the following services (the \"Services\"): {{project_description}}.\n(b) Any work not described above is outside the Services. If the Client asks for additional work, the Parties will first agree in writing on the extra fee and any change to the timeline, and the Freelancer need not start that work before then."}},
-    {"id": "timeline", "title": "Timeline and Delays", "risk": "low", "variants": {
-      "balanced": "(a) The Services begin on {{start_date}} and are to be completed by {{end_date}} (the \"Completion Date\").\n(b) The Completion Date is extended by the period of any delay caused by the Client, including late feedback, approvals, information or payments.\n(c) The Freelancer will tell the Client promptly if a delay is likely."}},
-    {"id": "payment", "title": "Fee and Payment", "risk": "high", "variants": {
-      "a": "(a) The total fee for the Services is Rs. {{total_fee}} (Rupees {{total_fee_words}}) (the \"Fee\").\n(b) The Client will pay 50% of the Fee in advance before work begins, and the balance within 7 days of delivery of the final work.\n(c) The Freelancer will raise invoices, and any amount not paid when due carries interest at 2% per month until it is paid.\n(d) The Freelancer may pause the Services while any invoice is overdue, and the Completion Date is extended accordingly.",
-      "balanced": "(a) The total fee for the Services is Rs. {{total_fee}} (Rupees {{total_fee_words}}) (the \"Fee\").\n(b) The Client will pay {{advance_percent}}% of the Fee in advance before work begins, and the balance within {{payment_days}} days of delivery of the final work.\n(c) The Freelancer will raise invoices, and any amount not paid when due carries interest at 1% per month until it is paid.\n(d) If an invoice remains unpaid 7 days after a written reminder, the Freelancer may pause the Services until it is paid, and the Completion Date is extended accordingly.",
-      "b": "(a) The total fee for the Services is Rs. {{total_fee}} (Rupees {{total_fee_words}}) (the \"Fee\").\n(b) The Fee is payable within 30 days of the Client's written acceptance of the final deliverables. No advance is payable.\n(c) The Client may withhold an amount that is genuinely in dispute if it tells the Freelancer in writing why, and must pay the undisputed part on time."}},
-    {"id": "taxes", "title": "Taxes", "risk": "medium", "variants": {
-      "balanced": "(a) The Fee is exclusive of GST. If the Freelancer is registered under GST, the Client will pay GST on the Fee at the applicable rate against a valid tax invoice.\n(b) If the law requires the Client to deduct tax at source (TDS) from any payment, the Client may deduct it and will give the Freelancer the tax deduction certificate.\n(c) Each Party is responsible for its own income tax."}},
-    {"id": "client_duties", "title": "Client Responsibilities", "risk": "low", "variants": {
-      "balanced": "The Client will give the Freelancer the information, access, materials and decisions reasonably needed for the Services, will give feedback within 3 working days of a request, and confirms that any material it supplies may lawfully be used for the Services."}},
-    {"id": "revisions", "title": "Revisions and Acceptance", "risk": "medium", "variants": {
-      "a": "(a) The Fee includes one round of minor revisions to each deliverable. Further revisions are charged at the Freelancer's then-current rates.\n(b) A deliverable is treated as accepted if the Client does not give written reasons for rejecting it within 5 days of delivery.",
-      "balanced": "(a) The Fee includes up to {{revision_rounds}} rounds of reasonable revisions within the agreed scope. Further revisions are charged separately.\n(b) The Client will review each deliverable and either accept it or give specific written feedback within 7 days of delivery. A deliverable is treated as accepted if the Client does not respond within that time.",
-      "b": "(a) The Freelancer will make revisions until the work matches the description of the Services.\n(b) A deliverable is accepted only when the Client confirms acceptance in writing."}},
-    {"id": "ip", "title": "Ownership of Work", "risk": "high", "variants": {
-      "a": "(a) The Freelancer keeps ownership of all work until the full Fee is received.\n(b) On receipt of the full Fee, the Client receives a non-exclusive licence to use the final deliverables for their intended business purpose.\n(c) The Freelancer keeps ownership of its pre-existing tools, templates and know-how, and may show the work in its portfolio.",
-      "balanced": "(a) On receipt of the full Fee, ownership of the final deliverables passes to the Client.\n(b) The Freelancer keeps ownership of its pre-existing tools, templates and general know-how, and grants the Client a licence to use any of them that are built into the deliverables.\n(c) The Freelancer may show the work in its portfolio unless the Client objects in writing.",
-      "b": "(a) All work created under this Agreement, in any state of completion, belongs to the Client from the moment it is created.\n(b) The Freelancer assigns all rights in it to the Client and may not reuse or display it without the Client's written consent."}},
-    {"id": "warranties", "title": "Freelancer's Assurances", "risk": "medium", "variants": {
-      "balanced": "(a) The Freelancer confirms that the work will be its own original work, or work it has the right to use, and that to its knowledge the work will not infringe anyone else's copyright or other rights.\n(b) The Freelancer will perform the Services with reasonable skill and care."}},
-    {"id": "confidentiality", "title": "Confidentiality", "risk": "medium", "variants": {
-      "balanced": "(a) Each Party will keep the other's non-public business information confidential and use it only for this engagement, during the engagement and for two years after it ends.\n(b) This does not apply to information that is or becomes public without breach of this Agreement, or that a Party must disclose by law."}},
-    {"id": "independent", "title": "Independent Contractor", "risk": "low", "variants": {
-      "balanced": "(a) The Freelancer is an independent contractor and not an employee, partner or agent of the Client, and cannot bind the Client.\n(b) The Freelancer decides how and when to do the work, uses its own tools and is responsible for its own taxes.\n(c) The Freelancer may work for others, provided this does not breach this Agreement."}},
-    {"id": "termination", "title": "Term and Termination", "risk": "high", "variants": {
-      "a": "(a) This Agreement runs until the Services are completed and paid for, unless ended earlier.\n(b) Either Party may end it by giving 7 days' written notice.\n(c) On termination the Client will pay for all work done up to the termination date, plus a kill fee of 20% of the unpaid part of the Fee. Advance payments are kept to the extent of work done.\n(d) Either Party may end it immediately by written notice if the other commits a serious breach and does not fix it within 7 days of notice.",
-      "balanced": "(a) This Agreement runs until the Services are completed and paid for, unless ended earlier.\n(b) Either Party may end it by giving 14 days' written notice.\n(c) On termination the Client will pay for all work completed up to the termination date and any agreed expenses already incurred.\n(d) Either Party may end it immediately by written notice if the other commits a serious breach and does not fix it within 7 days of notice.",
-      "b": "(a) This Agreement runs until the Services are completed, unless ended earlier.\n(b) The Client may end it at any time by written notice. The Freelancer may end it only if the Client does not pay an undisputed invoice within 15 days of a written reminder.\n(c) On termination the Freelancer is paid only for deliverables accepted by the Client before the termination date."}},
-    {"id": "liability", "title": "Limitation of Liability", "risk": "medium", "variants": {
-      "a": "The Freelancer's total liability under this Agreement is limited to the fees it has actually received for the work giving rise to the claim, and excludes indirect or consequential losses such as lost profit.",
-      "balanced": "Each Party's total liability under this Agreement is limited to the Fee, except for breach of confidentiality or wilful misconduct. Neither Party is liable for indirect or consequential losses.",
-      "b": "The Freelancer is liable for all losses the Client suffers because of defects in the work."}},
-    {"id": "law", "title": "Governing Law and Dispute Resolution", "risk": "low", "variants": {
-      "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have exclusive jurisdiction."}},
-    {"id": "notices", "title": "Notices", "risk": "low", "variants": {
-      "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address that the Parties have confirmed in writing. An email notice is treated as received on the next working day."}},
-    {"id": "general", "title": "General", "risk": "low", "variants": {
-      "balanced": "(a) This Agreement is the entire agreement between the Parties about the Services and replaces earlier discussions.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) Neither Party may transfer its rights or duties under it without the other's written consent.\n(e) A failure to enforce a right is not a waiver of it.\n(f) It may be signed in counterparts, including electronically."}},
-    {"id": "stamp", "title": "Stamp Duty", "risk": "low", "variants": {
-      "balanced": "This Agreement will be stamped as required by the stamp law that applies at the place of signing. The stamp duty and related costs will be shared equally by the Parties unless the law requires otherwise."}}
+    {
+      "id": "scope",
+      "title": "Engagement and Scope of Work",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Client engages the Freelancer, and the Freelancer agrees, to provide the following services (the \"Services\"): {{project_description}}.\n(b) Any work not described above is outside the Services. If the Client asks for additional work, the Parties will first agree in writing on the extra fee and any change to the timeline, and the Freelancer need not start that work before then."
+      }
+    },
+    {
+      "id": "timeline",
+      "title": "Timeline and Delays",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Services begin on {{start_date}} and are to be completed by {{end_date}} (the \"Completion Date\").\n(b) The Completion Date is extended by the period of any delay caused by the Client, including late feedback, approvals, information or payments.\n(c) The Freelancer will tell the Client promptly if a delay is likely."
+      }
+    },
+    {
+      "id": "payment",
+      "title": "Fee and Payment",
+      "risk": "high",
+      "variants": {
+        "a": "(a) The total fee for the Services is Rs. {{total_fee}} (Rupees {{total_fee_words}}) (the \"Fee\").\n(b) The Client will pay 50% of the Fee in advance before work begins, and the balance within 7 days of delivery of the final work.\n(c) The Freelancer will raise invoices, and any amount not paid when due carries interest at 2% per month until it is paid.\n(d) The Freelancer may pause the Services while any invoice is overdue, and the Completion Date is extended accordingly.",
+        "balanced": "(a) The total fee for the Services is Rs. {{total_fee}} (Rupees {{total_fee_words}}) (the \"Fee\").\n(b) The Client will pay {{advance_percent}}% of the Fee in advance before work begins, and the balance within {{payment_days}} days of delivery of the final work.\n(c) The Freelancer will raise invoices, and any amount not paid when due carries interest at 1% per month until it is paid.\n(d) If an invoice remains unpaid 7 days after a written reminder, the Freelancer may pause the Services until it is paid, and the Completion Date is extended accordingly.",
+        "b": "(a) The total fee for the Services is Rs. {{total_fee}} (Rupees {{total_fee_words}}) (the \"Fee\").\n(b) The Fee is payable within 30 days of the Client's written acceptance of the final deliverables. No advance is payable.\n(c) The Client may withhold an amount that is genuinely in dispute if it tells the Freelancer in writing why, and must pay the undisputed part on time."
+      }
+    },
+    {
+      "id": "taxes",
+      "title": "Taxes",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Fee is exclusive of GST. If the Freelancer is registered under GST, the Client will pay GST on the Fee at the applicable rate against a valid tax invoice.\n(b) If the law requires the Client to deduct tax at source (TDS) from any payment, the Client may deduct it and will give the Freelancer the tax deduction certificate.\n(c) Each Party is responsible for its own income tax."
+      }
+    },
+    {
+      "id": "client_duties",
+      "title": "Client Responsibilities",
+      "risk": "low",
+      "variants": {
+        "balanced": "The Client will give the Freelancer the information, access, materials and decisions reasonably needed for the Services, will give feedback within 3 working days of a request, and confirms that any material it supplies may lawfully be used for the Services."
+      }
+    },
+    {
+      "id": "revisions",
+      "title": "Revisions and Acceptance",
+      "risk": "medium",
+      "variants": {
+        "a": "(a) The Fee includes one round of minor revisions to each deliverable. Further revisions are charged at the Freelancer's then-current rates.\n(b) A deliverable is treated as accepted if the Client does not give written reasons for rejecting it within 5 days of delivery.",
+        "balanced": "(a) The Fee includes up to {{revision_rounds}} rounds of reasonable revisions within the agreed scope. Further revisions are charged separately.\n(b) The Client will review each deliverable and either accept it or give specific written feedback within 7 days of delivery. A deliverable is treated as accepted if the Client does not respond within that time.",
+        "b": "(a) The Freelancer will make revisions until the work matches the description of the Services.\n(b) A deliverable is accepted only when the Client confirms acceptance in writing."
+      }
+    },
+    {
+      "id": "ip",
+      "title": "Ownership of Work",
+      "risk": "high",
+      "variants": {
+        "a": "(a) The Freelancer keeps ownership of all work until the full Fee is received.\n(b) On receipt of the full Fee, the Client receives a non-exclusive licence to use the final deliverables for their intended business purpose.\n(c) The Freelancer keeps ownership of its pre-existing tools, templates and know-how, and may show the work in its portfolio.",
+        "balanced": "(a) On receipt of the full Fee, ownership of the final deliverables passes to the Client.\n(b) The Freelancer keeps ownership of its pre-existing tools, templates and general know-how, and grants the Client a licence to use any of them that are built into the deliverables.\n(c) The Freelancer may show the work in its portfolio unless the Client objects in writing.",
+        "b": "(a) All work created under this Agreement, in any state of completion, belongs to the Client from the moment it is created.\n(b) The Freelancer assigns all rights in it to the Client and may not reuse or display it without the Client's written consent."
+      }
+    },
+    {
+      "id": "warranties",
+      "title": "Freelancer's Assurances",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Freelancer confirms that the work will be its own original work, or work it has the right to use, and that to its knowledge the work will not infringe anyone else's copyright or other rights.\n(b) The Freelancer will perform the Services with reasonable skill and care."
+      }
+    },
+    {
+      "id": "confidentiality",
+      "title": "Confidentiality",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) Each Party will keep the other's non-public business information confidential and use it only for this engagement, during the engagement and for two years after it ends.\n(b) This does not apply to information that is or becomes public without breach of this Agreement, or that a Party must disclose by law."
+      }
+    },
+    {
+      "id": "independent",
+      "title": "Independent Contractor",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Freelancer is an independent contractor and not an employee, partner or agent of the Client, and cannot bind the Client.\n(b) The Freelancer decides how and when to do the work, uses its own tools and is responsible for its own taxes.\n(c) The Freelancer may work for others, provided this does not breach this Agreement."
+      }
+    },
+    {
+      "id": "termination",
+      "title": "Term and Termination",
+      "risk": "high",
+      "variants": {
+        "a": "(a) This Agreement runs until the Services are completed and paid for, unless ended earlier.\n(b) Either Party may end it by giving 7 days' written notice.\n(c) On termination the Client will pay for all work done up to the termination date, plus a kill fee of 20% of the unpaid part of the Fee. Advance payments are kept to the extent of work done.\n(d) Either Party may end it immediately by written notice if the other commits a serious breach and does not fix it within 7 days of notice.",
+        "balanced": "(a) This Agreement runs until the Services are completed and paid for, unless ended earlier.\n(b) Either Party may end it by giving 14 days' written notice.\n(c) On termination the Client will pay for all work completed up to the termination date and any agreed expenses already incurred.\n(d) Either Party may end it immediately by written notice if the other commits a serious breach and does not fix it within 7 days of notice.",
+        "b": "(a) This Agreement runs until the Services are completed, unless ended earlier.\n(b) The Client may end it at any time by written notice. The Freelancer may end it only if the Client does not pay an undisputed invoice within 15 days of a written reminder.\n(c) On termination the Freelancer is paid only for deliverables accepted by the Client before the termination date."
+      }
+    },
+    {
+      "id": "liability",
+      "title": "Limitation of Liability",
+      "risk": "medium",
+      "variants": {
+        "a": "The Freelancer's total liability under this Agreement is limited to the fees it has actually received for the work giving rise to the claim, and excludes indirect or consequential losses such as lost profit.",
+        "balanced": "Each Party's total liability under this Agreement is limited to the Fee, except for breach of confidentiality or wilful misconduct. Neither Party is liable for indirect or consequential losses.",
+        "b": "The Freelancer is liable for all losses the Client suffers because of defects in the work."
+      }
+    },
+    {
+      "id": "expenses",
+      "title": "Expenses and Third-Party Costs",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Fee does not include travel, stock assets, licences, software, hosting or other third-party costs unless the Parties agree in writing that the Freelancer will cover them.\n(b) The Freelancer will get the Client's written approval before incurring any cost that the Client is to reimburse.\n(c) The Client will reimburse approved costs within 15 days of receiving the Freelancer's invoice with receipts."
+      }
+    },
+    {
+      "id": "communication",
+      "title": "Communication and Working Arrangements",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) Each Party will name one contact person for day-to-day communication on the Services.\n(b) The Parties will reply to messages about the Services within 2 working days, and the Freelancer will give a short written progress update on request.\n(c) The Freelancer will keep working files in a reasonable form so that the work can be handed over on completion."
+      }
+    },
+    {
+      "id": "subcontracting",
+      "title": "Subcontracting",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Freelancer will perform the Services personally and may use a subcontractor or assistant only with the Client's written consent.\n(b) If consent is given, the Freelancer remains responsible for the subcontractor's work and for keeping the Client's information confidential."
+      }
+    },
+    {
+      "id": "third_party",
+      "title": "Third-Party Materials and Licences",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Client will pay for and hold licences for any third-party materials, such as fonts, stock images, plugins or software, that it asks the Freelancer to use, unless the Parties agree otherwise in writing.\n(b) The Freelancer will tell the Client about any third-party licence terms that affect how the final work may be used."
+      }
+    },
+    {
+      "id": "data_protection",
+      "title": "Personal Data and Privacy",
+      "risk": "medium",
+      "variants": {
+        "balanced": "If the Services involve personal data, each Party will handle it only as needed for the Services and in line with the data protection law that applies, including the Digital Personal Data Protection Act, 2023 where it applies. The Client will make sure it is entitled to share that data, and the Freelancer will keep it secure and delete or return it when the Services end."
+      }
+    },
+    {
+      "id": "force_majeure",
+      "title": "Events Beyond Control",
+      "risk": "low",
+      "variants": {
+        "balanced": "Neither Party is liable for delay or failure caused by events beyond its reasonable control, such as natural disasters, war, strikes, government orders or pandemics, if it tells the other Party promptly. If the event lasts more than 30 days, either Party may end this Agreement by written notice."
+      }
+    },
+    {
+      "id": "indemnity",
+      "title": "Indemnity",
+      "risk": "high",
+      "variants": {
+        "balanced": "Each Party will compensate the other for losses, damages and reasonable legal costs arising from a claim by a third party that is caused by its own breach of this Agreement, its wilful misconduct, or its infringement of that third party's rights. The Party seeking compensation will tell the other promptly and allow it to help defend the claim. This is subject to the limit on liability in this Agreement."
+      }
+    },
+    {
+      "id": "law",
+      "title": "Governing Law and Dispute Resolution",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have exclusive jurisdiction."
+      }
+    },
+    {
+      "id": "notices",
+      "title": "Notices",
+      "risk": "low",
+      "variants": {
+        "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address that the Parties have confirmed in writing. An email notice is treated as received on the next working day."
+      }
+    },
+    {
+      "id": "general",
+      "title": "General",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) This Agreement is the entire agreement between the Parties about the Services and replaces earlier discussions.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) Neither Party may transfer its rights or duties under it without the other's written consent.\n(e) A failure to enforce a right is not a waiver of it.\n(f) It may be signed in counterparts, including electronically."
+      }
+    },
+    {
+      "id": "stamp",
+      "title": "Stamp Duty",
+      "risk": "low",
+      "variants": {
+        "balanced": "This Agreement will be stamped as required by the stamp law that applies at the place of signing. The stamp duty and related costs will be shared equally by the Parties unless the law requires otherwise."
+      }
+    }
   ]
 }

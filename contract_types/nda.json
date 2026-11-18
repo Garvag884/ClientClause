@@ -161,6 +161,54 @@
       }
     },
     {
+      "id": "security",
+      "title": "Security Measures",
+      "risk": "medium",
+      "variants": {
+        "balanced": "The Receiving Party will keep the Confidential Information secure, limit copies to what the Purpose needs, keep it separate from its other material where possible, and label copies as confidential."
+      }
+    },
+    {
+      "id": "reverse",
+      "title": "No Reverse Engineering",
+      "risk": "medium",
+      "variants": {
+        "balanced": "The Receiving Party will not copy, reverse engineer, decompile or analyse any prototype, software, sample or product shared by the Disclosing Party in order to find out how it works or to make something similar, except as the Disclosing Party permits in writing."
+      }
+    },
+    {
+      "id": "publicity",
+      "title": "No Public Statements",
+      "risk": "low",
+      "variants": {
+        "balanced": "Neither Party will announce or publicise the fact of these discussions, or use the other Party's name or logo, without its written consent."
+      }
+    },
+    {
+      "id": "personal_data",
+      "title": "Personal Data",
+      "risk": "medium",
+      "variants": {
+        "balanced": "If the Confidential Information includes personal data, the Receiving Party will use it only for the Purpose, keep it secure, and handle it in line with the data protection law that applies, including the Digital Personal Data Protection Act, 2023 where it applies."
+      }
+    },
+    {
+      "id": "survival",
+      "title": "Survival",
+      "risk": "low",
+      "variants": {
+        "balanced": "The Receiving Party's duties continue after the Purpose ends, or the discussions stop, for the whole period stated in this Agreement."
+      }
+    },
+    {
+      "id": "notices",
+      "title": "Notices",
+      "risk": "low",
+      "variants": {
+        "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address that the Parties have confirmed in writing. An email notice is treated as received on the next working day."
+      }
+    },
+    {
       "id": "law",
       "title": "Governing Law and Dispute Resolution",
       "risk": "low",

@@ -5,35 +5,141 @@
   "side_a": "Employee",
   "side_b": "Employer",
   "signatories": [
-    {"role": "Employer", "name_field": "employer_name"},
-    {"role": "Employee", "name_field": "employee_name"}
+    {
+      "role": "Employer",
+      "name_field": "employer_name"
+    },
+    {
+      "role": "Employee",
+      "name_field": "employee_name"
+    }
   ],
   "witnesses": 2,
   "fields": [
-    {"key": "employer_name", "label": "Employer / company name", "required": true},
-    {"key": "employer_address", "label": "Employer's office address"},
-    {"key": "employee_name", "label": "Employee's full name", "required": true},
-    {"key": "employee_address", "label": "Employee's residential address"},
-    {"key": "job_title", "label": "Job title", "required": true},
-    {"key": "monthly_salary", "label": "Monthly gross salary in rupees (a fixed figure)", "type": "number", "money": true, "required": true},
-    {"key": "pay_day", "label": "When salary is paid each month", "default": "by the 7th day of each calendar month"},
-    {"key": "start_date", "label": "Joining date", "type": "date", "required": true},
-    {"key": "probation_months", "label": "Probation period in months", "type": "number", "default": "3"},
-    {"key": "working_hours", "label": "Working hours", "default": "9:30 a.m. to 6:30 p.m., Monday to Friday"},
-    {"key": "place_of_work", "label": "Place of work", "default": "the Employer's office, or any other place the Employer reasonably requires"},
-    {"key": "wfh_days", "label": "Work-from-home days allowed per month (leave blank for none)", "type": "number"},
-    {"key": "sick_leaves", "label": "Paid sick leaves per year", "type": "number", "default": "6"},
-    {"key": "casual_leaves", "label": "Paid casual leaves per year", "type": "number", "default": "6"},
-    {"key": "notice_period_days", "label": "Notice period in days", "type": "number", "default": "30"},
-    {"key": "jurisdiction_city", "label": "City whose courts will have jurisdiction", "required": true},
-    {"key": "agreement_date", "label": "Date of the agreement", "type": "date", "default": "@today"},
-    {"key": "signing_place", "label": "Place of signing", "default_from": "jurisdiction_city"}
+    {
+      "key": "employer_name",
+      "label": "Employer / company name",
+      "required": true
+    },
+    {
+      "key": "employer_address",
+      "label": "Employer's office address"
+    },
+    {
+      "key": "employee_name",
+      "label": "Employee's full name",
+      "required": true
+    },
+    {
+      "key": "employee_address",
+      "label": "Employee's residential address"
+    },
+    {
+      "key": "job_title",
+      "label": "Job title",
+      "required": true
+    },
+    {
+      "key": "monthly_salary",
+      "label": "Monthly gross salary in rupees (a fixed figure)",
+      "type": "number",
+      "money": true,
+      "required": true
+    },
+    {
+      "key": "pay_day",
+      "label": "When salary is paid each month",
+      "default": "by the 7th day of each calendar month"
+    },
+    {
+      "key": "start_date",
+      "label": "Joining date",
+      "type": "date",
+      "required": true
+    },
+    {
+      "key": "probation_months",
+      "label": "Probation period in months",
+      "type": "number",
+      "default": "3"
+    },
+    {
+      "key": "working_hours",
+      "label": "Working hours",
+      "default": "9:30 a.m. to 6:30 p.m., Monday to Friday"
+    },
+    {
+      "key": "place_of_work",
+      "label": "Place of work",
+      "default": "the Employer's office, or any other place the Employer reasonably requires"
+    },
+    {
+      "key": "wfh_days",
+      "label": "Work-from-home days allowed per month (leave blank for none)",
+      "type": "number"
+    },
+    {
+      "key": "sick_leaves",
+      "label": "Paid sick leaves per year",
+      "type": "number",
+      "default": "6"
+    },
+    {
+      "key": "casual_leaves",
+      "label": "Paid casual leaves per year",
+      "type": "number",
+      "default": "6"
+    },
+    {
+      "key": "notice_period_days",
+      "label": "Notice period in days",
+      "type": "number",
+      "default": "30"
+    },
+    {
+      "key": "jurisdiction_city",
+      "label": "City whose courts will have jurisdiction",
+      "required": true
+    },
+    {
+      "key": "agreement_date",
+      "label": "Date of the agreement",
+      "type": "date",
+      "default": "@today"
+    },
+    {
+      "key": "signing_place",
+      "label": "Place of signing",
+      "default_from": "jurisdiction_city"
+    }
   ],
   "rules": [
-    {"type": "positive_number", "field": "monthly_salary", "message": "The monthly salary must be a positive number."},
-    {"type": "range", "field": "probation_months", "min": 0, "max": 12, "message": "Probation should be between 0 and 12 months."},
-    {"type": "range", "field": "notice_period_days", "min": 0, "max": 180, "message": "The notice period should be between 0 and 180 days."},
-    {"type": "range", "field": "wfh_days", "min": 0, "max": 31, "message": "Work-from-home days per month must be between 0 and 31."}
+    {
+      "type": "positive_number",
+      "field": "monthly_salary",
+      "message": "The monthly salary must be a positive number."
+    },
+    {
+      "type": "range",
+      "field": "probation_months",
+      "min": 0,
+      "max": 12,
+      "message": "Probation should be between 0 and 12 months."
+    },
+    {
+      "type": "range",
+      "field": "notice_period_days",
+      "min": 0,
+      "max": 180,
+      "message": "The notice period should be between 0 and 180 days."
+    },
+    {
+      "type": "range",
+      "field": "wfh_days",
+      "min": 0,
+      "max": 31,
+      "message": "Work-from-home days per month must be between 0 and 31."
+    }
   ],
   "preamble": [
     "This EMPLOYMENT AGREEMENT (the \"Agreement\") is made at {{signing_place}} on {{agreement_date}}",
@@ -44,47 +150,194 @@
     "NOW, THEREFORE, the Parties agree as follows:"
   ],
   "clauses": [
-    {"id": "appointment", "title": "Appointment", "risk": "low", "variants": {
-      "balanced": "(a) The Employer appoints the Employee as {{job_title}} with effect from {{start_date}} (the \"Joining Date\").\n(b) The Employee will perform the duties that belong to this role and any other reasonable duties the Employer assigns that match the Employee's skills and seniority.\n(c) The Employee will report to the person the Employer names from time to time."}},
-    {"id": "probation", "title": "Probation", "risk": "medium", "variants": {
-      "a": "(a) The first {{probation_months}} months of employment are a probation period.\n(b) The Employer will review the Employee's performance in writing before probation ends. If it does not, the Employee is treated as confirmed at the end of probation.",
-      "balanced": "(a) The first {{probation_months}} months of employment are a probation period, during which the Employee's performance and conduct will be reviewed.\n(b) The Employer will confirm the employment in writing at the end of probation. It may extend probation once, by up to 3 months, by giving written reasons.",
-      "b": "(a) The first {{probation_months}} months of employment are a probation period, which the Employer may extend at its discretion.\n(b) Employment is confirmed only when the Employer confirms it in writing."}},
-    {"id": "workplace", "title": "Place of Work and Working Hours", "risk": "low", "variants": {
-      "balanced": "(a) The Employee will work at {{place_of_work}}.\n(b) Normal working hours are {{working_hours}}, with the breaks the Employer allows.\n(c) The Employee may be asked to work reasonable additional hours when the business needs it, subject to applicable law."}},
-    {"id": "remote", "title": "Work From Home", "risk": "medium", "only_if": "wfh_days", "variants": {
-      "a": "The Employee may work from home for up to {{wfh_days}} days each month without further approval. Additional days may be agreed with the Employee's manager.",
-      "balanced": "The Employee may work from home for up to {{wfh_days}} days each month, scheduled with the Employee's manager in advance. The Employee must be reachable during working hours and have a suitable working setup.",
-      "b": "The Employee may work from home for up to {{wfh_days}} days each month, subject to prior approval and the Employer's business needs. The Employer may withdraw this arrangement with reasonable notice."}},
-    {"id": "salary", "title": "Salary and Payment", "risk": "high", "variants": {
-      "a": "(a) The Employee will receive a gross salary of Rs. {{monthly_salary}} (Rupees {{monthly_salary_words}}) per month, payable {{pay_day}} by bank transfer.\n(b) The Employer will deduct tax at source and other deductions required by law, and will give salary slips and the tax certificate required by law.\n(c) The salary will be reviewed in good faith at least once every year.",
-      "balanced": "(a) The Employee will receive a gross salary of Rs. {{monthly_salary}} (Rupees {{monthly_salary_words}}) per month, payable {{pay_day}} by bank transfer.\n(b) The Employer will deduct tax at source and other deductions required by law, and will give salary slips and the tax certificate required by law.\n(c) The salary will be reviewed annually. Any increase depends on performance and the Employer's business results.",
-      "b": "(a) The Employee will receive a gross salary of Rs. {{monthly_salary}} (Rupees {{monthly_salary_words}}) per month, payable {{pay_day}} by bank transfer, less tax and other deductions required by law.\n(b) Any revision of salary is at the Employer's discretion.\n(c) The Employer may recover any amount paid in excess of what is due, to the extent the law allows."}},
-    {"id": "benefits", "title": "Benefits and Statutory Contributions", "risk": "medium", "variants": {
-      "balanced": "(a) The Employee is entitled to provident fund, gratuity, insurance and other statutory benefits to the extent they apply under the law.\n(b) Any other benefits are as set out in the Employer's written policies, which the Employer may change with reasonable notice, except for benefits the law requires."}},
-    {"id": "leave", "title": "Leave and Holidays", "risk": "medium", "variants": {
-      "a": "(a) The Employee is entitled to {{sick_leaves}} paid sick leaves and {{casual_leaves}} paid casual leaves each year. Sick leave of up to two consecutive days needs no medical certificate.\n(b) The Employee is also entitled to earned leave and public holidays as required by applicable law and the Employer's holiday list.",
-      "balanced": "(a) The Employee is entitled to {{sick_leaves}} paid sick leaves and {{casual_leaves}} paid casual leaves each year. A medical certificate may be requested for sick leave longer than two consecutive days.\n(b) The Employee is also entitled to earned leave and public holidays as required by applicable law and the Employer's holiday list.",
-      "b": "(a) The Employee is entitled to {{sick_leaves}} paid sick leaves and {{casual_leaves}} paid casual leaves each year, with sick leave supported by a medical certificate and casual leave subject to prior approval.\n(b) Other leave and public holidays follow applicable law and the Employer's policy as it applies from time to time."}},
-    {"id": "conduct", "title": "Duties, Conduct and Outside Work", "risk": "medium", "variants": {
-      "balanced": "(a) The Employee will devote their full working time to the Employer's business and follow the Employer's lawful instructions and written policies.\n(b) The Employee will not take other paid work, or run a business that competes with or conflicts with the Employer's business, without the Employer's written consent.\n(c) The Employee will tell the Employer promptly about any conflict of interest."}},
-    {"id": "confidentiality", "title": "Confidentiality", "risk": "medium", "variants": {
-      "balanced": "(a) The Employee will keep the Employer's non-public business information confidential during employment and for two years after it ends, and will use it only for the Employer's business.\n(b) This does not apply to information that is or becomes public without the Employee's breach, or that the law requires the Employee to disclose."}},
-    {"id": "ip", "title": "Work Product and Intellectual Property", "risk": "medium", "variants": {
-      "a": "(a) Work the Employee creates as part of their duties belongs to the Employer.\n(b) Work the Employee creates in their own time, without the Employer's resources, and unrelated to the Employer's business, belongs to the Employee.",
-      "balanced": "(a) Work the Employee creates as part of their duties, or using the Employer's resources, belongs to the Employer, and the Employee will sign any documents reasonably needed to record this.\n(b) The Employee keeps their general skills, knowledge and experience.",
-      "b": "All work and ideas the Employee creates during employment, whether or not related to their duties, belong to the Employer."}},
-    {"id": "termination", "title": "Notice and Termination", "risk": "high", "variants": {
-      "a": "(a) Either Party may end this Agreement by giving {{notice_period_days}} days' written notice, or by paying salary in place of notice for the part of the notice period not served.\n(b) The Employer may end it without notice only for serious misconduct, and only after giving the Employee a written statement of the allegations and a fair chance to respond.\n(c) All salary and dues up to the last working day will be paid within 30 days after it.",
-      "balanced": "(a) Either Party may end this Agreement by giving {{notice_period_days}} days' written notice, or by paying salary in place of notice for the part of the notice period not served.\n(b) The Employer may end it without notice for serious misconduct, after giving the Employee a chance to respond.\n(c) All salary and dues up to the last working day will be paid in the final settlement.",
-      "b": "(a) The Employee must give {{notice_period_days}} days' written notice. The Employer may end this Agreement with the same notice, or by paying salary in place of notice.\n(b) The Employer may end it without notice for misconduct or breach of this Agreement.\n(c) The Employer may complete the final settlement after clearance formalities, within the time the law allows."}},
-    {"id": "exit", "title": "Return of Property and Final Settlement", "risk": "medium", "variants": {
-      "balanced": "On or before the last working day, the Employee will return all laptops, documents, access cards, data and other property of the Employer and complete the Employer's handover and clearance process. The Employer will then settle all dues in the final settlement within the time the law requires."}},
-    {"id": "law", "title": "Governing Law and Dispute Resolution", "risk": "low", "variants": {
-      "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have jurisdiction."}},
-    {"id": "notices", "title": "Notices", "risk": "low", "variants": {
-      "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address that the Parties have confirmed in writing. An email notice is treated as received on the next working day."}},
-    {"id": "general", "title": "General", "risk": "low", "variants": {
-      "balanced": "(a) This Agreement is the entire agreement between the Parties about the employment and replaces earlier offers and discussions.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) A failure to enforce a right is not a waiver of it.\n(e) It may be signed in counterparts, including electronically."}}
+    {
+      "id": "appointment",
+      "title": "Appointment",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Employer appoints the Employee as {{job_title}} with effect from {{start_date}} (the \"Joining Date\").\n(b) The Employee will perform the duties that belong to this role and any other reasonable duties the Employer assigns that match the Employee's skills and seniority.\n(c) The Employee will report to the person the Employer names from time to time."
+      }
+    },
+    {
+      "id": "probation",
+      "title": "Probation",
+      "risk": "medium",
+      "variants": {
+        "a": "(a) The first {{probation_months}} months of employment are a probation period.\n(b) The Employer will review the Employee's performance in writing before probation ends. If it does not, the Employee is treated as confirmed at the end of probation.",
+        "balanced": "(a) The first {{probation_months}} months of employment are a probation period, during which the Employee's performance and conduct will be reviewed.\n(b) The Employer will confirm the employment in writing at the end of probation. It may extend probation once, by up to 3 months, by giving written reasons.",
+        "b": "(a) The first {{probation_months}} months of employment are a probation period, which the Employer may extend at its discretion.\n(b) Employment is confirmed only when the Employer confirms it in writing."
+      }
+    },
+    {
+      "id": "workplace",
+      "title": "Place of Work and Working Hours",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Employee will work at {{place_of_work}}.\n(b) Normal working hours are {{working_hours}}, with the breaks the Employer allows.\n(c) The Employee may be asked to work reasonable additional hours when the business needs it, subject to applicable law."
+      }
+    },
+    {
+      "id": "remote",
+      "title": "Work From Home",
+      "risk": "medium",
+      "only_if": "wfh_days",
+      "variants": {
+        "a": "The Employee may work from home for up to {{wfh_days}} days each month without further approval. Additional days may be agreed with the Employee's manager.",
+        "balanced": "The Employee may work from home for up to {{wfh_days}} days each month, scheduled with the Employee's manager in advance. The Employee must be reachable during working hours and have a suitable working setup.",
+        "b": "The Employee may work from home for up to {{wfh_days}} days each month, subject to prior approval and the Employer's business needs. The Employer may withdraw this arrangement with reasonable notice."
+      }
+    },
+    {
+      "id": "salary",
+      "title": "Salary and Payment",
+      "risk": "high",
+      "variants": {
+        "a": "(a) The Employee will receive a gross salary of Rs. {{monthly_salary}} (Rupees {{monthly_salary_words}}) per month, payable {{pay_day}} by bank transfer.\n(b) The Employer will deduct tax at source and other deductions required by law, and will give salary slips and the tax certificate required by law.\n(c) The salary will be reviewed in good faith at least once every year.",
+        "balanced": "(a) The Employee will receive a gross salary of Rs. {{monthly_salary}} (Rupees {{monthly_salary_words}}) per month, payable {{pay_day}} by bank transfer.\n(b) The Employer will deduct tax at source and other deductions required by law, and will give salary slips and the tax certificate required by law.\n(c) The salary will be reviewed annually. Any increase depends on performance and the Employer's business results.",
+        "b": "(a) The Employee will receive a gross salary of Rs. {{monthly_salary}} (Rupees {{monthly_salary_words}}) per month, payable {{pay_day}} by bank transfer, less tax and other deductions required by law.\n(b) Any revision of salary is at the Employer's discretion.\n(c) The Employer may recover any amount paid in excess of what is due, to the extent the law allows."
+      }
+    },
+    {
+      "id": "benefits",
+      "title": "Benefits and Statutory Contributions",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Employee is entitled to provident fund, gratuity, insurance and other statutory benefits to the extent they apply under the law.\n(b) Any other benefits are as set out in the Employer's written policies, which the Employer may change with reasonable notice, except for benefits the law requires."
+      }
+    },
+    {
+      "id": "leave",
+      "title": "Leave and Holidays",
+      "risk": "medium",
+      "variants": {
+        "a": "(a) The Employee is entitled to {{sick_leaves}} paid sick leaves and {{casual_leaves}} paid casual leaves each year. Sick leave of up to two consecutive days needs no medical certificate.\n(b) The Employee is also entitled to earned leave and public holidays as required by applicable law and the Employer's holiday list.",
+        "balanced": "(a) The Employee is entitled to {{sick_leaves}} paid sick leaves and {{casual_leaves}} paid casual leaves each year. A medical certificate may be requested for sick leave longer than two consecutive days.\n(b) The Employee is also entitled to earned leave and public holidays as required by applicable law and the Employer's holiday list.",
+        "b": "(a) The Employee is entitled to {{sick_leaves}} paid sick leaves and {{casual_leaves}} paid casual leaves each year, with sick leave supported by a medical certificate and casual leave subject to prior approval.\n(b) Other leave and public holidays follow applicable law and the Employer's policy as it applies from time to time."
+      }
+    },
+    {
+      "id": "conduct",
+      "title": "Duties, Conduct and Outside Work",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Employee will devote their full working time to the Employer's business and follow the Employer's lawful instructions and written policies.\n(b) The Employee will not take other paid work, or run a business that competes with or conflicts with the Employer's business, without the Employer's written consent.\n(c) The Employee will tell the Employer promptly about any conflict of interest."
+      }
+    },
+    {
+      "id": "confidentiality",
+      "title": "Confidentiality",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Employee will keep the Employer's non-public business information confidential during employment and for two years after it ends, and will use it only for the Employer's business.\n(b) This does not apply to information that is or becomes public without the Employee's breach, or that the law requires the Employee to disclose."
+      }
+    },
+    {
+      "id": "ip",
+      "title": "Work Product and Intellectual Property",
+      "risk": "medium",
+      "variants": {
+        "a": "(a) Work the Employee creates as part of their duties belongs to the Employer.\n(b) Work the Employee creates in their own time, without the Employer's resources, and unrelated to the Employer's business, belongs to the Employee.",
+        "balanced": "(a) Work the Employee creates as part of their duties, or using the Employer's resources, belongs to the Employer, and the Employee will sign any documents reasonably needed to record this.\n(b) The Employee keeps their general skills, knowledge and experience.",
+        "b": "All work and ideas the Employee creates during employment, whether or not related to their duties, belong to the Employer."
+      }
+    },
+    {
+      "id": "termination",
+      "title": "Notice and Termination",
+      "risk": "high",
+      "variants": {
+        "a": "(a) Either Party may end this Agreement by giving {{notice_period_days}} days' written notice, or by paying salary in place of notice for the part of the notice period not served.\n(b) The Employer may end it without notice only for serious misconduct, and only after giving the Employee a written statement of the allegations and a fair chance to respond.\n(c) All salary and dues up to the last working day will be paid within 30 days after it.",
+        "balanced": "(a) Either Party may end this Agreement by giving {{notice_period_days}} days' written notice, or by paying salary in place of notice for the part of the notice period not served.\n(b) The Employer may end it without notice for serious misconduct, after giving the Employee a chance to respond.\n(c) All salary and dues up to the last working day will be paid in the final settlement.",
+        "b": "(a) The Employee must give {{notice_period_days}} days' written notice. The Employer may end this Agreement with the same notice, or by paying salary in place of notice.\n(b) The Employer may end it without notice for misconduct or breach of this Agreement.\n(c) The Employer may complete the final settlement after clearance formalities, within the time the law allows."
+      }
+    },
+    {
+      "id": "exit",
+      "title": "Return of Property and Final Settlement",
+      "risk": "medium",
+      "variants": {
+        "balanced": "On or before the last working day, the Employee will return all laptops, documents, access cards, data and other property of the Employer and complete the Employer's handover and clearance process. The Employer will then settle all dues in the final settlement within the time the law requires."
+      }
+    },
+    {
+      "id": "background",
+      "title": "Documents and Background Verification",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) The Employee will give true copies of identity, address, education and employment records when asked, and confirms that the details given at hiring are correct.\n(b) The Employer may verify these details with the Employee's consent. Giving false information is a ground for ending employment after the Employee has had a chance to respond."
+      }
+    },
+    {
+      "id": "performance",
+      "title": "Performance Reviews",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Employer will review the Employee's performance at least once a year and will discuss the outcome with the Employee.\n(b) Goals and any performance-linked pay will be shared in writing, and any bonus or incentive is payable only as stated in that written plan."
+      }
+    },
+    {
+      "id": "expenses",
+      "title": "Business Expenses",
+      "risk": "low",
+      "variants": {
+        "balanced": "The Employer will reimburse reasonable expenses that the Employee incurs for the Employer's business with prior approval, within 30 days of the Employee submitting the claim with receipts, under the Employer's expense policy."
+      }
+    },
+    {
+      "id": "equipment",
+      "title": "Company Equipment and IT Use",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) Devices, accounts and tools provided by the Employer remain its property and are to be used mainly for work. The Employee will look after them and return them when employment ends.\n(b) The Employee will follow the Employer's IT and security policies, will not install unlicensed software, and will report any loss or security incident promptly.\n(c) The Employer may monitor work accounts and devices only as its written policy states and as the law allows."
+      }
+    },
+    {
+      "id": "harassment",
+      "title": "Respectful Workplace",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Employer will provide a workplace free from harassment and discrimination, and will follow the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013 where it applies, including having an Internal Committee where required.\n(b) The Employee will treat colleagues, clients and others with respect, and will report concerns through the channels in the Employer's policy.\n(c) The Employer will not punish anyone for raising a concern in good faith."
+      }
+    },
+    {
+      "id": "data_protection",
+      "title": "Employee Data and Privacy",
+      "risk": "medium",
+      "variants": {
+        "balanced": "The Employer will collect and use the Employee's personal data only for employment, payroll, legal and security purposes, keep it secure, share it only where needed and lawful, and follow the data protection law that applies, including the Digital Personal Data Protection Act, 2023 where it applies."
+      }
+    },
+    {
+      "id": "training",
+      "title": "Training and Development",
+      "risk": "low",
+      "variants": {
+        "balanced": "The Employer may arrange training for the Employee's role during working hours at its cost. Any repayment of training costs applies only if the Parties agree to it separately in writing before the training starts, and only to the extent the law allows."
+      }
+    },
+    {
+      "id": "law",
+      "title": "Governing Law and Dispute Resolution",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have jurisdiction."
+      }
+    },
+    {
+      "id": "notices",
+      "title": "Notices",
+      "risk": "low",
+      "variants": {
+        "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address that the Parties have confirmed in writing. An email notice is treated as received on the next working day."
+      }
+    },
+    {
+      "id": "general",
+      "title": "General",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) This Agreement is the entire agreement between the Parties about the employment and replaces earlier offers and discussions.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) A failure to enforce a right is not a waiver of it.\n(e) It may be signed in counterparts, including electronically."
+      }
+    }
   ]
 }

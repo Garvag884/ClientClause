@@ -15,3 +15,7 @@ backend/find_nvidia.py
 .venv/
 __pycache__/
 .DS_Store
+.env
+.venv/
+__pycache__/
+.DS_Store

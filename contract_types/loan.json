@@ -1,0 +1,73 @@
+{
+  "id": "loan",
+  "name": "Loan Agreement",
+  "description": "A personal loan agreement where one person or business lends money to another, for example a loan between friends or family, with repayment instalments and optional interest.",
+  "side_a": "Lender",
+  "side_b": "Borrower",
+  "signatories": [
+    {"role": "Lender", "name_field": "lender_name"},
+    {"role": "Borrower", "name_field": "borrower_name"}
+  ],
+  "witnesses": 2,
+  "fields": [
+    {"key": "lender_name", "label": "Lender's full name", "required": true},
+    {"key": "lender_address", "label": "Lender's address"},
+    {"key": "borrower_name", "label": "Borrower's full name", "required": true},
+    {"key": "borrower_address", "label": "Borrower's address"},
+    {"key": "loan_amount", "label": "Loan amount in rupees", "type": "number", "money": true, "required": true},
+    {"key": "interest_percent", "label": "Interest rate per year in percent (0 for interest-free)", "type": "number", "default": "0"},
+    {"key": "tenure_months", "label": "Repayment period in months", "type": "number", "required": true},
+    {"key": "first_repayment_date", "label": "Date of the first instalment", "type": "date", "required": true},
+    {"key": "purpose", "label": "What the loan is for", "default": "the Borrower's personal needs"},
+    {"key": "jurisdiction_city", "label": "City whose courts will have jurisdiction", "required": true},
+    {"key": "agreement_date", "label": "Date of the agreement", "type": "date", "default": "@today"},
+    {"key": "signing_place", "label": "Place of signing", "default_from": "jurisdiction_city"}
+  ],
+  "rules": [
+    {"type": "positive_number", "field": "loan_amount", "message": "The loan amount must be a positive number."},
+    {"type": "range", "field": "tenure_months", "min": 1, "max": 120, "message": "The repayment period should be between 1 and 120 months."},
+    {"type": "range", "field": "interest_percent", "min": 0, "max": 36, "message": "The interest rate should be between 0 and 36 percent a year."}
+  ],
+  "preamble": [
+    "This LOAN AGREEMENT (the \"Agreement\") is made at {{signing_place}} on {{agreement_date}}",
+    "BETWEEN {{lender_name}}, residing at {{lender_address}} (the \"Lender\", which expression includes legal heirs and permitted assigns),",
+    "AND {{borrower_name}}, residing at {{borrower_address}} (the \"Borrower\", which expression includes legal heirs).",
+    "The Lender and the Borrower are together called the \"Parties\" and individually a \"Party\".",
+    "WHEREAS the Borrower has asked the Lender for a loan for {{purpose}}, and the Lender has agreed to lend the money on the terms of this Agreement.",
+    "NOW, THEREFORE, the Parties agree as follows:"
+  ],
+  "clauses": [
+    {"id": "loan", "title": "The Loan", "risk": "high", "variants": {
+      "balanced": "(a) The Lender lends to the Borrower Rs. {{loan_amount}} (Rupees {{loan_amount_words}}) (the \"Loan\").\n(b) The Lender will pay the Loan by bank transfer or another traceable method to the Borrower's bank account, and the Borrower confirms by signing this Agreement that it has received the Loan, or will receive it on the date the transfer is made.\n(c) The Borrower will use the Loan only for {{purpose}} and not for any unlawful purpose."}},
+    {"id": "interest", "title": "Interest", "risk": "high", "variants": {
+      "a": "(a) Interest accrues on the outstanding principal at {{interest_percent}}% per year, calculated as simple interest from the date the Loan is paid.\n(b) If this rate is zero, the Loan is interest-free, but the late-payment charge below still applies if an instalment is missed.",
+      "balanced": "(a) Interest accrues on the outstanding principal at {{interest_percent}}% per year, calculated as simple interest from the date the Loan is paid.\n(b) If this rate is zero, the Loan is interest-free.",
+      "b": "(a) Interest accrues on the outstanding principal at {{interest_percent}}% per year, calculated as simple interest on the reducing balance from the date the Loan is paid.\n(b) If this rate is zero, the Loan is interest-free. No other fee or charge applies except as stated in this Agreement."}},
+    {"id": "repayment", "title": "Repayment", "risk": "high", "variants": {
+      "balanced": "(a) The Borrower will repay the Loan, with interest, in equal monthly instalments over {{tenure_months}} months, the first instalment falling due on {{first_repayment_date}} and each later one on the same day of each following month.\n(b) Each instalment is the total of the principal and interest divided by the number of months, and the Parties will record the instalment amount in writing, such as in a message or a signed schedule, when the Loan is paid.\n(c) The Borrower will pay by bank transfer or another traceable method, and the Lender will confirm each payment in writing or by the bank record."}},
+    {"id": "prepayment", "title": "Early Repayment", "risk": "medium", "variants": {
+      "a": "The Borrower may repay the Loan early only with the Lender's written consent, and will then also pay the interest due for the whole month in which it pays.",
+      "balanced": "The Borrower may repay all or part of the Loan early at any time without any penalty. Interest stops on the amount repaid from the date of repayment.",
+      "b": "The Borrower may repay all or part of the Loan early at any time without any penalty or extra charge, and the Lender will confirm the payment in writing within 7 days."}},
+    {"id": "late", "title": "Late Payment", "risk": "medium", "variants": {
+      "a": "An instalment not paid within 3 days of its due date carries a late charge of 2% per month on the overdue amount until it is paid.",
+      "balanced": "An instalment not paid within 7 days of its due date carries a late charge of 1% per month on the overdue amount until it is paid.",
+      "b": "An instalment not paid within 15 days of its due date carries a late charge of 0.5% per month on the overdue amount until it is paid. The Lender will first give a written reminder."}},
+    {"id": "default", "title": "Default and Recall of the Loan", "risk": "high", "variants": {
+      "a": "If the Borrower misses one instalment and does not pay it within 7 days after a written reminder, the Lender may demand immediate repayment of the whole outstanding amount.",
+      "balanced": "If the Borrower misses two instalments in a row and does not pay them within 15 days after a written notice, the Lender may demand immediate repayment of the whole outstanding amount.",
+      "b": "If the Borrower misses three instalments in a row and does not pay them within 30 days after a written notice, the Lender may demand repayment of the whole outstanding amount. The Lender will first discuss a revised repayment plan in good faith."}},
+    {"id": "assurances", "title": "Borrower's Assurances", "risk": "medium", "variants": {
+      "balanced": "The Borrower confirms that the information it has given about itself is true, and that it will tell the Lender promptly if its address or contact details change, or if it cannot pay an instalment on time."}},
+    {"id": "records", "title": "Records", "risk": "low", "variants": {
+      "balanced": "Each Party will keep records of the Loan and each payment, such as bank statements and messages, and will give the other a copy on request. The Lender will give a written confirmation when the Loan has been repaid in full."}},
+    {"id": "law", "title": "Governing Law and Dispute Resolution", "risk": "low", "variants": {
+      "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have jurisdiction."}},
+    {"id": "notices", "title": "Notices", "risk": "low", "variants": {
+      "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address or phone number that the Parties have confirmed in writing. A notice sent by email or message is treated as received on the next working day."}},
+    {"id": "general", "title": "General", "risk": "low", "variants": {
+      "balanced": "(a) This Agreement is the entire agreement between the Parties about the Loan and replaces earlier discussions.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) A failure to enforce a right is not a waiver of it.\n(e) It may be signed in counterparts, including electronically."}},
+    {"id": "stamp", "title": "Stamp Duty", "risk": "low", "variants": {
+      "balanced": "This Agreement will be stamped as required by the stamp law that applies at the place of signing. The stamp duty and related costs will be borne by the Borrower unless the Parties agree otherwise in writing."}}
+  ]
+}

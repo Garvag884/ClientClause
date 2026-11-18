@@ -1,0 +1,87 @@
+{
+  "id": "supply",
+  "name": "Supply Agreement",
+  "description": "A vendor, supplier or supply agreement where a supplier regularly sells and delivers goods or materials to a buyer, with prices, delivery, quality checks, payment and warranty.",
+  "side_a": "Supplier",
+  "side_b": "Buyer",
+  "signatories": [
+    {"role": "Supplier", "name_field": "supplier_name"},
+    {"role": "Buyer", "name_field": "buyer_name"}
+  ],
+  "witnesses": 2,
+  "fields": [
+    {"key": "supplier_name", "label": "Supplier's name", "required": true},
+    {"key": "supplier_address", "label": "Supplier's address"},
+    {"key": "buyer_name", "label": "Buyer's name", "required": true},
+    {"key": "buyer_address", "label": "Buyer's address"},
+    {"key": "goods_description", "label": "Goods or materials to be supplied", "required": true},
+    {"key": "contract_value", "label": "Total expected value of supply in rupees", "type": "number", "money": true, "required": true},
+    {"key": "start_date", "label": "Supply start date", "type": "date", "required": true},
+    {"key": "supply_months", "label": "Length of the supply arrangement in months", "type": "number", "default": "12"},
+    {"key": "delivery_days", "label": "Days to deliver after each order", "type": "number", "default": "7"},
+    {"key": "payment_days", "label": "Days to pay after delivery and invoice", "type": "number", "default": "30"},
+    {"key": "warranty_months", "label": "Warranty period in months", "type": "number", "default": "6"},
+    {"key": "jurisdiction_city", "label": "City whose courts will have jurisdiction", "required": true},
+    {"key": "agreement_date", "label": "Date of the agreement", "type": "date", "default": "@today"},
+    {"key": "signing_place", "label": "Place of signing", "default_from": "jurisdiction_city"}
+  ],
+  "rules": [
+    {"type": "positive_number", "field": "contract_value", "message": "The supply value must be a positive number."},
+    {"type": "range", "field": "supply_months", "min": 1, "max": 60, "message": "The supply period should be between 1 and 60 months."},
+    {"type": "range", "field": "delivery_days", "min": 0, "max": 180, "message": "Delivery time should be between 0 and 180 days."},
+    {"type": "range", "field": "payment_days", "min": 0, "max": 180, "message": "Payment time should be between 0 and 180 days."},
+    {"type": "range", "field": "warranty_months", "min": 0, "max": 60, "message": "The warranty should be between 0 and 60 months."}
+  ],
+  "preamble": [
+    "This SUPPLY AGREEMENT (the \"Agreement\") is made at {{signing_place}} on {{agreement_date}}",
+    "BETWEEN {{supplier_name}}, having its address at {{supplier_address}} (the \"Supplier\", which expression includes its successors and permitted assigns),",
+    "AND {{buyer_name}}, having its address at {{buyer_address}} (the \"Buyer\", which expression includes its successors and permitted assigns).",
+    "The Supplier and the Buyer are together called the \"Parties\" and individually a \"Party\".",
+    "WHEREAS the Supplier deals in the goods described below and the Buyer wishes to buy them from the Supplier on a continuing basis, on the terms of this Agreement.",
+    "NOW, THEREFORE, the Parties agree as follows:"
+  ],
+  "clauses": [
+    {"id": "supply", "title": "Supply of Goods", "risk": "medium", "variants": {
+      "balanced": "(a) The Supplier will supply, and the Buyer will buy, the following goods: {{goods_description}} (the \"Goods\"), starting on {{start_date}} and for {{supply_months}} months (the \"Term\").\n(b) The expected total value of supply during the Term is Rs. {{contract_value}} (Rupees {{contract_value_words}}). This is an estimate and not a minimum order commitment, unless the Parties agree otherwise in writing.\n(c) The Buyer will place each order in writing, stating the quantity and delivery date, and each order is binding once the Supplier confirms it in writing."}},
+    {"id": "price", "title": "Price and Payment", "risk": "high", "variants": {
+      "a": "(a) The prices are those in the Supplier's written price list or quotation, which applies to each order unless the Parties agree otherwise in writing.\n(b) The Buyer will pay each invoice within 15 days of delivery, by bank transfer or another traceable method.\n(c) Overdue amounts carry interest at 2% per month until they are paid, and the Supplier may stop further deliveries while an invoice is overdue.",
+      "balanced": "(a) The prices are those in the Supplier's written price list or quotation, which applies to each order unless the Parties agree otherwise in writing. The Supplier will give at least 30 days' written notice of any price change, which does not affect orders already confirmed.\n(b) The Buyer will pay each invoice within {{payment_days}} days of delivery and receipt of a valid invoice, by bank transfer or another traceable method.\n(c) Overdue amounts carry interest at 1% per month until they are paid.",
+      "b": "(a) The prices are fixed for the Term and apply to each order. They can be changed only by a written agreement signed by both Parties.\n(b) The Buyer will pay each invoice within 45 days of delivery, acceptance of the Goods and receipt of a valid invoice, by bank transfer or another traceable method.\n(c) The Buyer may withhold the part of an invoice that is genuinely in dispute, if it tells the Supplier why in writing, and must pay the rest on time."}},
+    {"id": "taxes", "title": "Taxes", "risk": "medium", "variants": {
+      "balanced": "(a) Prices are exclusive of GST. The Buyer will pay GST at the applicable rate against a valid tax invoice.\n(b) If the law requires the Buyer to deduct tax at source, it may do so and will give the Supplier the deduction certificate.\n(c) Each Party is responsible for its own income tax."}},
+    {"id": "delivery", "title": "Delivery", "risk": "medium", "variants": {
+      "balanced": "(a) The Supplier will deliver the Goods to the Buyer's address, or another address stated in the order, within {{delivery_days}} days of the order, unless the order says otherwise.\n(b) Each delivery will come with a delivery note listing the Goods and quantities. The Buyer or its representative will sign for the delivery.\n(c) The Supplier will pack the Goods so that they reach the Buyer undamaged."}},
+    {"id": "inspection", "title": "Inspection and Rejection", "risk": "medium", "variants": {
+      "a": "(a) The Buyer will inspect each delivery within 3 days of receipt and tell the Supplier in writing about any shortage, damage or defect.\n(b) Goods not rejected within that time are treated as accepted.",
+      "balanced": "(a) The Buyer will inspect each delivery within 7 days of receipt and tell the Supplier in writing about any shortage, damage or defect, with supporting details.\n(b) Goods not rejected within that time are treated as accepted, except for hidden defects covered by the warranty.\n(c) The Supplier will, at its choice, replace or repair rejected Goods or credit their price, at its own cost, within a reasonable time.",
+      "b": "(a) The Buyer may inspect each delivery within 15 days of receipt and reject Goods that are short, damaged, defective or different from the order.\n(b) The Supplier will collect rejected Goods at its own cost and, at the Buyer's choice, replace them or refund their price within 15 days."}},
+    {"id": "warranty", "title": "Quality and Warranty", "risk": "high", "variants": {
+      "a": "(a) The Supplier confirms that the Goods will match the agreed description and be of reasonable quality.\n(b) The Supplier will, at its choice, replace or repair Goods that fail within {{warranty_months}} months of delivery because of a manufacturing defect. This is the Buyer's only remedy for defective Goods.\n(c) The warranty does not cover misuse, wrong storage or normal wear and tear.",
+      "balanced": "(a) The Supplier confirms that the Goods will match the agreed description, be of reasonable quality, be fit for their normal use, and be free from any third-party claims.\n(b) The Supplier will replace or repair, at its own cost, Goods that fail within {{warranty_months}} months of delivery because of a defect in material or workmanship.\n(c) The warranty does not cover misuse, wrong storage or normal wear and tear.",
+      "b": "(a) The Supplier confirms that the Goods will match the agreed description and any samples or specifications, be of good quality, be fit for their intended use, comply with applicable law, and be free from any third-party claims.\n(b) The Supplier will replace or repair, at its own cost and within 15 days, Goods that fail within {{warranty_months}} months of delivery, and will compensate the Buyer for direct losses caused by the defect."}},
+    {"id": "risk", "title": "Risk and Ownership", "risk": "medium", "variants": {
+      "balanced": "(a) The risk of loss or damage to the Goods passes to the Buyer on delivery.\n(b) Ownership of the Goods passes to the Buyer when the Buyer has paid for them in full."}},
+    {"id": "delay", "title": "Late Delivery", "risk": "medium", "variants": {
+      "balanced": "(a) If the Supplier delivers late, except for reasons outside its control or caused by the Buyer, the Buyer may claim a reduction of 0.5% of the order value for each full week of delay, up to 5% of that order value.\n(b) If delivery is more than 30 days late, the Buyer may cancel that order without further liability."}},
+    {"id": "forcemajeure", "title": "Events Beyond Control", "risk": "low", "variants": {
+      "balanced": "Neither Party is liable for delay or failure caused by events beyond its reasonable control, such as natural disasters, war, strikes, government orders or pandemics, if it tells the other Party promptly. If the event lasts more than 30 days, either Party may cancel the affected order by written notice."}},
+    {"id": "confidentiality", "title": "Confidentiality", "risk": "medium", "variants": {
+      "balanced": "Each Party will keep the other's non-public business information confidential, and use it only for this Agreement, during the Term and for two years after it ends. This does not apply to information that is public without breach of this Agreement, or that the law requires a Party to disclose."}},
+    {"id": "termination", "title": "Term and Termination", "risk": "high", "variants": {
+      "a": "(a) This Agreement runs for the Term unless ended earlier.\n(b) Either Party may end it by giving 30 days' written notice. The Buyer will pay for all Goods ordered and confirmed before the notice period ends.\n(c) The Supplier may end it immediately by written notice if the Buyer does not pay an undisputed invoice within 15 days of a reminder.",
+      "balanced": "(a) This Agreement runs for the Term unless ended earlier.\n(b) Either Party may end it by giving 60 days' written notice. Orders already confirmed will still be completed and paid for.\n(c) Either Party may end it immediately by written notice if the other seriously breaches it and does not fix the breach within 15 days of notice, or becomes insolvent.",
+      "b": "(a) This Agreement runs for the Term unless ended earlier.\n(b) The Buyer may end it at any time by giving 15 days' written notice. The Supplier may end it only by giving 90 days' written notice.\n(c) The Buyer may end it immediately by written notice if the Supplier seriously breaches it, repeatedly delivers defective Goods, or becomes insolvent."}},
+    {"id": "liability", "title": "Limitation of Liability", "risk": "medium", "variants": {
+      "a": "The Supplier's total liability under this Agreement is limited to the price of the Goods that caused the claim, and it is not liable for indirect or consequential losses such as lost profit.",
+      "balanced": "Each Party's total liability for a claim under this Agreement is limited to the value of the order that caused the claim, except for breach of confidentiality, wilful misconduct, or liability that the law does not allow to be limited. Neither Party is liable for indirect or consequential losses.",
+      "b": "The Supplier is liable for all direct losses the Buyer suffers because of defective Goods or late delivery, in addition to the remedies in this Agreement."}},
+    {"id": "law", "title": "Governing Law and Dispute Resolution", "risk": "low", "variants": {
+      "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have jurisdiction."}},
+    {"id": "notices", "title": "Notices", "risk": "low", "variants": {
+      "balanced": "Notices under this Agreement must be in writing and sent to the addresses at the start of this Agreement, or to an email address that the Parties have confirmed in writing. An email notice is treated as received on the next working day."}},
+    {"id": "general", "title": "General", "risk": "low", "variants": {
+      "balanced": "(a) This Agreement is the entire agreement between the Parties about the supply of the Goods and replaces earlier discussions.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) Neither Party may transfer its rights or duties under it without the other's written consent.\n(e) A failure to enforce a right is not a waiver of it.\n(f) It may be signed in counterparts, including electronically."}},
+    {"id": "stamp", "title": "Stamp Duty", "risk": "low", "variants": {
+      "balanced": "This Agreement will be stamped as required by the stamp law that applies at the place of signing. The stamp duty and related costs will be shared equally by the Parties unless the law requires otherwise."}}
+  ]
+}

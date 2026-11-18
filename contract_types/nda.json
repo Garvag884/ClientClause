@@ -1,27 +1,75 @@
 {
   "id": "nda",
   "name": "Non-Disclosure Agreement",
-  "description": "An agreement to keep shared business or personal information confidential.",
+  "description": "A ONE-WAY non-disclosure agreement where only one party shares confidential information and the other party receives it and must keep it secret.",
   "side_a": "Disclosing Party",
   "side_b": "Receiving Party",
   "signatories": [
-    {"role": "Disclosing Party", "name_field": "disclosing_party"},
-    {"role": "Receiving Party", "name_field": "receiving_party"}
+    {
+      "role": "Disclosing Party",
+      "name_field": "disclosing_party"
+    },
+    {
+      "role": "Receiving Party",
+      "name_field": "receiving_party"
+    }
   ],
   "witnesses": 2,
   "fields": [
-    {"key": "disclosing_party", "label": "Disclosing party (shares the information)", "required": true},
-    {"key": "disclosing_address", "label": "Disclosing party's address"},
-    {"key": "receiving_party", "label": "Receiving party (receives the information)", "required": true},
-    {"key": "receiving_address", "label": "Receiving party's address"},
-    {"key": "purpose", "label": "Purpose of sharing the information", "required": true},
-    {"key": "term_years", "label": "Confidentiality period in years", "type": "number", "required": true},
-    {"key": "jurisdiction_city", "label": "City whose courts will have jurisdiction", "required": true},
-    {"key": "agreement_date", "label": "Date of the agreement (effective date)", "type": "date", "default": "@today"},
-    {"key": "signing_place", "label": "Place of signing", "default_from": "jurisdiction_city"}
+    {
+      "key": "disclosing_party",
+      "label": "Disclosing party (shares the information)",
+      "required": true
+    },
+    {
+      "key": "disclosing_address",
+      "label": "Disclosing party's address"
+    },
+    {
+      "key": "receiving_party",
+      "label": "Receiving party (receives the information)",
+      "required": true
+    },
+    {
+      "key": "receiving_address",
+      "label": "Receiving party's address"
+    },
+    {
+      "key": "purpose",
+      "label": "Purpose of sharing the information",
+      "required": true
+    },
+    {
+      "key": "term_years",
+      "label": "Confidentiality period in years",
+      "type": "number",
+      "required": true
+    },
+    {
+      "key": "jurisdiction_city",
+      "label": "City whose courts will have jurisdiction",
+      "required": true
+    },
+    {
+      "key": "agreement_date",
+      "label": "Date of the agreement (effective date)",
+      "type": "date",
+      "default": "@today"
+    },
+    {
+      "key": "signing_place",
+      "label": "Place of signing",
+      "default_from": "jurisdiction_city"
+    }
   ],
   "rules": [
-    {"type": "range", "field": "term_years", "min": 1, "max": 25, "message": "The confidentiality period should be between 1 and 25 years."}
+    {
+      "type": "range",
+      "field": "term_years",
+      "min": 1,
+      "max": 25,
+      "message": "The confidentiality period should be between 1 and 25 years."
+    }
   ],
   "preamble": [
     "This NON-DISCLOSURE AGREEMENT (the \"Agreement\") is made at {{signing_place}} on {{agreement_date}} (the \"Effective Date\")",
@@ -32,37 +80,109 @@
     "NOW, THEREFORE, the Parties agree as follows:"
   ],
   "clauses": [
-    {"id": "definition", "title": "Confidential Information", "risk": "high", "variants": {
-      "a": "\"Confidential Information\" means all information shared by the Disclosing Party in any form, whether or not it is marked confidential, including business plans, data, designs, software, finances, customer details and the existence and content of the discussions between the Parties.",
-      "balanced": "\"Confidential Information\" means information shared by the Disclosing Party in any form that is marked confidential, or that a reasonable person would understand to be confidential from its nature or the way it is shared.",
-      "b": "\"Confidential Information\" means only information that is clearly marked \"Confidential\" in writing at the time it is shared, or that is confirmed in writing as confidential within 15 days after it is shared orally."}},
-    {"id": "obligations", "title": "Obligations of the Receiving Party", "risk": "high", "variants": {
-      "a": "The Receiving Party must keep the Confidential Information strictly confidential, use it only for the Purpose, limit access to people who need it and are bound in writing, and protect it with at least the care it gives its own most sensitive information.",
-      "balanced": "The Receiving Party will protect the Confidential Information with reasonable care, use it only for the Purpose, and not disclose it to anyone except as this Agreement allows.",
-      "b": "The Receiving Party will use reasonable efforts to keep the Confidential Information confidential and will use it for the Purpose."}},
-    {"id": "permitted", "title": "Permitted Disclosures", "risk": "medium", "variants": {
-      "balanced": "(a) The Receiving Party may share the Confidential Information with its directors, employees and professional advisers who need to know it for the Purpose and who are bound by duties of confidentiality at least as strict as this Agreement. The Receiving Party is responsible for any breach by them.\n(b) If the law, a court or a government authority requires disclosure, the Receiving Party will, where lawful, give the Disclosing Party prompt written notice and disclose only what is required."}},
-    {"id": "exclusions", "title": "Exclusions", "risk": "medium", "variants": {
-      "balanced": "This Agreement does not apply to information that (a) is or becomes public without breach of this Agreement, (b) the Receiving Party already knew without any duty of confidentiality, (c) the Receiving Party develops independently without using the Confidential Information, or (d) the Receiving Party lawfully receives from a third party who is free to share it."}},
-    {"id": "ownership", "title": "No Licence and No Warranty", "risk": "low", "variants": {
-      "balanced": "(a) All Confidential Information remains the property of the Disclosing Party. This Agreement gives the Receiving Party no licence or other right in it, except to use it for the Purpose.\n(b) The Confidential Information is provided as it is, without any warranty of accuracy or completeness, unless the Parties agree otherwise in writing."}},
-    {"id": "breach_notice", "title": "Notice of Unauthorised Use", "risk": "medium", "variants": {
-      "balanced": "The Receiving Party will tell the Disclosing Party promptly in writing if it becomes aware of any unauthorised use or disclosure of the Confidential Information, and will cooperate to limit the harm."}},
-    {"id": "return", "title": "Return or Destruction", "risk": "low", "variants": {
-      "balanced": "On written request, or when the Purpose ends, the Receiving Party will return or delete the Confidential Information and confirm this in writing, except for copies it must keep by law or in routine backups, which remain subject to this Agreement."}},
-    {"id": "term", "title": "Duration", "risk": "medium", "variants": {
-      "a": "The obligations in this Agreement continue for {{term_years}} years from the Effective Date, and for trade secrets for as long as they remain trade secrets.",
-      "balanced": "The obligations in this Agreement continue for {{term_years}} years from the Effective Date.",
-      "b": "The obligations in this Agreement end one year after the Effective Date."}},
-    {"id": "remedies", "title": "Remedies", "risk": "medium", "variants": {
-      "a": "The Receiving Party agrees that a breach may cause harm that money cannot fully repair, and that the Disclosing Party may seek an injunction as well as damages.",
-      "balanced": "The Disclosing Party may seek an injunction or other urgent relief in addition to any other remedy available under law.",
-      "b": "The Disclosing Party's remedy for a breach is limited to damages it can prove."}},
-    {"id": "law", "title": "Governing Law and Dispute Resolution", "risk": "low", "variants": {
-      "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have jurisdiction."}},
-    {"id": "general", "title": "General", "risk": "low", "variants": {
-      "balanced": "(a) This Agreement is the entire agreement between the Parties about the Confidential Information and replaces earlier discussions on it.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) Neither Party may transfer its rights or duties under it without the other's written consent.\n(e) It may be signed in counterparts, including electronically."}},
-    {"id": "stamp", "title": "Stamp Duty", "risk": "low", "variants": {
-      "balanced": "This Agreement will be stamped as required by the stamp law that applies at the place of signing. The stamp duty and related costs will be shared equally by the Parties unless the law requires otherwise."}}
+    {
+      "id": "definition",
+      "title": "Confidential Information",
+      "risk": "high",
+      "variants": {
+        "a": "\"Confidential Information\" means all information shared by the Disclosing Party in any form, whether or not it is marked confidential, including business plans, data, designs, software, finances, customer details and the existence and content of the discussions between the Parties.",
+        "balanced": "\"Confidential Information\" means information shared by the Disclosing Party in any form that is marked confidential, or that a reasonable person would understand to be confidential from its nature or the way it is shared.",
+        "b": "\"Confidential Information\" means only information that is clearly marked \"Confidential\" in writing at the time it is shared, or that is confirmed in writing as confidential within 15 days after it is shared orally."
+      }
+    },
+    {
+      "id": "obligations",
+      "title": "Obligations of the Receiving Party",
+      "risk": "high",
+      "variants": {
+        "a": "The Receiving Party must keep the Confidential Information strictly confidential, use it only for the Purpose, limit access to people who need it and are bound in writing, and protect it with at least the care it gives its own most sensitive information.",
+        "balanced": "The Receiving Party will protect the Confidential Information with reasonable care, use it only for the Purpose, and not disclose it to anyone except as this Agreement allows.",
+        "b": "The Receiving Party will use reasonable efforts to keep the Confidential Information confidential and will use it for the Purpose."
+      }
+    },
+    {
+      "id": "permitted",
+      "title": "Permitted Disclosures",
+      "risk": "medium",
+      "variants": {
+        "balanced": "(a) The Receiving Party may share the Confidential Information with its directors, employees and professional advisers who need to know it for the Purpose and who are bound by duties of confidentiality at least as strict as this Agreement. The Receiving Party is responsible for any breach by them.\n(b) If the law, a court or a government authority requires disclosure, the Receiving Party will, where lawful, give the Disclosing Party prompt written notice and disclose only what is required."
+      }
+    },
+    {
+      "id": "exclusions",
+      "title": "Exclusions",
+      "risk": "medium",
+      "variants": {
+        "balanced": "This Agreement does not apply to information that (a) is or becomes public without breach of this Agreement, (b) the Receiving Party already knew without any duty of confidentiality, (c) the Receiving Party develops independently without using the Confidential Information, or (d) the Receiving Party lawfully receives from a third party who is free to share it."
+      }
+    },
+    {
+      "id": "ownership",
+      "title": "No Licence and No Warranty",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) All Confidential Information remains the property of the Disclosing Party. This Agreement gives the Receiving Party no licence or other right in it, except to use it for the Purpose.\n(b) The Confidential Information is provided as it is, without any warranty of accuracy or completeness, unless the Parties agree otherwise in writing."
+      }
+    },
+    {
+      "id": "breach_notice",
+      "title": "Notice of Unauthorised Use",
+      "risk": "medium",
+      "variants": {
+        "balanced": "The Receiving Party will tell the Disclosing Party promptly in writing if it becomes aware of any unauthorised use or disclosure of the Confidential Information, and will cooperate to limit the harm."
+      }
+    },
+    {
+      "id": "return",
+      "title": "Return or Destruction",
+      "risk": "low",
+      "variants": {
+        "balanced": "On written request, or when the Purpose ends, the Receiving Party will return or delete the Confidential Information and confirm this in writing, except for copies it must keep by law or in routine backups, which remain subject to this Agreement."
+      }
+    },
+    {
+      "id": "term",
+      "title": "Duration",
+      "risk": "medium",
+      "variants": {
+        "a": "The obligations in this Agreement continue for {{term_years}} years from the Effective Date, and for trade secrets for as long as they remain trade secrets.",
+        "balanced": "The obligations in this Agreement continue for {{term_years}} years from the Effective Date.",
+        "b": "The obligations in this Agreement end one year after the Effective Date."
+      }
+    },
+    {
+      "id": "remedies",
+      "title": "Remedies",
+      "risk": "medium",
+      "variants": {
+        "a": "The Receiving Party agrees that a breach may cause harm that money cannot fully repair, and that the Disclosing Party may seek an injunction as well as damages.",
+        "balanced": "The Disclosing Party may seek an injunction or other urgent relief in addition to any other remedy available under law.",
+        "b": "The Disclosing Party's remedy for a breach is limited to damages it can prove."
+      }
+    },
+    {
+      "id": "law",
+      "title": "Governing Law and Dispute Resolution",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) This Agreement is governed by the laws of India.\n(b) If a dispute arises, the Parties will first try to settle it through good-faith discussion for 15 days after one Party gives written notice of the dispute.\n(c) If it is not settled, the courts at {{jurisdiction_city}} have jurisdiction."
+      }
+    },
+    {
+      "id": "general",
+      "title": "General",
+      "risk": "low",
+      "variants": {
+        "balanced": "(a) This Agreement is the entire agreement between the Parties about the Confidential Information and replaces earlier discussions on it.\n(b) It can be changed only in writing signed by both Parties.\n(c) If any part is found unenforceable, the rest continues in force.\n(d) Neither Party may transfer its rights or duties under it without the other's written consent.\n(e) It may be signed in counterparts, including electronically."
+      }
+    },
+    {
+      "id": "stamp",
+      "title": "Stamp Duty",
+      "risk": "low",
+      "variants": {
+        "balanced": "This Agreement will be stamped as required by the stamp law that applies at the place of signing. The stamp duty and related costs will be shared equally by the Parties unless the law requires otherwise."
+      }
+    }
   ]
 }

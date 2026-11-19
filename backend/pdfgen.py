@@ -1,3 +1,4 @@
+import re
 from io import BytesIO
 from xml.sax.saxutils import escape
 
@@ -45,6 +46,7 @@ def build_pdf(data, logo_path):
                             title=clean(data["type_name"]), author="ClientClause")
     base = ParagraphStyle("base", fontName="Times-Roman", fontSize=11, leading=15.5)
     body = ParagraphStyle("body", parent=base, alignment=TA_JUSTIFY, spaceAfter=6)
+    sub = ParagraphStyle("sub", parent=body, leftIndent=13 * mm, bulletIndent=0, bulletFontName="Times-Roman")
     head = ParagraphStyle("head", parent=base, fontName="Times-Bold", spaceBefore=8,
                           spaceAfter=3, keepWithNext=1)
     title = ParagraphStyle("title", parent=base, fontName="Times-Bold", fontSize=15,
@@ -95,12 +97,17 @@ def build_pdf(data, logo_path):
         t.setStyle(TableStyle(style))
         return t
 
-    story = [Paragraph(ptext(data["type_name"].upper()), title)]
+    story = [Paragraph("<u>%s</u>" % ptext(data["type_name"].upper()), title)]
     for p in data["preamble"]:
         story.append(Paragraph(ptext(p), body))
     for c in data["clauses"]:
-        story.append(Paragraph("%d. %s" % (c["number"], ptext(c["title"])), head))
-        story.append(Paragraph(ptext(c["text"]), body))
+        story.append(Paragraph("%d. %s" % (c["number"], ptext(c["title"]).upper()), head))
+        for line in str(c["text"]).split("\n"):
+            m = re.match(r"^(\d+\.\d+)\s+(.*)$", line)
+            if m:
+                story.append(Paragraph(ptext(m.group(2)), sub, bulletText=m.group(1)))
+            else:
+                story.append(Paragraph(ptext(line), body))
 
     g = data["signature"]
     parties = [{"head": "Signed by the " + p["role"],

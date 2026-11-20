@@ -1134,7 +1134,7 @@ function goTo(id){
 function useSample(key){
   resetViews();
   setHeroMode("new");
-  $("desc").value=SAMPLES[key]||"";
+  $("desc").value=pickSample(key);
   window.scrollTo({top:0,behavior:smooth()});
   setTimeout(()=>$("desc").focus({preventScroll:true}),250);
 }
@@ -1146,11 +1146,100 @@ let reviewSourceText="",reviewIssues=[];
 
 /* ── Chip samples ── */
 const SAMPLES={
-  "Freelance":"I'm Riya Sharma, a freelance web developer. I'm building an e-commerce website for Acme Traders for 50,000 rupees. Work starts 1 December 2026 and is due 31 January 2027. Courts in Bengaluru.",
-  "Employment":"I'm Arjun Mehta, joining Zesta Labs as a Backend Developer on 1 December 2026. Salary is 60000 rupees per month, 5 work from home days a month, 3 sick leaves, 30 days notice. Courts in Bengaluru.",
-  "NDA":"My startup Zesta Labs is sharing product plans with Arjun Mehta so he can evaluate a partnership. Confidentiality for 3 years. Courts in Bengaluru.",
-  "Rent":"I'm Meera Kapoor, renting a 2 BHK flat at 14 Lake View Apartments, Indiranagar, Bengaluru from Suresh Nair. Rent is 32,000 rupees a month, deposit 96,000, starting 1 January 2027 for 11 months. Courts in Bengaluru."
+  "Freelance":[
+    "I'm Riya Sharma, a freelance web developer. I'm building an e-commerce website for Acme Traders for 50,000 rupees. Work starts 1 December 2026 and is due 31 January 2027. Courts in Bengaluru.",
+    "PixelCraft Studio is hiring freelance designer Asha Rao to create a brand identity and 12 social media templates for 42,000 rupees. Two revision rounds, 40% upfront, delivery by 15 February 2027. Courts in Mumbai.",
+    "I'm a freelance photographer hired by Cedar Grove Resort for a two-day product shoot on 10 and 11 January 2027. Fee is 75,000 rupees, with edited images delivered within 14 days. The resort can use the images in its marketing. Courts in Kochi.",
+    "Northstar Apps is hiring freelance copywriter Kabir Shah to write website copy for 8 pages for 30,000 rupees. One revision round, half upfront and the rest on approval, due 20 December 2026. Courts in Delhi.",
+    "I'm an independent consultant helping Riverbend Foods improve its supply chain for 6 weeks starting 1 February 2027. Fee is 1,20,000 rupees, paid in two milestones. Either side can end with 7 days' notice. Courts in Pune.",
+    "I'm a freelance web designer. I'll build a 5-page website for Kavya Bakers for Rs. 45,000, 50% advance, balance within 7 days of delivery, 30 days timeline starting 1 December 2026 and ending 31 December 2026, two rounds of revisions. Courts in Pune.",
+    "Rohan Mehta, a video editor, will edit 8 YouTube videos for Studio Pixel at Rs. 3,000 per video, total Rs. 24,000. 25% advance, balance 7 days after final delivery, starting 5 December 2026, finishing 31 January 2027. Courts in Mumbai.",
+    "Ananya Rao, a UI/UX designer, will design a mobile app for FinEasy for Rs. 80,000 with 40% advance and 15 days for payment after delivery. Start 10 December 2026, end 28 February 2027, three revision rounds. She may show it in her portfolio. Courts in Hyderabad.",
+    "I'm a content writer. I'll write 12 blog posts for GreenLeaf Organics for Rs. 24,000.",
+    "I'll manage Instagram for Urban Brew Cafe at Rs. 15,000 a month."
+  ],
+  "Employment":[
+    "I'm Arjun Mehta, joining Zesta Labs as a Backend Developer on 1 December 2026. Salary is 60000 rupees per month, 5 work from home days a month, 3 sick leaves, 30 days notice. Courts in Bengaluru.",
+    "Mira Sen is joining Blue Oak Design as a UX Designer on 5 January 2027 at 72,000 rupees per month. She will work from the Bengaluru office three days a week and receive 24 days of paid leave each year. Courts in Bengaluru.",
+    "Hire Dev Malhotra as Sales Manager at Kestrel Systems from 1 February 2027 for 95,000 rupees monthly plus a sales incentive. Include a 6-month probation and 60 days' notice. Courts in Hyderabad.",
+    "I'm Priya Nair, joining Greenline Labs as a Research Associate on 15 December 2026 at 48,000 rupees per month. This is a one-year fixed-term role with 20 days of annual leave. Courts in Chennai.",
+    "Summit Retail is hiring Nikhil Das as an Operations Lead from 1 March 2027 for 80,000 rupees monthly. He will be based in Jaipur, work 5 days a week, and get 30 days' notice from either side. Courts in Jaipur.",
+    "Hire Sneha Iyer as Software Engineer at Nimbus Tech, Bengaluru. Rs. 85,000 a month paid on the last working day, joining 4 January 2027, 3 months probation, 60 days notice, 2 WFH days a month, 12 sick and 12 casual leaves. Courts in Bengaluru.",
+    "Employment agreement for Meera Nair as HR Manager at Orbit Retail, Kochi. Rs. 70,000 a month paid on the 1st, starts 1 December 2026, 6 months probation, 30 days notice, 10 casual and 8 sick leaves, 9:30 to 6:30. Courts in Kochi.",
+    "Offer letter for Arjun Patel as Sales Executive at BrightPath Solutions, Ahmedabad. Rs. 35,000 a month, joining 15 December 2026, 3 months probation, 30 days notice, 6 sick and 8 casual leaves. Courts in Ahmedabad.",
+    "Hire Karan Singh as Graphic Designer at PixelCraft, Rs. 40,000 a month.",
+    "Appoint Divya Menon as Accountant at Sharma and Sons."
+  ],
+  "NDA":[
+    "My startup Zesta Labs is sharing product plans with Arjun Mehta so he can evaluate a partnership. Confidentiality for 3 years. Courts in Bengaluru.",
+    "Orchid Biotech will share its unpublished research with consultant Devika Rao to assess a potential project. Keep the information confidential for 5 years and do not use it for another purpose. Courts in Hyderabad.",
+    "I'm discussing a sale of my business with buyer Northstar Ventures and will share financial records and customer lists. They must keep them confidential for 2 years. Courts in Mumbai.",
+    "Blue Oak Design is sharing a prototype and pricing details with manufacturer Apex Works for a manufacturing quote. No copying or disclosure, confidentiality for 3 years. Courts in Pune.",
+    "Cedar Grove Resorts will give marketing agency Brightline access to its campaign plans and customer insights while considering an engagement. Protect the information for 4 years. Courts in Kochi.",
+    "Tidal Analytics, Gurugram, will share its pricing model and client list with Brightwave Labs, Noida, to explore a partnership. Brightwave must keep it confidential for 3 years. Courts in Gurugram.",
+    "I'm Neha Kapoor. I'll share my app idea and prototype with developer Rahul Verma so he can quote for the build. He must keep it secret for 2 years. Courts in Mumbai.",
+    "NovaCart, Delhi, will show its investor deck and financials to angel investor Meena Kapoor to decide on funding. Confidential for 5 years. Courts in Delhi.",
+    "Acme Foods is sharing its secret recipes with packaging vendor PackRight.",
+    "Our freelance developer will get access to our source code and customer data."
+  ],
+  "Rent":[
+    "I'm Meera Kapoor, renting a 2 BHK flat at 14 Lake View Apartments, Indiranagar, Bengaluru from Suresh Nair. Rent is 32,000 rupees a month, deposit 96,000, starting 1 January 2027 for 11 months. Courts in Bengaluru.",
+    "I'm renting a furnished 1 BHK at 8 Palm Street, Andheri West, Mumbai from Neel Joshi for 28,000 rupees monthly. Deposit is 84,000 and the 11-month term starts 1 February 2027. Courts in Mumbai.",
+    "Landlord Kavita Rao is renting a 2 BHK home in Jubilee Hills, Hyderabad to tenant Aman Verma for 45,000 rupees monthly, with a 1,35,000 rupee deposit, from 1 January 2027 for 11 months. Courts in Hyderabad.",
+    "I'm renting a small office at 22 MG Road, Pune from Kiran Shah for 38,000 rupees per month. Deposit is 1,14,000, term is 2 years from 1 April 2027, and rent increases 5% each year. Courts in Pune.",
+    "Rohan Das is renting his 3 BHK flat in Salt Lake, Kolkata to Anika Bose for 35,000 rupees per month. Deposit is 1,05,000, term starts 15 January 2027 for 11 months, and tenant pays utilities. Courts in Kolkata.",
+    "Flat in Koramangala, Bengaluru. Landlord Ramesh Gupta, tenant Priya Shah. Rent Rs. 28,000 due by the 5th, deposit Rs. 1,68,000, starts 1 December 2026 for 11 months, 6 months lock-in, 2 months notice, 5% yearly increase. Tenant pays maintenance. Courts in Bengaluru.",
+    "2BHK in Baner, Pune. Owner Anita Kulkarni, tenant Vikram Joshi. Rent Rs. 22,000 a month, deposit Rs. 66,000, start 1 January 2027, 11 months, 3 months lock-in, 1 month notice, 5% yearly rise. Landlord pays maintenance. Courts in Pune.",
+    "Shop in Lajpat Nagar, Delhi, let by Suresh Malhotra to Bakers Delight at Rs. 55,000 a month, deposit Rs. 3,30,000, from 1 February 2027 for 36 months, 12 months lock-in, 3 months notice, 5% yearly rise. Courts in Delhi.",
+    "Single room in Hinjewadi for student Aman Verma at Rs. 8,000 a month. Landlord Mrs. Deshmukh.",
+    "Office in Gurugram let to Zenith Digital for 2 years."
+  ],
+  "Loan":[
+    "I'm Anil Verma, lending my friend Ritu Sharma 1,50,000 rupees for her laptop and course fees. Interest-free, repaid over 10 months starting 5 March 2027. Courts in Jaipur.",
+    "Lender Nisha Kapoor is lending Rohit Jain 2,00,000 rupees at 6% annual interest, repayable in 12 monthly instalments from 1 January 2027. Courts in Delhi.",
+    "I'm lending my brother 75,000 rupees interest-free for a scooter. He will repay 5,000 rupees each month starting 10 February 2027, and can repay early without a fee. Courts in Bengaluru.",
+    "Meadow Finance is lending Tara Foods 5,00,000 rupees for equipment at 9% annual interest. Repay over 18 months beginning 1 March 2027, with a 15-day grace period. Courts in Pune.",
+    "I am lending Sameer Khan 1,20,000 rupees on 15 December 2026, interest-free. He will repay the full amount by 15 June 2027, and both of us can agree in writing to an extension. Courts in Mumbai.",
+    "I'm lending my friend Nikhil Rao Rs. 2,00,000 for 12 months at 8% a year, repaid in monthly instalments with the first on 1 January 2027. Purpose: his shop renovation. Courts in Mumbai.",
+    "Loan of Rs. 5,00,000 from Sunita Rao to her brother Ajay Rao for his business, 24 months, interest-free, first instalment 5 January 2027. Courts in Hyderabad.",
+    "Zenith Traders lends Rs. 10,00,000 to supplier Kiran Agencies at 12% a year for 18 months to buy stock. First repayment 1 February 2027. Courts in Kolkata.",
+    "I'm lending Rs. 75,000 to my cousin Tanvi for her course fees.",
+    "Personal loan from Harish Nair to Deepa Pillai at 10% a year."
+  ],
+  "Supply":[
+    "Greenfield Packaging will supply corrugated boxes to Nova Foods Pvt Ltd for 12 months starting 1 February 2027. Expected value 8,00,000 rupees, delivery within 10 days of each order, payment in 30 days, 6 month warranty. Courts in Pune.",
+    "Silverline Textiles will supply 500 cotton uniforms each month to Harbor Hotels from 1 January through 31 December 2027 at 650 rupees per uniform. Delivery in Chennai, invoices due in 15 days. Courts in Chennai.",
+    "Apex Components will supply 2,000 circuit boards to Kestrel Systems by 30 March 2027 for 12,00,000 rupees. Include inspection on delivery, replacement of defective units, and payment within 30 days. Courts in Bengaluru.",
+    "Fresh Valley Farms will deliver seasonal vegetables to Maple Kitchens every Monday and Thursday for 6 months starting 1 January 2027. Rates are agreed weekly, payment is due within 7 days, and rejected goods are replaced. Courts in Delhi.",
+    "Riverbend Paper will supply recycled printer paper to Northstar School for one year starting 1 April 2027. Monthly orders up to 1,000 reams, delivered within 5 days, at 180 rupees per ream. Courts in Jaipur.",
+    "Sharma Textiles, Surat, will supply 5,000 metres of cotton fabric a month to Urban Threads, Mumbai, for 12 months from 1 January 2027. Estimated value Rs. 30,00,000, payment in 30 days, delivery in 7 days, 6 months warranty. Courts in Surat.",
+    "Apex Packaging supplies 20,000 cartons a month to Nova Foods for 12 months starting 1 December 2026. Estimated value Rs. 12,00,000, payment in 45 days, delivery within 5 days, 3 months warranty. Courts in Pune.",
+    "Metro Electronics supplies 500 LED panels to BrightHomes over 8 months from 15 January 2027, total Rs. 18,00,000, payment in 30 days, delivery in 10 days, 12 months warranty. Courts in Delhi.",
+    "FreshFarm Produce supplies vegetables daily to GreenBowl Restaurants.",
+    "Kumar Steel will supply steel rods to BuildRight Constructions for 2 years."
+  ],
+  "Mutual NDA":[
+    "Tidal Analytics and Brightwave Labs will both share product roadmaps and customer data while exploring a joint venture. Keep it confidential for 3 years. Courts in Gurugram.",
+    "Orchid Biotech and Meadow Labs will exchange research methods and test results to evaluate a collaboration. Each side must protect the other's information for 5 years. Courts in Hyderabad.",
+    "Northstar Ventures and Cedar Grove Foods are sharing financial and business records while negotiating an investment. Use them only for the deal and keep them confidential for 2 years. Courts in Mumbai.",
+    "Blue Oak Design and Apex Works will share prototypes, drawings and pricing to develop a new product together. Both sides must keep information confidential for 4 years. Courts in Pune.",
+    "Summit Mobility and Riverbend Energy will exchange technical plans and customer research to explore a partnership. Neither may disclose or use the other's information outside the evaluation. Courts in Delhi.",
+    "Tidal Analytics, Gurugram, and Brightwave Labs, Noida, will both share product roadmaps and customer data while exploring a joint venture. Keep it confidential for 3 years. Courts in Gurugram.",
+    "CloudNine, Bengaluru, and DataHive, Pune, will exchange technical designs and pricing while discussing a merger. Confidential for 5 years. Courts in Bengaluru.",
+    "Orion Pharma, Hyderabad, and MedLink Labs, Chennai, will share research data to explore a partnership. Both keep it secret for 4 years. Courts in Hyderabad.",
+    "Two agencies, PixelWorks and BrandNest, will share client lists while planning a collaboration.",
+    "RoboTech and AutoDrive will exchange product specs for a joint product."
+  ]
 };
+const lastSampleIndex={};
+function pickSample(key){
+  const options=SAMPLES[key];
+  if(!Array.isArray(options))return "";
+  let index=Math.floor(Math.random()*options.length);
+  if(options.length>1&&index===lastSampleIndex[key])index=(index+1+Math.floor(Math.random()*(options.length-1)))%options.length;
+  lastSampleIndex[key]=index;
+  return options[index];
+}
 $("chips").innerHTML=Object.keys(SAMPLES).map(k=>`<button type="button" class="chip" data-s="${k}">Try: ${k}</button>`).join("");
 $("desc").addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")draft()});
 $("reviewtext").addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key==="Enter")reviewExisting()});
@@ -1285,7 +1374,7 @@ function jump(k){
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeMenu(); });
 document.addEventListener("click",e=>{
   const mm=$("mmenu"); if(mm&&mm.open&&!mm.contains(e.target)) mm.open=false;
-  const s=e.target.closest("[data-s]");if(s){$("desc").value=SAMPLES[s.dataset.s];$("desc").focus();return;}
+  const s=e.target.closest("[data-s]");if(s){$("desc").value=pickSample(s.dataset.s);$("desc").focus();return;}
   const k=e.target.closest("[data-k]");if(k){jump(k.dataset.k);return;}
   const c=e.target.closest("[data-c]");if(c){const t=$("c"+c.dataset.c);if(t)t.scrollIntoView({block:"center",behavior:smooth()});}
 });
@@ -1337,7 +1426,6 @@ function render(){
 </script>
 <script src="voice.js"></script>
 <script src="edit.js"></script>
-<script src="samples.js"></script>
 <script src="recover.js"></script>
 </body>
 </html>

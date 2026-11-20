@@ -1248,7 +1248,7 @@ $("reviewtext").addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key=
 async function api(url,opts){
   let r;
   try{ r=await fetch((window.API_BASE||"")+url,opts); }
-  catch(e){ throw new Error("Can't reach the server. Check your connection and that the backend is running, then try again."); }
+  catch(e){ if(e.name==="AbortError")throw e; throw new Error("Can't reach the server. Check your connection and that the backend is running, then try again."); }
   let d=null; try{ d=await r.json(); }catch(e){}
   if(!r.ok){
     const det=d&&d.detail;
@@ -1307,9 +1307,15 @@ async function reviewExisting(){
 
 /* ── Improve ── */
 async function makeBetter(){
-  const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Improving draft…";$("betterout").innerHTML="";
+  const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Improving draft…";
+  const out=$("betterout");out.innerHTML='<p class="sub" role="status">Preparing a clearer draft. This can take up to a minute for a long contract.</p>';
+  const controller=new AbortController();
+  const timeoutId=setTimeout(()=>controller.abort(),70000);
+  const progressId=setTimeout(()=>{
+    if(btn.isConnected)out.innerHTML='<p class="sub" role="status">Still working. The original draft is unchanged while the revised version is prepared.</p>';
+  },15000);
   try{
-    const d=await post("/api/review/improve",{text:reviewSourceText,issues:reviewIssues});
+    const d=await api("/api/review/improve",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:reviewSourceText,issues:reviewIssues}),signal:controller.signal});
     let h=`<div class="issue" style="margin-top:16px"><h4>Improved working draft</h4><p>${esc(d.change_summary)}</p><small>AI-generated wording. Check every change and have a lawyer review before signing.</small>`;
     const openQs=arr(d.open_questions);
     if(openQs.length)h+=`<p style="margin-top:12px"><b>Still needs your input</b></p><ul style="padding-left:18px;margin-top:6px">${openQs.map(q=>`<li style="font-size:13.5px;color:var(--text-secondary);margin-bottom:4px">${esc(q)}</li>`).join("")}</ul>`;
@@ -1319,8 +1325,11 @@ async function makeBetter(){
           <button type="button" class="btn btn-outline btn-md" onclick="downloadImproved()">Download as TXT</button>
         </div></div>`;
     $("betterout").innerHTML=h;
-  }catch(e){$("betterout").innerHTML=`<p class="msg-error">${esc(String(e.message||e))}</p>`;}
-  finally{btn.disabled=false;btn.textContent="Make this draft better";}
+  }catch(e){
+    const message=e.name==="AbortError"?"The AI did not finish within 70 seconds. Your original draft is unchanged. Please try again.":String(e.message||e);
+    $("betterout").innerHTML=`<p class="msg-error" role="alert">${esc(message)}</p>`;
+  }
+  finally{clearTimeout(timeoutId);clearTimeout(progressId);btn.disabled=false;btn.textContent="Make this draft better";}
 }
 
 async function copyImproved(){

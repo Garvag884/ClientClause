@@ -55,9 +55,9 @@ def friendly(e):
     return MESSAGES[_kind(e)]
 
 
-def _openai_style(base_url, key, model, prompt, system):
+def _openai_style(base_url, key, model, prompt, system, timeout=TIMEOUT):
     from openai import OpenAI
-    client = OpenAI(api_key=key, base_url=base_url, timeout=TIMEOUT)
+    client = OpenAI(api_key=key, base_url=base_url, timeout=timeout)
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
@@ -69,33 +69,39 @@ def _openai_style(base_url, key, model, prompt, system):
     return text
 
 
-def _call_groq(prompt, system):
+def _call_groq(prompt, system, timeout=TIMEOUT):
     return _openai_style("https://api.groq.com/openai/v1", os.getenv("GROQ_API_KEY"),
-                         os.getenv("GROQ_MODEL"), prompt, system)
+                         os.getenv("GROQ_MODEL"), prompt, system, timeout)
 
 
-def _call_openrouter(prompt, system):
+def _call_openrouter(prompt, system, timeout=TIMEOUT):
     return _openai_style("https://openrouter.ai/api/v1", os.getenv("OPENROUTER_API_KEY"),
-                         os.getenv("OPENROUTER_MODEL"), prompt, system)
+                         os.getenv("OPENROUTER_MODEL"), prompt, system, timeout)
 
 
-def _call_nvidia(prompt, system):
+def _call_nvidia(prompt, system, timeout=TIMEOUT):
     return _openai_style("https://integrate.api.nvidia.com/v1", os.getenv("NVIDIA_API_KEY"),
-                         os.getenv("NVIDIA_MODEL"), prompt, system)
+                         os.getenv("NVIDIA_MODEL"), prompt, system, timeout)
 
 
-def _call_gemini(prompt, system):
+def _call_gemini(prompt, system, timeout=TIMEOUT):
     from google import genai
     from google.genai import types
-    client = genai.Client(http_options=types.HttpOptions(timeout=int(TIMEOUT * 1000)))
     config = types.GenerateContentConfig(system_instruction=system) if system else None
     last = None
+    started = time.monotonic()
     for model in GEMINI_MODELS:
+        remaining = timeout - (time.monotonic() - started)
+        if remaining <= 0:
+            break
         try:
+            client = genai.Client(http_options=types.HttpOptions(timeout=max(1, int(remaining * 1000))))
             return client.models.generate_content(model=model, contents=prompt, config=config).text
         except Exception as e:
             last = e
-    raise last
+    if last:
+        raise last
+    raise TimeoutError("AI provider deadline exceeded")
 
 
 PROVIDERS = {
@@ -128,20 +134,19 @@ def ask_llm(prompt, system="", validate=None):
     resting = [n for n in order if n not in ready]
     kinds = []
 
-    def expired():
-        return time.time() - started > DEADLINE
-
     for name in ready + resting:
-        if expired():
+        remaining = DEADLINE - (time.time() - started)
+        if remaining <= 0:
             kinds.append("timeout")
             break
         for attempt in range(RETRIES):
-            if expired():
+            remaining = DEADLINE - (time.time() - started)
+            if remaining <= 0:
                 kinds.append("timeout")
                 break
             t0 = time.time()
             try:
-                text = PROVIDERS[name]["call"](prompt, system)
+                text = PROVIDERS[name]["call"](prompt, system, timeout=min(TIMEOUT, remaining))
             except Exception as e:
                 k = _kind(e)
                 kinds.append(k)

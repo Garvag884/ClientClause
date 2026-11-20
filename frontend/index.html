@@ -1308,9 +1308,9 @@ async function reviewExisting(){
 /* ── Improve ── */
 async function makeBetter(){
   const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Improving draft…";
-  const out=$("betterout");out.innerHTML='<p class="sub" role="status">Preparing a clearer draft. This can take up to a minute for a long contract.</p>';
+  const out=$("betterout");out.innerHTML='<p class="sub" role="status">Preparing a clearer draft. This can take up to two minutes if a consistency check needs a retry.</p>';
   const controller=new AbortController();
-  const timeoutId=setTimeout(()=>controller.abort(),70000);
+  const timeoutId=setTimeout(()=>controller.abort(),125000);
   const progressId=setTimeout(()=>{
     if(btn.isConnected)out.innerHTML='<p class="sub" role="status">Still working. The original draft is unchanged while the revised version is prepared.</p>';
   },15000);
@@ -1326,7 +1326,7 @@ async function makeBetter(){
         </div></div>`;
     $("betterout").innerHTML=h;
   }catch(e){
-    const message=e.name==="AbortError"?"The AI did not finish within 70 seconds. Your original draft is unchanged. Please try again.":String(e.message||e);
+    const message=e.name==="AbortError"?"The AI did not finish within two minutes. Your original draft is unchanged. Please try again.":String(e.message||e);
     $("betterout").innerHTML=`<p class="msg-error" role="alert">${esc(message)}</p>`;
   }
   finally{clearTimeout(timeoutId);clearTimeout(progressId);btn.disabled=false;btn.textContent="Make this draft better";}

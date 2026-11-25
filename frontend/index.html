@@ -1083,6 +1083,7 @@ function closeMenu(){ const m=$("mmenu"); if(m) m.open=false }
 /* Show the landing page and hide review / draft views */
 function resetViews(){
   $("work").hidden=true;
+  $("rebuildTermsPanel")?.remove();
   document.querySelector(".work-page-header")?.remove();
   showLanding();
   document.body.classList.remove("has-draft");
@@ -1298,16 +1299,81 @@ async function reviewExisting(){
     else h+=`<div class="issue">No specific issues were returned. This is not a legal validation.</div>`;
     if(missing.length)h+=`<div class="panel"><h3>Topics to check</h3><ul style="margin-top:8px;padding-left:18px">${missing.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
     if(lawyerQs.length)h+=`<div class="panel"><h3>Questions for a lawyer</h3><ul style="margin-top:8px;padding-left:18px">${lawyerQs.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
-    h+=`<div class="panel"><h3>Want to improve this draft?</h3><p class="sub">Create a revised version using the review findings. Unknown details stay marked for you to fill in.</p><button type="button" class="btn btn-primary btn-md" id="makebetter" onclick="makeBetter()">Make this draft better</button><div id="betterout"></div></div>`;
+h+=`<div class="panel">
+  <h3>Create a new draft</h3>
+  <p class="sub">Build a new contract from the details in the original. Any terms that don’t carry over will be shown for review.</p>
+  <button type="button" class="btn btn-primary btn-md" id="rebuildContract" onclick="rebuildFromReview()">Create a new draft from this contract</button>
+  <button type="button" class="btn btn-outline btn-md" id="makebetter" onclick="makeBetter()">Rewrite my own text</button>
+  <div id="rebuildout"></div>
+  <div id="betterout"></div>
+  </div>`;
     $("reviewout").innerHTML=h;
     $("reviewout").scrollIntoView({behavior:smooth(),block:"start"});
   }catch(e){$("reviewmsg").textContent=e.message;}
   finally{btn.disabled=false;btn.textContent="Review contract";}
 }
 
-/* ── Improve ── */
+/* ── Rebuild from reviewed contract ── */
+async function rebuildFromReview(){
+  const btn=$("rebuildContract"),out=$("rebuildout");
+  if(!btn||!out||!reviewSourceText)return;
+
+  btn.disabled=true;
+  btn.textContent="Creating draft…";
+  out.innerHTML='<p class="sub" role="status">Building a new draft from the details in the original.</p>';
+  $("rebuildTermsPanel")?.remove();
+
+  const controller=new AbortController();
+  const timeoutId=setTimeout(()=>controller.abort(),125000);
+  try{
+    const d=await api("/api/review/rebuild",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({text:reviewSourceText}),
+      signal:controller.signal
+    });
+
+    if(!d.supported){
+      const types=arr(d.supported_types);
+      const list=types.length?` Supported types: ${esc(types.join(", "))}.`:"";
+      out.innerHTML=`<p class="msg-error" role="status">${esc(d.message||"I can't rebuild this type with the supported templates.")} Use <b>Rewrite my own text</b> below as the fallback.${list}</p>`;
+      return;
+    }
+    if(!d.draft||!d.draft.type_id)throw new Error("The server returned an incomplete draft.");
+
+    S=Object.assign({},d.draft,{variants:{},custom:{},history:[]});
+    render();
+    document.body.classList.add("has-draft");
+
+    const terms=arr(d.unmatched_terms);
+    const list=terms.length
+      ? `<ul style="padding-left:20px">${terms.map(t=>`<li style="margin:10px 0"><blockquote>${esc(t.quote)}</blockquote></li>`).join("")}</ul><p class="sub">Use <b>Edit contract</b> to ask for any of these quoted terms to be added.</p>`
+      : `<p class="sub">No uncarried terms were identified automatically. Compare this draft with the original to check.</p>`;
+    const warning=d.unmatched_terms_warning
+      ? `<p class="msg-error">${esc(d.unmatched_terms_warning)}</p>`
+      : "";
+    const panel=document.createElement("section");
+    panel.id="rebuildTermsPanel";
+    panel.className="panel noprint";
+    panel.style.cssText="max-width:1100px;margin:16px auto;padding:20px";
+    panel.innerHTML=`<h3>Terms in your original that are not in this draft</h3>${list}${warning}`;
+    $("work").parentNode.insertBefore(panel,$("work").nextSibling);
+    $("work").scrollIntoView({behavior:smooth()});
+  }catch(e){
+    const message=e.name==="AbortError"
+      ? "The AI did not finish within two minutes. Your original contract is unchanged."
+      : String(e.message||e);
+    out.innerHTML=`<p class="msg-error" role="alert">${esc(message)}</p>`;
+  }finally{
+    clearTimeout(timeoutId);
+    btn.disabled=false;
+    btn.textContent="Create a new draft from this contract";
+  }
+}
+
+/* ── Rewrite fallback ── */
 async function makeBetter(){
-  const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Improving draft…";
+  const btn=$("makebetter");if(!btn)return;btn.disabled=true;btn.textContent="Rewriting…";
   const out=$("betterout");out.innerHTML='<p class="sub" role="status">Preparing a clearer draft. This can take up to two minutes if a consistency check needs a retry.</p>';
   const controller=new AbortController();
   const timeoutId=setTimeout(()=>controller.abort(),125000);
@@ -1316,7 +1382,7 @@ async function makeBetter(){
   },15000);
   try{
     const d=await api("/api/review/improve",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:reviewSourceText,issues:reviewIssues}),signal:controller.signal});
-    let h=`<div class="issue" style="margin-top:16px"><h4>Improved working draft</h4><p>${esc(d.change_summary)}</p><small>AI-generated wording. Check every change and have a lawyer review before signing.</small>`;
+    let h=`<div class="issue" style="margin-top:16px"><h4>Rewritten draft</h4><p>${esc(d.change_summary)}</p><small>AI-generated wording. Check every change and have a lawyer review before signing.</small>`;
     const openQs=arr(d.open_questions);
     if(openQs.length)h+=`<p style="margin-top:12px"><b>Still needs your input</b></p><ul style="padding-left:18px;margin-top:6px">${openQs.map(q=>`<li style="font-size:13.5px;color:var(--text-secondary);margin-bottom:4px">${esc(q)}</li>`).join("")}</ul>`;
     h+=`<textarea id="improvedtext" aria-label="Editable improved contract draft" style="width:100%;min-height:300px;margin-top:14px;padding:14px;border:1.5px solid var(--border-strong);border-radius:var(--radius-md);font:14px/1.65 Georgia,serif;color:var(--text-primary)">${esc(d.revised_text)}</textarea>
@@ -1329,7 +1395,7 @@ async function makeBetter(){
     const message=e.name==="AbortError"?"The AI did not finish within two minutes. Your original draft is unchanged. Please try again.":String(e.message||e);
     $("betterout").innerHTML=`<p class="msg-error" role="alert">${esc(message)}</p>`;
   }
-  finally{clearTimeout(timeoutId);clearTimeout(progressId);btn.disabled=false;btn.textContent="Make this draft better";}
+  finally{clearTimeout(timeoutId);clearTimeout(progressId);btn.disabled=false;btn.textContent="Rewrite my own text";}
 }
 
 async function copyImproved(){

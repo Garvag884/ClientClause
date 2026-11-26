@@ -9,6 +9,11 @@
   }
   function put(k, v) { try { v.at = Date.now(); store().setItem(P + k, JSON.stringify(v)); } catch (e) {} }
   function drop(k) { try { store().removeItem(P + k); } catch (e) {} }
+  window.saveReviewRecovery = function (record) {
+    if (!record || !record.text || !record.result) return;
+    put("review", { text: String(record.text), result: record.result });
+    put("t_reviewtext", { text: String(record.text) });
+  };
   function wipe() {
     try { Object.keys(store()).filter(function (k) { return k.indexOf(P) === 0; })
       .forEach(function (k) { store().removeItem(k); }); } catch (e) {}
@@ -85,16 +90,26 @@
     return m < 1 ? "just now" : m < 60 ? m + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " days ago";
   }
   setTimeout(function () {
-    if (haveS()) return;
-    var d = get("draft");
-    if (!d) return;
+    var d = haveS() ? null : get("draft"), review = get("review");
+    if (!d && !review) return;
     var bar = document.createElement("div");
     bar.id = "ccresume";
     bar.setAttribute("role", "status");
-    bar.innerHTML = "<span>Resume your unfinished <b>" + esc(d.name || "contract") + "</b> (saved " + ago(d.at) +
-      ")? <small>Drafts stay in this browser only.</small></span><button class='go'>Resume</button><button class='no'>Discard</button>";
-    bar.querySelector(".go").onclick = function () { resume(d); };
-    bar.querySelector(".no").onclick = function () { drop("draft"); bar.remove(); };
+    var useReview = review && (!d || review.at >= d.at);
+    if (useReview) {
+      bar.innerHTML = "<span>Resume your saved <b>contract review</b> (saved " + ago(review.at) +
+        ")? <small>Text and findings stay in this browser only.</small></span><button class='go'>Resume review</button><button class='no'>Discard</button>";
+      bar.querySelector(".go").onclick = function () {
+        if (window.restoreReviewReport) window.restoreReviewReport(review);
+        bar.remove();
+      };
+      bar.querySelector(".no").onclick = function () { drop("review"); drop("t_reviewtext"); bar.remove(); };
+    } else {
+      bar.innerHTML = "<span>Resume your unfinished <b>" + esc(d.name || "contract") + "</b> (saved " + ago(d.at) +
+        ")? <small>Drafts stay in this browser only.</small></span><button class='go'>Resume</button><button class='no'>Discard</button>";
+      bar.querySelector(".go").onclick = function () { resume(d); };
+      bar.querySelector(".no").onclick = function () { drop("draft"); bar.remove(); };
+    }
     document.body.appendChild(bar);
   }, 400);
 
@@ -129,7 +144,7 @@
     rd.readAsText(f);
   };
   $("ccwipe").onclick = function () {
-    if (confirm("Delete the drafts and text saved in this browser?")) { wipe(); var b = $("ccresume"); if (b) b.remove(); }
+    if (confirm("Delete saved drafts, review results, and text from this browser?")) { wipe(); var b = $("ccresume"); if (b) b.remove(); }
   };
   toggleBar();
 

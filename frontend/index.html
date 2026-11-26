@@ -647,6 +647,26 @@ input.flash { animation:flash 1.4s }
   .v { background:none; padding:0; color:inherit }
   .blank { background:none; border-bottom:1px solid #000; padding:0 }
   .wm { display:block; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:70%; max-width:560px; opacity:.05; z-index:0; pointer-events:none }
+  body.print-review .hero, body.print-review .hero-content,
+  body.print-review .mode-tabs, body.print-review #panel-review,
+  body.print-review #reviewout { display:block !important; visibility:visible !important }
+  body.print-review .site-header, body.print-review #panel-new,
+  body.print-review .hero-eyebrow, body.print-review .hero-title,
+  body.print-review .hero-sub, body.print-review .mode-tabs,
+  body.print-review #reviewchips, body.print-review .trust-row,
+  body.print-review #panel-review > .hero-box,
+  body.print-review #panel-review > .hero-note,
+  body.print-review #panel-review > .msg-error,
+  body.print-review #reviewout .review-controls,
+  body.print-review #reviewout .review-editbox,
+  body.print-review #reviewout .reviewbar { display:none !important }
+  body.print-review #heromain { padding:0 !important; border:0 !important }
+  body.print-review .hero-content { max-width:none !important; padding:0 !important }
+  body.print-review #panel-review { position:static !important }
+  body.print-review #reviewout { position:relative; max-width:none !important; margin:0 !important; padding:0 !important; color:#111 }
+  body.print-review #reviewout, body.print-review #reviewout * { visibility:visible !important }
+  body.print-review #reviewout .panel, body.print-review #reviewout .issue { break-inside:avoid; color:#111 }
+  body.print-review .wm { visibility:visible !important }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -805,7 +825,7 @@ footer { background:var(--surface-dark) }
           <div class="hero-box">
             <textarea id="reviewtext" aria-label="Contract text to review" placeholder="Paste your contract text here, or choose a PDF, TXT or image file. We'll flag unclear terms, missing clauses and risks."></textarea>
             <div class="hero-box-bar">
-              <span class="hero-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-right:5px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sent to AI for review only — not stored by ClientClause.</span>
+              <span class="hero-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-right:5px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sent to AI for review. A local copy of your text and completed results is kept in this browser for up to 7 days.</span>
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                 <label class="filebtn" style="margin:0;cursor:pointer;font:600 13px var(--ui);color:var(--text-muted);display:flex;align-items:center;gap:6px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -817,6 +837,10 @@ footer { background:var(--surface-dark) }
               </div>
             </div>
           </div>
+          <div class="hero-chips" id="reviewchips" aria-label="Review examples">
+            <button type="button" class="chip" onclick="useReviewSample()">Try a sample contract</button>
+          </div>
+          <p class="hero-note">The example uses made-up details. Replace them before using a contract.</p>
           <p class="hero-note">PDF, TXT or image files. Scanned pages are read with OCR, so verify extracted text against the original.</p>
           <div class="msg-error" id="reviewmsg" role="alert"></div>
           <div id="reviewout" class="reviewout" aria-live="polite"></div>
@@ -1144,11 +1168,81 @@ function useSample(key){
   window.scrollTo({top:0,behavior:smooth()});
   setTimeout(()=>$("desc").focus({preventScroll:true}),250);
 }
+function useReviewSample(){
+  setHeroMode("review");
+  $("reviewtext").value=`SERVICE AGREEMENT
+
+This Service Agreement is made on December 1, 2026, between Maple Street Design Co. (the “Designer”) and Cedar Grove Cafe (the “Client”).
+
+1. Services
+The Designer will create a logo and a basic brand guide for the Client. The work includes two initial logo concepts and up to two rounds of reasonable revisions to the selected concept.
+
+2. Schedule
+Work begins on December 3, 2026. The Designer will deliver the final files by January 15, 2027, provided the Client supplies requested information and feedback on time. The parties may agree in writing to change this schedule.
+
+3. Fee and payment
+The total fee is ₹75,000. The Client will pay ₹30,000 when this Agreement is signed and the remaining ₹45,000 within seven calendar days after delivery of the final files. The Designer may pause work on overdue invoices after giving the Client written notice.
+
+4. Client responsibilities
+The Client will provide accurate business details, send any required images or brand materials, and give feedback within five business days of each delivery. Delays in these items may extend the schedule.
+
+5. Ownership and portfolio
+After all fees are paid, the Designer assigns to the Client the rights the Designer owns in the final logo artwork. The Designer keeps ownership of pre-existing tools and materials used to create it. The Designer may display the final work in a portfolio unless the Client asks in writing for a delayed public release.
+
+6. Confidentiality
+Each party will use the other party’s non-public business information only for this project and will take reasonable steps to keep it confidential.
+
+7. Ending the Agreement
+Either party may end this Agreement by giving seven days’ written notice. The Client will pay for work completed and approved expenses incurred up to the end date. Any prepaid amount above that balance will be returned.
+
+8. Governing law
+The laws of India govern this Agreement. Courts in Bengaluru, Karnataka will have jurisdiction over disputes arising from it.
+
+9. Signatures
+The parties agree to the terms above by signing below.
+
+Designer: ______________________________    Date: ______________
+Client:   ______________________________    Date: ______________`;
+  $("reviewtext").dispatchEvent(new Event("input",{bubbles:true}));
+  $("reviewfile").value="";syncFile();
+  $("reviewmsg").textContent="";
+  $("reviewout").innerHTML="";
+  window.scrollTo({top:0,behavior:smooth()});
+  setTimeout(()=>$("reviewtext").focus({preventScroll:true}),250);
+}
 
 /* ── Health ping ── */
 fetch((window.API_BASE||"")+"/api/health").catch(()=>{});
 let S=null;
 let reviewSourceText="",reviewIssues=[];
+function renderReviewResults(d, sourceText){
+  reviewSourceText=String(sourceText||d.source_text||"");reviewIssues=arr(d.issues);
+  const missing=arr(d.missing_topics),lawyerQs=arr(d.questions_for_lawyer);
+  let h=d.extraction_warning?`<div class="issue"><b>Text extraction check</b><p>${esc(d.extraction_warning)}</p></div>`:"";
+  h+=`<div class="panel"><h3>Review summary</h3><p>${esc(d.summary)}</p><small>AI issue spotting only — not a legal validation. Have a qualified lawyer review before signing.</small></div>`;
+  h+=`<div class="review-controls panel"><h3>Reviewed contract</h3><p class="sub">Edit the contract text and update the review to check the revised wording.</p><button type="button" class="btn btn-outline btn-md" onclick="toggleReviewEdit(true)">Edit reviewed contract</button><div class="review-editbox" id="reviewEditBox" hidden><label for="reviewEditText">Contract text</label><textarea id="reviewEditText" aria-describedby="reviewEditHelp"></textarea><small id="reviewEditHelp">Updating will run the review again on your edited text.</small><div class="reviewbar"><button type="button" class="btn btn-primary btn-md" onclick="updateReviewedContract()">Update review</button><button type="button" class="btn btn-outline btn-md" onclick="toggleReviewEdit(false)">Cancel</button></div></div></div>`;
+  h+=`<div class="review-controls" style="display:flex;justify-content:flex-end"><button type="button" class="btn btn-outline btn-md" onclick="printReview()">Print / Save as PDF</button></div>`;
+  if(reviewIssues.length)h+=reviewIssues.map(i=>`<article class="issue"><span class="badge badge-${esc(i.priority)}">${esc(i.priority)} priority · ${esc(i.category)}</span><h4>${esc(i.title)}</h4>${i.excerpt?`<p><b>Text:</b> "${esc(i.excerpt)}"</p>`:""}<p><b>Why it may matter:</b> ${esc(i.why_it_matters)}</p><p><b>Suggested next step:</b> ${esc(i.suggestion)}</p></article>`).join("");
+  else h+=`<div class="issue">No specific issues were returned. This is not a legal validation.</div>`;
+  if(missing.length)h+=`<div class="panel"><h3>Topics to check</h3><ul style="margin-top:8px;padding-left:18px">${missing.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
+  if(lawyerQs.length)h+=`<div class="panel"><h3>Questions for a lawyer</h3><ul style="margin-top:8px;padding-left:18px">${lawyerQs.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
+  h+=`<div class="review-controls panel"><h3>Create a new draft</h3><p class="sub">Build a new contract from the details in the original. Any terms that don’t carry over will be shown for review.</p><button type="button" class="btn btn-primary btn-md" id="rebuildContract" onclick="rebuildFromReview()">Create a new draft from this contract</button><button type="button" class="btn btn-outline btn-md" id="makebetter" onclick="makeBetter()">Rewrite my own text</button><div id="rebuildout"></div><div id="betterout"></div></div>`;
+  $("reviewout").innerHTML=h;
+  $("reviewEditText").value=reviewSourceText;
+}
+function printReview(){
+  const previousTitle=document.title;
+  document.title="ClientClause - Contract Review";
+  document.body.classList.add("print-review");
+  window.addEventListener("afterprint",()=>{document.body.classList.remove("print-review");document.title=previousTitle;},{once:true});
+  window.print();
+}
+window.restoreReviewReport=function(record){
+  if(!record||!record.text||!record.result)return;
+  $("reviewtext").value=String(record.text);$("reviewfile").value="";syncFile();
+  setHeroMode("review");renderReviewResults(record.result,record.text);
+  $("reviewout").scrollIntoView({behavior:smooth(),block:"start"});
+};
 
 /* ── Chip samples ── */
 const SAMPLES={
@@ -1302,24 +1396,8 @@ async function reviewExisting(updatedText=null){
     else{d=await post("/api/review",{text});}
     reviewSourceText=String(d.source_text||text);reviewIssues=arr(d.issues);
     if(isUpdate){$("reviewtext").value=reviewSourceText;$("reviewfile").value="";syncFile();}
-    const missing=arr(d.missing_topics),lawyerQs=arr(d.questions_for_lawyer);
-    let h=d.extraction_warning?`<div class="issue"><b>Text extraction check</b><p>${esc(d.extraction_warning)}</p></div>`:"";
-    h+=`<div class="panel"><h3>Review summary</h3><p>${esc(d.summary)}</p><small>AI issue spotting only — not a legal validation. Have a qualified lawyer review before signing.</small></div>`;
-    h+=`<div class="panel"><h3>Reviewed contract</h3><p class="sub">Edit the contract text and update the review to check the revised wording.</p><button type="button" class="btn btn-outline btn-md" onclick="toggleReviewEdit(true)">Edit reviewed contract</button><div class="review-editbox" id="reviewEditBox" hidden><label for="reviewEditText">Contract text</label><textarea id="reviewEditText" aria-describedby="reviewEditHelp"></textarea><small id="reviewEditHelp">Updating will run the review again on your edited text.</small><div class="reviewbar"><button type="button" class="btn btn-primary btn-md" onclick="updateReviewedContract()">Update review</button><button type="button" class="btn btn-outline btn-md" onclick="toggleReviewEdit(false)">Cancel</button></div></div></div>`;
-    if(reviewIssues.length)h+=reviewIssues.map(i=>`<article class="issue"><span class="badge badge-${esc(i.priority)}">${esc(i.priority)} priority · ${esc(i.category)}</span><h4>${esc(i.title)}</h4>${i.excerpt?`<p><b>Text:</b> "${esc(i.excerpt)}"</p>`:""}<p><b>Why it may matter:</b> ${esc(i.why_it_matters)}</p><p><b>Suggested next step:</b> ${esc(i.suggestion)}</p></article>`).join("");
-    else h+=`<div class="issue">No specific issues were returned. This is not a legal validation.</div>`;
-    if(missing.length)h+=`<div class="panel"><h3>Topics to check</h3><ul style="margin-top:8px;padding-left:18px">${missing.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
-    if(lawyerQs.length)h+=`<div class="panel"><h3>Questions for a lawyer</h3><ul style="margin-top:8px;padding-left:18px">${lawyerQs.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
-h+=`<div class="panel">
-  <h3>Create a new draft</h3>
-  <p class="sub">Build a new contract from the details in the original. Any terms that don’t carry over will be shown for review.</p>
-  <button type="button" class="btn btn-primary btn-md" id="rebuildContract" onclick="rebuildFromReview()">Create a new draft from this contract</button>
-  <button type="button" class="btn btn-outline btn-md" id="makebetter" onclick="makeBetter()">Rewrite my own text</button>
-  <div id="rebuildout"></div>
-  <div id="betterout"></div>
-  </div>`;
-    $("reviewout").innerHTML=h;
-    $("reviewEditText").value=reviewSourceText;
+    renderReviewResults(d,reviewSourceText);
+    if(window.saveReviewRecovery)window.saveReviewRecovery({text:reviewSourceText,result:d});
     $("reviewout").scrollIntoView({behavior:smooth(),block:"start"});
   }catch(e){
     if(isUpdate){$("reviewout").innerHTML=previousOutput;$("reviewEditText").value=updatedText;toggleReviewEdit(true);}

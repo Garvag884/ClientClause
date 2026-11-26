@@ -502,6 +502,9 @@ footer {
 .reviewbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px }
 .reviewbar input { max-width:280px }
 .reviewout { display:grid; gap:14px; margin-top:20px }
+.review-editbox { margin-top:14px; padding-top:14px; border-top:1px solid var(--border) }
+.review-editbox[hidden] { display:none }
+.review-editbox textarea { min-height:240px; margin-top:10px }
 .issue {
   background:var(--surface); border:1.5px solid var(--border);
   border-radius:var(--radius-md); padding:20px;
@@ -1283,20 +1286,26 @@ async function draft(){
 }
 
 /* ── Review existing ── */
-async function reviewExisting(){
+async function reviewExisting(updatedText=null){
   if($("reviewgo").disabled) return;
-  const text=$("reviewtext").value.trim(), file=$("reviewfile").files[0];
+  const isUpdate=typeof updatedText==="string";
+  const text=isUpdate?updatedText.trim():$("reviewtext").value.trim();
+  const file=isUpdate?null:$("reviewfile").files[0];
   if(!text&&!file){$("reviewmsg").textContent="Paste contract text or choose a file first.";return;}
   const btn=$("reviewgo");btn.disabled=true;btn.textContent="Reviewing…";
-  $("reviewmsg").className="msg-error";$("reviewmsg").textContent="";$("reviewout").innerHTML="";
+  const previousOutput=$("reviewout").innerHTML;
+  $("reviewmsg").className="msg-error";$("reviewmsg").textContent="";
+  if(!isUpdate)$("reviewout").innerHTML="";
   try{
     let d;
     if(file){const form=new FormData();form.append("file",file);d=await api("/api/review/upload",{method:"POST",body:form});}
     else{d=await post("/api/review",{text});}
     reviewSourceText=String(d.source_text||text);reviewIssues=arr(d.issues);
+    if(isUpdate){$("reviewtext").value=reviewSourceText;$("reviewfile").value="";syncFile();}
     const missing=arr(d.missing_topics),lawyerQs=arr(d.questions_for_lawyer);
     let h=d.extraction_warning?`<div class="issue"><b>Text extraction check</b><p>${esc(d.extraction_warning)}</p></div>`:"";
     h+=`<div class="panel"><h3>Review summary</h3><p>${esc(d.summary)}</p><small>AI issue spotting only — not a legal validation. Have a qualified lawyer review before signing.</small></div>`;
+    h+=`<div class="panel"><h3>Reviewed contract</h3><p class="sub">Edit the contract text and update the review to check the revised wording.</p><button type="button" class="btn btn-outline btn-md" onclick="toggleReviewEdit(true)">Edit reviewed contract</button><div class="review-editbox" id="reviewEditBox" hidden><label for="reviewEditText">Contract text</label><textarea id="reviewEditText" aria-describedby="reviewEditHelp"></textarea><small id="reviewEditHelp">Updating will run the review again on your edited text.</small><div class="reviewbar"><button type="button" class="btn btn-primary btn-md" onclick="updateReviewedContract()">Update review</button><button type="button" class="btn btn-outline btn-md" onclick="toggleReviewEdit(false)">Cancel</button></div></div></div>`;
     if(reviewIssues.length)h+=reviewIssues.map(i=>`<article class="issue"><span class="badge badge-${esc(i.priority)}">${esc(i.priority)} priority · ${esc(i.category)}</span><h4>${esc(i.title)}</h4>${i.excerpt?`<p><b>Text:</b> "${esc(i.excerpt)}"</p>`:""}<p><b>Why it may matter:</b> ${esc(i.why_it_matters)}</p><p><b>Suggested next step:</b> ${esc(i.suggestion)}</p></article>`).join("");
     else h+=`<div class="issue">No specific issues were returned. This is not a legal validation.</div>`;
     if(missing.length)h+=`<div class="panel"><h3>Topics to check</h3><ul style="margin-top:8px;padding-left:18px">${missing.map(x=>`<li style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">${esc(x)}</li>`).join("")}</ul></div>`;
@@ -1310,9 +1319,25 @@ h+=`<div class="panel">
   <div id="betterout"></div>
   </div>`;
     $("reviewout").innerHTML=h;
+    $("reviewEditText").value=reviewSourceText;
     $("reviewout").scrollIntoView({behavior:smooth(),block:"start"});
-  }catch(e){$("reviewmsg").textContent=e.message;}
+  }catch(e){
+    if(isUpdate){$("reviewout").innerHTML=previousOutput;$("reviewEditText").value=updatedText;toggleReviewEdit(true);}
+    $("reviewmsg").textContent=e.message;
+  }
   finally{btn.disabled=false;btn.textContent="Review contract";}
+}
+
+function toggleReviewEdit(open){
+  const box=$("reviewEditBox");
+  if(box)box.hidden=!open;
+  if(open)$("reviewEditText")?.focus();
+}
+
+async function updateReviewedContract(){
+  const text=$("reviewEditText")?.value.trim();
+  if(!text){$("reviewmsg").textContent="Add the contract text before updating the review.";return;}
+  await reviewExisting(text);
 }
 
 /* ── Rebuild from reviewed contract ── */
